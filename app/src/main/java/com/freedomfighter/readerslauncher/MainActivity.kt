@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.freedomfighter.readerslauncher.ui.AppsScreen
 import com.freedomfighter.readerslauncher.ui.ArrangeScreen
+import com.freedomfighter.readerslauncher.ui.BookChaptersScreen
+import com.freedomfighter.readerslauncher.ui.BookScreen
 import com.freedomfighter.readerslauncher.ui.CategoryEditScreen
 import com.freedomfighter.readerslauncher.ui.CategoryScreen
 import com.freedomfighter.readerslauncher.ui.HiddenScreen
@@ -45,6 +47,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val settings by app.prefs.settings.collectAsState()
+            LaunchedEffect(settings.autoRotate) {
+                requestedOrientation = if (settings.autoRotate) android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                else android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
             ReaderTheme(settings) {
                 SystemBars(settings.showStatusBar)
                 Root(nav, app)
@@ -129,5 +135,7 @@ private fun Root(nav: Nav, app: App) {
         is Screen.CalendarSetup -> CalendarSetupScreen(nav, app, screen.tileId)
         is Screen.TasksSetup -> TasksSetupScreen(nav, app, screen.tileId)
         Screen.Recents -> RecentsScreen(nav, app)
+        is Screen.Book -> BookScreen(nav, app, screen.slot)
+        is Screen.BookChapters -> BookChaptersScreen(nav, app, screen.slot)
     }
 }

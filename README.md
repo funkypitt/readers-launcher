@@ -13,6 +13,12 @@ No icons, no colours, no wallpaper: a single column of words.
 * Built-in widgets: **clock**, **weather** (Open-Meteo, no key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
   first task, ☐ to complete, + to add). Any standard app widget can be added too.
+* Two **books** live beside the home screen: swipe right for the left one, left for the
+  right one. A very plain reader — tap the right half of the page to go forward, the left
+  half to go back, long press for chapters and text size — that reopens where you stopped.
+  EPUB, MOBI (PalmDoc), FB2 and plain text; no PDF.
+* English by default; French, German, Spanish, Portuguese and Russian follow the device
+  language.
 
 ## Gestures
 
@@ -20,11 +26,13 @@ No icons, no colours, no wallpaper: a single column of words.
 |---|---|
 | long press on empty space | add app / category · add grid launcher · add widget · settings |
 | long press on a tile | open · edit · rename · move · arrange · remove · app info · uninstall |
+| arrange tiles | drag a row anywhere in the list, across as many rows as needed |
 | tap a tile | open the app / the category |
 | double tap on empty space | flip the theme |
 | swipe up | all apps, alphabetical, with search; long press an app for its options |
 | swipe up and hold | text list of recently used apps ("open apps") |
 | swipe down | notification shade |
+| swipe right / left | the book on that side (long press in the reader for its menu) |
 | swipe left / right on the agenda tile | next / previous upcoming event |
 | tap the weather tile | one day ↔ five days |
 | long press a grid square | choose / change / clear the app, number of squares |
@@ -54,6 +62,16 @@ lists your lists. Pick one.
 
 The tile follows Tasks.org's change notifications, so it refreshes as soon as a task is
 added, completed or synced.
+
+## Books
+
+Two slots, left and right of the home screen, each remembering its own book and position.
+Opening a book copies it into the launcher's private storage, so it keeps working after the
+original file moves. Text only: images, footnote links and styling are dropped, chapters are
+paginated to the screen, and the reading size defaults to a value derived from the screen
+width (adjustable from the reader's long-press menu). Formats: EPUB 2/3, MOBI/PRC/AZW with
+PalmDoc or no compression (Kindle-store HUFF/CDIC or DRM files are refused), FictionBook 2,
+plain text.
 
 ## Build
 

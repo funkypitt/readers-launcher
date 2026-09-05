@@ -192,6 +192,33 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         }
                     }
                 }
+                // Horizontal swipe → the book on that side. Observed in the Final pass so a tile
+                // that consumed the drag (the agenda) keeps it.
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Final)
+                        val slop = viewConfiguration.touchSlop
+                        var childHasIt = false
+                        var horizontal = false
+                        while (true) {
+                            val event = awaitPointerEvent(PointerEventPass.Final)
+                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                            val dx = change.position.x - down.position.x
+                            val dy = change.position.y - down.position.y
+                            if (!horizontal && change.isConsumed) childHasIt = true
+                            if (!childHasIt && !horizontal && abs(dx) > slop && abs(dx) > 2 * abs(dy)) horizontal = true
+                            // Consuming here (Final pass) cancels the tiles' pending clicks.
+                            if (horizontal) change.consume()
+                            if (!change.pressed) {
+                                if (horizontal && abs(dx) > swipeThresholdPx) {
+                                    tick()
+                                    nav.push(Screen.Book(if (dx > 0) 0 else 1))
+                                }
+                                break
+                            }
+                        }
+                    }
+                }
                 .pointerInput(settings.doubleTapTheme) {
                     detectTapGestures(
                         onLongPress = { tick(); menu = HomeMenu.Empty },

@@ -49,7 +49,7 @@ fun ArrangeScreen(nav: Nav, app: App) {
                 items = home.tiles,
                 key = { it.id },
                 label = { label(it) },
-                onMove = { from, to -> app.store.reorder(from, to) },
+                onReorder = { app.store.update { s -> s.copy(tiles = it) } },
                 modifier = Modifier.weight(1f)
             )
         }

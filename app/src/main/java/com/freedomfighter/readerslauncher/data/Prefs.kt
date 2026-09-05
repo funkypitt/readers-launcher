@@ -18,7 +18,10 @@ data class Settings(
     val doubleTapTheme: Boolean = true,
     val swipeDownNotifications: Boolean = true,
     val showStatusBar: Boolean = true,
-    val haptics: Boolean = true
+    val haptics: Boolean = true,
+    val autoRotate: Boolean = true,
+    /** Reader text size in sp; 0 = automatic from screen size. */
+    val readerSp: Int = 0
 )
 
 /**
@@ -48,7 +51,9 @@ class Prefs(context: Context) {
         doubleTapTheme = sp.getBoolean(K_DOUBLE_TAP, true),
         swipeDownNotifications = sp.getBoolean(K_SWIPE_DOWN, true),
         showStatusBar = sp.getBoolean(K_STATUS_BAR, true),
-        haptics = sp.getBoolean(K_HAPTICS, true)
+        haptics = sp.getBoolean(K_HAPTICS, true),
+        autoRotate = sp.getBoolean(K_ROTATE, true),
+        readerSp = sp.getInt(K_READER_SP, 0)
     )
 
     private inline fun <reified E : Enum<E>> enumOr(name: String?, default: E): E =
@@ -62,6 +67,8 @@ class Prefs(context: Context) {
     fun setSwipeDownNotifications(v: Boolean) = sp.edit().putBoolean(K_SWIPE_DOWN, v).apply()
     fun setShowStatusBar(v: Boolean) = sp.edit().putBoolean(K_STATUS_BAR, v).apply()
     fun setHaptics(v: Boolean) = sp.edit().putBoolean(K_HAPTICS, v).apply()
+    fun setAutoRotate(v: Boolean) = sp.edit().putBoolean(K_ROTATE, v).apply()
+    fun setReaderSp(v: Int) = sp.edit().putInt(K_READER_SP, v).apply()
 
     /** Flip between the two monochrome palettes (SYSTEM resolves to whatever is showing now). */
     fun toggleTheme(systemIsDark: Boolean) {
@@ -87,5 +94,7 @@ class Prefs(context: Context) {
         private const val K_SWIPE_DOWN = "swipe_down_notifications"
         private const val K_STATUS_BAR = "show_status_bar"
         private const val K_HAPTICS = "haptics"
+        private const val K_ROTATE = "auto_rotate"
+        private const val K_READER_SP = "reader_sp"
     }
 }

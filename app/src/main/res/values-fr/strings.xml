@@ -103,6 +103,7 @@
     <string name="settings_swipe_down">glisser vers le bas ouvre les notifications : %1$s</string>
     <string name="settings_status_bar">barre d\'état : %1$s</string>
     <string name="settings_haptics">retour haptique : %1$s</string>
+    <string name="settings_rotation">rotation automatique : %1$s</string>
     <string name="on">oui</string>
     <string name="off">non</string>
     <string name="settings_hidden">apps masquées</string>
@@ -118,4 +119,15 @@
     <string name="import_done">configuration importée</string>
     <string name="import_failed">impossible de lire ce fichier</string>
     <string name="arrange_hint">glisser une tuile pour la déplacer</string>
+    <string name="reader_open_book">ouvrir un livre</string>
+    <string name="reader_hint_formats">epub, mobi, fb2 ou texte brut</string>
+    <string name="reader_hint_back">glisser latéralement pour revenir à l\'accueil</string>
+    <string name="reader_loading">…</string>
+    <string name="reader_unsupported">ce fichier n\'a pas pu être lu</string>
+    <string name="reader_menu_chapters">chapitres</string>
+    <string name="reader_menu_larger">texte plus grand</string>
+    <string name="reader_menu_smaller">texte plus petit</string>
+    <string name="reader_menu_open">ouvrir un autre livre</string>
+    <string name="reader_menu_remove">retirer de ce côté</string>
+    <string name="reader_menu_home">accueil</string>
 </resources>

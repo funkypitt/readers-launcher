@@ -112,10 +112,7 @@ fun CategoryEditScreen(nav: Nav, app: App, tileId: String) {
                 items = tile.apps,
                 key = { it.key },
                 label = { home.labelFor(app, it) },
-                onMove = { from, to ->
-                    val l = tile.apps.toMutableList(); val x = l.removeAt(from); l.add(to, x)
-                    app.store.replaceTile(tile.copy(apps = l))
-                },
+                onReorder = { app.store.replaceTile(tile.copy(apps = it)) },
                 onTap = { removeFor = it },
                 modifier = Modifier.weight(1f)
             )

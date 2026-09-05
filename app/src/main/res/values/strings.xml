@@ -122,6 +122,7 @@
     <string name="settings_swipe_down">swipe down opens notifications: %1$s</string>
     <string name="settings_status_bar">status bar: %1$s</string>
     <string name="settings_haptics">haptic feedback: %1$s</string>
+    <string name="settings_rotation">auto-rotate: %1$s</string>
     <string name="on">on</string>
     <string name="off">off</string>
     <string name="settings_hidden">hidden apps</string>
@@ -138,4 +139,17 @@
     <string name="import_failed">could not read that file</string>
 
     <string name="arrange_hint">drag a tile to move it</string>
+
+    <!-- reader -->
+    <string name="reader_open_book">open a book</string>
+    <string name="reader_hint_formats">epub, mobi, fb2 or plain text</string>
+    <string name="reader_hint_back">swipe sideways to go back home</string>
+    <string name="reader_loading">…</string>
+    <string name="reader_unsupported">this file could not be read</string>
+    <string name="reader_menu_chapters">chapters</string>
+    <string name="reader_menu_larger">larger text</string>
+    <string name="reader_menu_smaller">smaller text</string>
+    <string name="reader_menu_open">open another book</string>
+    <string name="reader_menu_remove">remove from this side</string>
+    <string name="reader_menu_home">home</string>
 </resources>
