@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reader\'s Launcher</string>
+    <string name="qs_theme_label">Reader\'s theme</string>
+
+    <!-- home -->
+    <string name="hint_empty">hold to begin</string>
+    <string name="hint_set_default">set as default launcher</string>
+    <string name="menu_add_app">add app / category</string>
+    <string name="menu_add_grid">add grid launcher</string>
+    <string name="menu_add_widget">add widget</string>
+    <string name="menu_settings">settings</string>
+
+    <!-- tile menu -->
+    <string name="menu_open">open</string>
+    <string name="menu_edit">edit</string>
+    <string name="menu_rename">rename</string>
+    <string name="menu_move_up">move up</string>
+    <string name="menu_move_down">move down</string>
+    <string name="menu_arrange">arrange tiles</string>
+    <string name="menu_remove">remove</string>
+    <string name="menu_app_info">app info</string>
+    <string name="menu_uninstall">uninstall</string>
+    <string name="menu_hide">hide</string>
+    <string name="menu_unhide">show again</string>
+    <string name="menu_add_to_home">add to home</string>
+    <string name="menu_add_to_category">add to category</string>
+    <string name="menu_remove_from_category">remove from category</string>
+    <string name="menu_change_app">change app</string>
+    <string name="menu_clear_slot">clear</string>
+    <string name="menu_columns">squares: %1$d</string>
+    <string name="menu_height">height: %1$s</string>
+    <string name="menu_configure">configure</string>
+    <string name="menu_refresh">refresh</string>
+    <string name="menu_units">units: %1$s</string>
+    <string name="menu_location_auto">location: automatic</string>
+    <string name="menu_location_city">location: %1$s</string>
+    <string name="menu_choose_city">choose a city</string>
+    <string name="menu_use_auto_location">use automatic location</string>
+    <string name="menu_calendars">choose calendars</string>
+    <string name="menu_sign_out">sign out of google</string>
+
+    <!-- picker / drawer -->
+    <string name="search">search</string>
+    <string name="drawer_title">apps</string>
+    <string name="picker_title_single">choose an app</string>
+    <string name="picker_title_multi">choose apps</string>
+    <string name="picker_hint_multi">tap to select · %1$d selected</string>
+    <string name="action_done">add</string>
+    <string name="action_ok">ok</string>
+    <string name="action_cancel">cancel</string>
+    <string name="action_back">back</string>
+    <string name="category_name_prompt">name of the category</string>
+    <string name="no_apps">nothing here</string>
+    <string name="recents_title">open apps</string>
+    <string name="recents_permission">allow usage access to list open apps</string>
+    <string name="recents_empty">no recent apps</string>
+    <string name="hidden_title">hidden apps</string>
+
+    <!-- category -->
+    <string name="category_empty">no apps in this category</string>
+    <string name="category_add_apps">add apps</string>
+
+    <!-- widgets -->
+    <string name="widgets_builtin">built in</string>
+    <string name="widgets_system">from apps</string>
+    <string name="widget_clock">clock</string>
+    <string name="widget_weather">weather</string>
+    <string name="widget_calendar">agenda</string>
+    <string name="widget_tasks">tasks</string>
+    <string name="widget_calendar_desc">next event, swipe for the following ones</string>
+    <string name="widget_weather_desc">time and today\'s weather, tap for five days</string>
+    <string name="widget_tasks_desc">first task of a google tasks list</string>
+    <string name="widget_clock_desc">time and date</string>
+    <string name="widget_bind_failed">could not add this widget</string>
+    <string name="widget_not_installed">widget app was removed</string>
+
+    <string name="weather_loading">…</string>
+    <string name="weather_no_location">no location — hold to choose a city</string>
+    <string name="weather_offline">weather unavailable</string>
+    <string name="weather_here">here</string>
+    <string name="weather_min_max">%1$s / %2$s</string>
+    <string name="weather_city_prompt">city name</string>
+
+    <string name="calendar_none">no upcoming event</string>
+    <string name="calendar_permission">allow calendar access</string>
+    <string name="calendar_choose">calendars to show</string>
+    <string name="calendar_today">today</string>
+    <string name="calendar_tomorrow">tomorrow</string>
+    <string name="calendar_all_day">all day</string>
+
+    <string name="tasks_none">no open task</string>
+    <string name="tasks_new_prompt">new task</string>
+    <string name="tasks_offline">tasks unavailable</string>
+    <string name="tasks_sign_in">sign in with google</string>
+    <string name="tasks_choose_list">choose a task list</string>
+    <string name="tasks_client_id_title">google tasks setup</string>
+    <string name="tasks_client_id_help">Google Tasks needs an OAuth client ID of type “Android” created in the Google Cloud console for this app’s package name and signing key. Paste it below (it ends with .apps.googleusercontent.com). See the README for the exact steps.</string>
+    <string name="tasks_client_id_prompt">client id</string>
+    <string name="tasks_signed_in_as">signed in</string>
+    <string name="tasks_not_signed_in">not signed in</string>
+    <string name="tasks_loading">…</string>
+
+    <!-- settings -->
+    <string name="settings_title">settings</string>
+    <string name="settings_theme">theme: %1$s</string>
+    <string name="theme_dark">white on black</string>
+    <string name="theme_light">black on white</string>
+    <string name="theme_system">follow system</string>
+    <string name="settings_font">font: %1$s</string>
+    <string name="font_serif">serif</string>
+    <string name="font_sans">sans</string>
+    <string name="font_mono">mono</string>
+    <string name="settings_text_size">text size: %1$s</string>
+    <string name="size_small">small</string>
+    <string name="size_medium">medium</string>
+    <string name="size_large">large</string>
+    <string name="settings_align">alignment: %1$s</string>
+    <string name="align_left">left</string>
+    <string name="align_center">center</string>
+    <string name="settings_double_tap">double tap flips theme: %1$s</string>
+    <string name="settings_swipe_down">swipe down opens notifications: %1$s</string>
+    <string name="settings_status_bar">status bar: %1$s</string>
+    <string name="settings_haptics">haptic feedback: %1$s</string>
+    <string name="on">on</string>
+    <string name="off">off</string>
+    <string name="settings_hidden">hidden apps</string>
+    <string name="settings_arrange">arrange tiles</string>
+    <string name="settings_default_launcher">default launcher</string>
+    <string name="settings_usage_access">usage access (open apps list)</string>
+    <string name="settings_tasks">google tasks setup</string>
+    <string name="settings_export">export configuration</string>
+    <string name="settings_import">import configuration</string>
+    <string name="settings_about">reader\'s launcher %1$s</string>
+    <string name="settings_about_line">black and white, text only. MIT licence.</string>
+    <string name="export_done">configuration exported</string>
+    <string name="import_done">configuration imported</string>
+    <string name="import_failed">could not read that file</string>
+
+    <string name="arrange_hint">drag a tile to move it</string>
+</resources>
