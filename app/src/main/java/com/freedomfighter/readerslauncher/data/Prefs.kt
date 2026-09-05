@@ -19,7 +19,7 @@ data class Settings(
     val swipeDownNotifications: Boolean = true,
     val showStatusBar: Boolean = true,
     val haptics: Boolean = true,
-    val autoRotate: Boolean = true,
+    val autoRotate: Boolean = false,
     /** Reader text size in sp; 0 = automatic from screen size. */
     val readerSp: Int = 0
 )
@@ -52,7 +52,7 @@ class Prefs(context: Context) {
         swipeDownNotifications = sp.getBoolean(K_SWIPE_DOWN, true),
         showStatusBar = sp.getBoolean(K_STATUS_BAR, true),
         haptics = sp.getBoolean(K_HAPTICS, true),
-        autoRotate = sp.getBoolean(K_ROTATE, true),
+        autoRotate = sp.getBoolean(K_ROTATE, false),
         readerSp = sp.getInt(K_READER_SP, 0)
     )
 
