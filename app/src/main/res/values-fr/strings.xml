@@ -33,7 +33,6 @@
     <string name="menu_choose_city">choisir une ville</string>
     <string name="menu_use_auto_location">lieu automatique</string>
     <string name="menu_calendars">choisir les agendas</string>
-    <string name="menu_sign_out">se déconnecter de google</string>
     <string name="search">rechercher</string>
     <string name="drawer_title">apps</string>
     <string name="picker_title_single">choisir une app</string>
@@ -59,7 +58,7 @@
     <string name="widget_tasks">tâches</string>
     <string name="widget_calendar_desc">prochain événement, glisser pour les suivants</string>
     <string name="widget_weather_desc">heure et météo du jour, toucher pour cinq jours</string>
-    <string name="widget_tasks_desc">première tâche d\'une liste google tasks</string>
+    <string name="widget_tasks_desc">première tâche d\'une liste Tasks.org</string>
     <string name="widget_clock_desc">heure et date</string>
     <string name="widget_bind_failed">impossible d\'ajouter ce widget</string>
     <string name="widget_not_installed">l\'app du widget a été supprimée</string>
@@ -76,13 +75,14 @@
     <string name="tasks_none">aucune tâche ouverte</string>
     <string name="tasks_new_prompt">nouvelle tâche</string>
     <string name="tasks_offline">tâches indisponibles</string>
-    <string name="tasks_sign_in">se connecter avec google</string>
+    <string name="tasks_setup_needed">configurer les tâches</string>
+    <string name="tasks_setup_title">configuration des tâches</string>
+    <string name="tasks_setup_help">La tuile tâches lit une liste de Tasks.org, l\'app de tâches open source (F-Droid). Tasks.org garde la liste sur le téléphone ou la synchronise avec CalDAV, Google Tasks, Microsoft To Do ou EteSync. Rien à configurer ici, à part autoriser l\'accès.</string>
+    <string name="tasks_install">installer Tasks.org</string>
+    <string name="tasks_grant">autoriser l\'accès aux tâches</string>
     <string name="tasks_choose_list">choisir une liste</string>
-    <string name="tasks_client_id_title">configuration google tasks</string>
-    <string name="tasks_client_id_help">Google Tasks demande un identifiant client OAuth de type « Android », créé dans la console Google Cloud pour le nom de paquet et la clé de signature de cette app. Collez-le ci-dessous (il se termine par .apps.googleusercontent.com). Le README décrit les étapes.</string>
-    <string name="tasks_client_id_prompt">identifiant client</string>
-    <string name="tasks_signed_in_as">connecté</string>
-    <string name="tasks_not_signed_in">non connecté</string>
+    <string name="tasks_choose_list_legacy">choisir une liste. Cette version de Tasks.org est en lecture seule depuis l\'extérieur : la case ouvre la tâche et + ouvre l\'éditeur. Tasks.org 15.11 ou plus récent coche et ajoute directement.</string>
+    <string name="tasks_no_lists">aucune liste — créez-en une d\'abord dans Tasks.org</string>
     <string name="settings_title">réglages</string>
     <string name="settings_theme">thème : %1$s</string>
     <string name="theme_dark">blanc sur noir</string>
@@ -109,7 +109,7 @@
     <string name="settings_arrange">ordonner les tuiles</string>
     <string name="settings_default_launcher">launcher par défaut</string>
     <string name="settings_usage_access">accès aux données d\'utilisation (apps ouvertes)</string>
-    <string name="settings_tasks">configuration google tasks</string>
+    <string name="settings_tasks">configuration des tâches</string>
     <string name="settings_export">exporter la configuration</string>
     <string name="settings_import">importer la configuration</string>
     <string name="settings_about">reader\'s launcher %1$s</string>

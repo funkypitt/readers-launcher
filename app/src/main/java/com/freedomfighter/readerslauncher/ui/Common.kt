@@ -68,6 +68,7 @@ fun T(
         style = TextStyle(
             color = color,
             fontFamily = LocalTypo.current.family,
+            fontWeight = LocalTypo.current.weight,
             fontSize = size,
             lineHeight = size * lineHeightMul,
             textAlign = align
@@ -89,8 +90,8 @@ fun Rule(modifier: Modifier = Modifier, color: Color = LocalColors.current.rule)
 }
 
 /** Padding used by every text row. */
-val rowPadH = 24.dp
-val rowPadV = 18.dp
+val rowPadH = 28.dp
+val rowPadV = 20.dp
 
 fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Modifier = this.then(
     Modifier.clickable(
@@ -177,7 +178,7 @@ data class MenuItem(val label: String, val secondary: String? = null, val action
  * Tapping outside or pressing back dismisses it.
  */
 @Composable
-fun TextMenu(title: String?, items: List<MenuItem>, onDismiss: () -> Unit) {
+fun TextMenu(title: String?, items: List<MenuItem>, onDismiss: () -> Unit, footer: List<MenuItem> = emptyList()) {
     val colors = LocalColors.current
     BackHandler(onBack = onDismiss)
     Box(
@@ -204,6 +205,15 @@ fun TextMenu(title: String?, items: List<MenuItem>, onDismiss: () -> Unit) {
                         onDismiss()
                         item.action()
                     })
+                }
+                if (footer.isNotEmpty()) {
+                    Rule(Modifier.padding(vertical = 6.dp))
+                    footer.forEach { item ->
+                        TextRow(item.label, secondary = item.secondary, size = LocalTypo.current.title, onClick = {
+                            onDismiss()
+                            item.action()
+                        })
+                    }
                 }
             }
             Spacer(Modifier.height(8.dp))
@@ -277,7 +287,7 @@ fun ReaderTextField(
         onValueChange = onValueChange,
         modifier = modifier,
         singleLine = true,
-        textStyle = TextStyle(color = colors.fg, fontFamily = typo.family, fontSize = typo.tile),
+        textStyle = TextStyle(color = colors.fg, fontFamily = typo.family, fontWeight = typo.weight, fontSize = typo.tile),
         cursorBrush = SolidColor(colors.fg),
         keyboardOptions = KeyboardOptions(imeAction = imeAction),
         keyboardActions = KeyboardActions(onAny = { onImeAction() }),

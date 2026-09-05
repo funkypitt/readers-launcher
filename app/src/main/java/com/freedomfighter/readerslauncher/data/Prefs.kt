@@ -12,14 +12,13 @@ enum class Align { LEFT, CENTER }
 
 data class Settings(
     val theme: ThemeMode = ThemeMode.DARK,
-    val font: FontChoice = FontChoice.SERIF,
+    val font: FontChoice = FontChoice.SANS,
     val textSize: TextSize = TextSize.MEDIUM,
     val align: Align = Align.LEFT,
     val doubleTapTheme: Boolean = true,
     val swipeDownNotifications: Boolean = true,
     val showStatusBar: Boolean = true,
-    val haptics: Boolean = true,
-    val tasksClientId: String = ""
+    val haptics: Boolean = true
 )
 
 /**
@@ -43,14 +42,13 @@ class Prefs(context: Context) {
 
     private fun read() = Settings(
         theme = enumOr(sp.getString(K_THEME, null), ThemeMode.DARK),
-        font = enumOr(sp.getString(K_FONT, null), FontChoice.SERIF),
+        font = enumOr(sp.getString(K_FONT, null), FontChoice.SANS),
         textSize = enumOr(sp.getString(K_SIZE, null), TextSize.MEDIUM),
         align = enumOr(sp.getString(K_ALIGN, null), Align.LEFT),
         doubleTapTheme = sp.getBoolean(K_DOUBLE_TAP, true),
         swipeDownNotifications = sp.getBoolean(K_SWIPE_DOWN, true),
         showStatusBar = sp.getBoolean(K_STATUS_BAR, true),
-        haptics = sp.getBoolean(K_HAPTICS, true),
-        tasksClientId = sp.getString(K_TASKS_CLIENT, "") ?: ""
+        haptics = sp.getBoolean(K_HAPTICS, true)
     )
 
     private inline fun <reified E : Enum<E>> enumOr(name: String?, default: E): E =
@@ -64,7 +62,6 @@ class Prefs(context: Context) {
     fun setSwipeDownNotifications(v: Boolean) = sp.edit().putBoolean(K_SWIPE_DOWN, v).apply()
     fun setShowStatusBar(v: Boolean) = sp.edit().putBoolean(K_STATUS_BAR, v).apply()
     fun setHaptics(v: Boolean) = sp.edit().putBoolean(K_HAPTICS, v).apply()
-    fun setTasksClientId(v: String) = sp.edit().putString(K_TASKS_CLIENT, v.trim()).apply()
 
     /** Flip between the two monochrome palettes (SYSTEM resolves to whatever is showing now). */
     fun toggleTheme(systemIsDark: Boolean) {
@@ -90,6 +87,5 @@ class Prefs(context: Context) {
         private const val K_SWIPE_DOWN = "swipe_down_notifications"
         private const val K_STATUS_BAR = "show_status_bar"
         private const val K_HAPTICS = "haptics"
-        private const val K_TASKS_CLIENT = "tasks_client_id"
     }
 }

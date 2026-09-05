@@ -39,19 +39,33 @@ private class LongPressHost(context: Context, private val onLongPress: () -> Uni
     private var downX = 0f
     private var downY = 0f
     private var pending = false
+    /** Once the long press fired, the rest of the gesture is ours: the widget must not see a click. */
+    private var swallowing = false
     private val slop = ViewConfiguration.get(context).scaledTouchSlop
-    private val trigger = Runnable { if (pending) { pending = false; onLongPress() } }
+    private val trigger = Runnable {
+        if (pending) {
+            pending = false
+            swallowing = true
+            performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS)
+            onLongPress()
+        }
+    }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                downX = ev.x; downY = ev.y; pending = true
+                downX = ev.x; downY = ev.y; pending = true; swallowing = false
                 postDelayed(trigger, ViewConfiguration.getLongPressTimeout().toLong())
             }
             MotionEvent.ACTION_MOVE -> if (pending && (Math.abs(ev.x - downX) > slop || Math.abs(ev.y - downY) > slop)) cancel()
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> cancel()
         }
-        return false
+        return swallowing
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) swallowing = false
+        return true
     }
 
     private fun cancel() { pending = false; removeCallbacks(trigger) }

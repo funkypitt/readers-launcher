@@ -42,7 +42,7 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
 
     Page {
         Column(Modifier.fillMaxSize()) {
-            ScreenTitle(tile.name, onBack = { nav.pop() }, trailing = "…", onTrailing = { nav.push(Screen.CategoryEdit(tileId)) })
+            ScreenTitle(tile.name, onBack = { nav.pop() }, trailing = stringResource(R.string.menu_edit), onTrailing = { nav.push(Screen.CategoryEdit(tileId)) })
             if (tile.apps.isEmpty()) {
                 TextRow(stringResource(R.string.category_add_apps), onClick = { nav.push(Screen.CategoryEdit(tileId)) })
             }

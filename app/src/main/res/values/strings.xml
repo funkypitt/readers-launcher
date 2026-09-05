@@ -38,7 +38,6 @@
     <string name="menu_choose_city">choose a city</string>
     <string name="menu_use_auto_location">use automatic location</string>
     <string name="menu_calendars">choose calendars</string>
-    <string name="menu_sign_out">sign out of google</string>
 
     <!-- picker / drawer -->
     <string name="search">search</string>
@@ -70,7 +69,6 @@
     <string name="widget_tasks">tasks</string>
     <string name="widget_calendar_desc">next event, swipe for the following ones</string>
     <string name="widget_weather_desc">time and today\'s weather, tap for five days</string>
-    <string name="widget_tasks_desc">first task of a google tasks list</string>
     <string name="widget_clock_desc">time and date</string>
     <string name="widget_bind_failed">could not add this widget</string>
     <string name="widget_not_installed">widget app was removed</string>
@@ -92,14 +90,16 @@
     <string name="tasks_none">no open task</string>
     <string name="tasks_new_prompt">new task</string>
     <string name="tasks_offline">tasks unavailable</string>
-    <string name="tasks_sign_in">sign in with google</string>
-    <string name="tasks_choose_list">choose a task list</string>
-    <string name="tasks_client_id_title">google tasks setup</string>
-    <string name="tasks_client_id_help">Google Tasks needs an OAuth client ID of type “Android” created in the Google Cloud console for this app’s package name and signing key. Paste it below (it ends with .apps.googleusercontent.com). See the README for the exact steps.</string>
-    <string name="tasks_client_id_prompt">client id</string>
-    <string name="tasks_signed_in_as">signed in</string>
-    <string name="tasks_not_signed_in">not signed in</string>
+    <string name="tasks_setup_needed">set up tasks</string>
+    <string name="tasks_setup_title">tasks setup</string>
+    <string name="tasks_setup_help">The tasks tile reads a list from Tasks.org, the open-source task app (F-Droid). Tasks.org keeps the list on the phone or syncs it with CalDAV, Google Tasks, Microsoft To Do or EteSync. Nothing to configure here beyond allowing access.</string>
+    <string name="tasks_install">install Tasks.org</string>
+    <string name="tasks_grant">allow access to tasks</string>
+    <string name="tasks_choose_list">choose a list</string>
+    <string name="tasks_choose_list_legacy">choose a list. This version of Tasks.org is read-only from outside: the box opens the task and + opens the editor. Tasks.org 15.11 or later completes and adds directly.</string>
+    <string name="tasks_no_lists">no list found — create one in Tasks.org first</string>
     <string name="tasks_loading">…</string>
+    <string name="widget_tasks_desc">first task of a Tasks.org list</string>
 
     <!-- settings -->
     <string name="settings_title">settings</string>
@@ -128,7 +128,7 @@
     <string name="settings_arrange">arrange tiles</string>
     <string name="settings_default_launcher">default launcher</string>
     <string name="settings_usage_access">usage access (open apps list)</string>
-    <string name="settings_tasks">google tasks setup</string>
+    <string name="settings_tasks">tasks setup</string>
     <string name="settings_export">export configuration</string>
     <string name="settings_import">import configuration</string>
     <string name="settings_about">reader\'s launcher %1$s</string>

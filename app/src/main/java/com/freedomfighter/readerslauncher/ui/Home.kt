@@ -211,7 +211,8 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.weight(1f).fillMaxWidth(),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 8.dp, bottom = 24.dp)
+                    // Generous bottom padding keeps a long-pressable empty zone under the last tile.
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 8.dp, bottom = 96.dp)
                 ) {
                     items(state.tiles, key = { it.id }) { tile ->
                         TileView(
@@ -244,16 +245,17 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
         }
 
         // ---- menus ----------------------------------------------------------------------
+        val homeItems = buildList {
+            add(MenuItem(stringResource(R.string.menu_add_app)) { addAppsFlow() })
+            if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
+            add(MenuItem(stringResource(R.string.menu_add_widget)) { nav.push(Screen.WidgetPicker) })
+            add(MenuItem(stringResource(R.string.menu_settings)) { nav.push(Screen.Settings) })
+        }
         when (val m = menu) {
             null -> Unit
             HomeMenu.Empty -> TextMenu(
                 title = null,
-                items = buildList {
-                    add(MenuItem(stringResource(R.string.menu_add_app)) { addAppsFlow() })
-                    if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
-                    add(MenuItem(stringResource(R.string.menu_add_widget)) { nav.push(Screen.WidgetPicker) })
-                    add(MenuItem(stringResource(R.string.menu_settings)) { nav.push(Screen.Settings) })
-                },
+                items = homeItems,
                 onDismiss = { menu = null }
             )
             is HomeMenu.ForTile -> TextMenu(
@@ -262,7 +264,9 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                     tile = m.tile, app = app, state = state, nav = nav, activity = activity,
                     onPrompt = { prompt = it }
                 ),
-                onDismiss = { menu = null }
+                onDismiss = { menu = null },
+                // When the column fills the screen there is no empty space left to long-press.
+                footer = homeItems
             )
             is HomeMenu.GridSlot -> {
                 val grid = state.grid ?: Grid()

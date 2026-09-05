@@ -13,10 +13,8 @@ android {
         applicationId = "com.freedomfighter.readerslauncher"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
-        // AppAuth redirect scheme for the Google Tasks sign-in (custom scheme = applicationId).
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.freedomfighter.readerslauncher"
+        versionCode = 2
+        versionName = "1.1.0"
     }
 
     buildTypes {
@@ -50,6 +48,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation("net.openid:appauth:0.11.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
