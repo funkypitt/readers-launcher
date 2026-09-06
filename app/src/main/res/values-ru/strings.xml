@@ -130,4 +130,5 @@
     <string name="reader_menu_open">открыть другую книгу</string>
     <string name="reader_menu_remove">убрать с этой стороны</string>
     <string name="reader_menu_home">главный экран</string>
+    <string name="hint_full">главный экран заполнен</string>
 </resources>

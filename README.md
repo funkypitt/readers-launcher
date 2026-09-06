@@ -4,12 +4,14 @@ A black-and-white, text-only Android launcher in the spirit of the Light Phone I
 No icons, no colours, no wallpaper: a single column of words.
 
 * Every screen is either white on black or black on white. Flip between the two at any
-  time with a double tap on the home screen, from the quick-settings tile
-  "Reader's theme", or in settings (which also offers "follow system").
-* The home screen is a column of tiles: an **app** (its name), a **category** (a name that
-  opens a text list of apps), or a **widget**. A special **grid** of 3 to 5 squares is pinned
-  at the bottom for the unavoidable apps (phone, messages…); their icons are rendered as
-  monochrome glyphs in the current theme.
+  time with a double tap on empty home-screen space, from the long-press menu of any
+  tile, from the quick-settings tile "Reader's theme", or in settings (which also offers
+  "follow system").
+* The home screen is a single fixed page — it never scrolls. It holds a column of tiles:
+  an **app** (its name), a **category** (a name that opens a text list of apps), or a
+  **widget**. Once the page is full, the menu says so instead of offering to add more.
+  A special **grid** of 3 to 5 squares is pinned at the bottom for the unavoidable apps
+  (phone, messages…); their icons are rendered as monochrome glyphs in the current theme.
 * Built-in widgets: **clock**, **weather** (Open-Meteo, no key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
   first task, swipe for the following ones, ☐ to complete, + to add). Any standard app
@@ -26,7 +28,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | Gesture | Effect |
 |---|---|
 | long press on empty space | add app / category · add grid launcher · add widget · settings |
-| long press on a tile | open · edit · rename · move · arrange · remove · app info · uninstall |
+| long press on a tile | open · edit · rename · move · arrange · remove · app info · uninstall, plus add / flip theme / settings |
 | arrange tiles | drag a row anywhere in the list, across as many rows as needed |
 | tap a tile | open the app / the category |
 | double tap on empty space | flip the theme |

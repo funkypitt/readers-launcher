@@ -21,11 +21,13 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -111,12 +113,32 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
     val colors = LocalColors.current
     val systemDark = isSystemInDarkTheme()
     val tick = rememberTick()
-    val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
     var menu by ui::menu
     var prompt by ui::prompt
     var isDefault by remember { mutableStateOf(isDefaultLauncher(context)) }
+    // The home screen is a fixed page, never a scrolling list: measure what the column can
+    // hold so that adding is refused once it is full.
+    var availableHeight by remember { mutableStateOf(0) }
+    var usedHeight by remember { mutableStateOf(0) }
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val oneRowPx = with(density) { (LocalTypo.current.tile.toPx() * 1.25f + (rowPadV * 2).toPx()).toInt() }
+    val roomForRow = availableHeight > 0 && availableHeight - usedHeight >= oneRowPx
+    // A tile that was just added and does not fit is taken back.
+    var knownIds by remember { mutableStateOf(state.tiles.map { it.id }.toSet()) }
+    LaunchedEffect(usedHeight, availableHeight, state.tiles) {
+        val ids = state.tiles.map { it.id }
+        val added = ids.filterNot { it in knownIds }
+        knownIds = ids.toSet()
+        if (availableHeight > 0 && usedHeight > availableHeight && added.isNotEmpty()) {
+            added.forEach { id ->
+                (state.tiles.firstOrNull { it.id == id } as? AppWidgetTile)?.let { app.widgetHost.deleteAppWidgetId(it.appWidgetId) }
+                app.store.removeTile(id)
+            }
+            android.widget.Toast.makeText(context, R.string.hint_full, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
 
     // Re-check the default launcher and refresh widget data whenever we come back.
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -154,8 +176,6 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
                         val startY = down.position.y
-                        val couldScrollDown = listState.canScrollForward
-                        val couldScrollUp = listState.canScrollBackward
                         var lastY = startY
                         var lastMove = down.uptimeMillis
                         var fired = false
@@ -177,8 +197,8 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                             if (!change.pressed) {
                                 val dy = change.position.y - startY
                                 if (!fired) {
-                                    if (dy < -swipeThresholdPx && !couldScrollDown) openDrawer()
-                                    else if (dy > swipeThresholdPx && !couldScrollUp && settings.swipeDownNotifications)
+                                    if (dy < -swipeThresholdPx) openDrawer()
+                                    else if (dy > swipeThresholdPx && settings.swipeDownNotifications)
                                         expandNotifications(context)
                                 }
                                 break
@@ -235,21 +255,26 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         onClick = { openHomeSettings(context) }
                     )
                 }
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
-                    // Generous bottom padding keeps a long-pressable empty zone under the last tile.
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 8.dp, bottom = 96.dp)
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .clipToBounds()
+                        .onSizeChanged { availableHeight = it.height }
                 ) {
-                    items(state.tiles, key = { it.id }) { tile ->
-                        TileView(
-                            tile = tile,
-                            app = app,
-                            state = state,
-                            nav = nav,
-                            onLongPress = { tick(); menu = HomeMenu.ForTile(tile) },
-                            onNeedCity = { prompt = HomePrompt.WeatherCity(it) }
-                        )
+                    Column(Modifier.fillMaxWidth().onSizeChanged { usedHeight = it.height }) {
+                        state.tiles.forEach { tile ->
+                            key(tile.id) {
+                                TileView(
+                                    tile = tile,
+                                    app = app,
+                                    state = state,
+                                    nav = nav,
+                                    onLongPress = { tick(); menu = HomeMenu.ForTile(tile) },
+                                    onNeedCity = { prompt = HomePrompt.WeatherCity(it) }
+                                )
+                            }
+                        }
                     }
                 }
                 state.grid?.let { grid ->
@@ -273,9 +298,18 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
 
         // ---- menus ----------------------------------------------------------------------
         val homeItems = buildList {
-            add(MenuItem(stringResource(R.string.menu_add_app)) { addAppsFlow() })
-            if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
-            add(MenuItem(stringResource(R.string.menu_add_widget)) { nav.push(Screen.WidgetPicker) })
+            if (roomForRow) {
+                add(MenuItem(stringResource(R.string.menu_add_app)) { addAppsFlow() })
+                if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
+                add(MenuItem(stringResource(R.string.menu_add_widget)) { nav.push(Screen.WidgetPicker) })
+            } else {
+                add(MenuItem(stringResource(R.string.hint_full)) { })
+                if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
+            }
+            // Reachable from every tile's menu too, since a full page leaves no empty space to double-tap.
+            add(MenuItem(if (colors.isDark) stringResource(R.string.theme_light) else stringResource(R.string.theme_dark)) {
+                app.prefs.toggleTheme(systemDark)
+            })
             add(MenuItem(stringResource(R.string.menu_settings)) { nav.push(Screen.Settings) })
         }
         when (val m = menu) {

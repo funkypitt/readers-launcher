@@ -130,4 +130,5 @@
     <string name="reader_menu_open">abrir outro livro</string>
     <string name="reader_menu_remove">remover deste lado</string>
     <string name="reader_menu_home">início</string>
+    <string name="hint_full">o ecrã inicial está cheio</string>
 </resources>

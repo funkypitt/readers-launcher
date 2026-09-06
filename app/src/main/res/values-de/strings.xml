@@ -130,4 +130,5 @@
     <string name="reader_menu_open">anderes Buch öffnen</string>
     <string name="reader_menu_remove">von dieser Seite entfernen</string>
     <string name="reader_menu_home">Start</string>
+    <string name="hint_full">der Startbildschirm ist voll</string>
 </resources>

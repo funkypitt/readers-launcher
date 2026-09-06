@@ -130,4 +130,5 @@
     <string name="reader_menu_open">ouvrir un autre livre</string>
     <string name="reader_menu_remove">retirer de ce côté</string>
     <string name="reader_menu_home">accueil</string>
+    <string name="hint_full">l\'écran d\'accueil est plein</string>
 </resources>

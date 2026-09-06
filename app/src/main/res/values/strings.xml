@@ -152,4 +152,5 @@
     <string name="reader_menu_open">open another book</string>
     <string name="reader_menu_remove">remove from this side</string>
     <string name="reader_menu_home">home</string>
+    <string name="hint_full">the home screen is full</string>
 </resources>
