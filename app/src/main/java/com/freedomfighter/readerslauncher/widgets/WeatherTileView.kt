@@ -5,7 +5,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +38,7 @@ import com.freedomfighter.readerslauncher.ui.Small
 import com.freedomfighter.readerslauncher.ui.T
 import com.freedomfighter.readerslauncher.ui.rowPadH
 import com.freedomfighter.readerslauncher.ui.rowPadV
+import com.freedomfighter.readerslauncher.ui.widgetTallHeight
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -76,6 +79,7 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
     Column(
         Modifier
             .fillMaxWidth()
+            .height(widgetTallHeight())
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -88,7 +92,8 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
                 },
                 onLongClick = onLongPress
             )
-            .padding(horizontal = rowPadH, vertical = rowPadV)
+            .padding(horizontal = rowPadH, vertical = rowPadV),
+        verticalArrangement = Arrangement.Center
     ) {
         when (val s = state) {
             WeatherState.Loading -> Row(verticalAlignment = Alignment.CenterVertically) {
@@ -125,22 +130,16 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
                         }
                     }
                 } else {
-                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        T(timeString(now), size = typo.tile * 1.4f, lineHeightMul = 1.05f, align = TextAlign.Start)
-                        Spacer(Modifier.width(14.dp))
-                        Small(placeLabel.lowercase(), maxLines = 1, align = TextAlign.Start)
-                    }
-                    Spacer(Modifier.padding(4.dp))
+                    // Five days: day, glyph, max/min — nothing else, so the tile keeps its height.
                     val dayFmt = remember { SimpleDateFormat("EEE", Locale.getDefault()) }
                     val parse = remember { SimpleDateFormat("yyyy-MM-dd", Locale.US) }
-                    Row(Modifier.fillMaxWidth()) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         f.days.take(5).forEach { d ->
                             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                                 val label = runCatching { dayFmt.format(parse.parse(d.date)!!) }.getOrDefault("").lowercase().trimEnd('.')
                                 Small(label, align = TextAlign.Center, maxLines = 1, color = colors.fg)
-                                WxIcon(d.code, 30.dp)
-                                Small(temp(d.max, tile.fahrenheit), align = TextAlign.Center, maxLines = 1, color = colors.fg)
-                                Small(temp(d.min, tile.fahrenheit), align = TextAlign.Center, maxLines = 1)
+                                WxIcon(d.code, 32.dp)
+                                Small(temp(d.max, tile.fahrenheit) + "/" + temp(d.min, tile.fahrenheit), align = TextAlign.Center, maxLines = 1)
                             }
                         }
                     }

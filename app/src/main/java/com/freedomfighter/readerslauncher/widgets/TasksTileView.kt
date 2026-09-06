@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -54,6 +55,7 @@ import com.freedomfighter.readerslauncher.ui.noRippleClickable
 import com.freedomfighter.readerslauncher.ui.rememberTick
 import com.freedomfighter.readerslauncher.ui.rowPadH
 import com.freedomfighter.readerslauncher.ui.rowPadV
+import com.freedomfighter.readerslauncher.ui.widgetTwoLineHeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -106,6 +108,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
     Row(
         Modifier
             .fillMaxWidth()
+            .height(widgetTwoLineHeight())
             // Swipe left → next task, right → previous, exactly like the agenda tile. The drag is
             // consumed here, so the home screen does not read it as a book-slot swipe.
             .pointerInput(list.size) {
@@ -146,7 +149,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
                 }, align = TextAlign.Start)
                 Box(Modifier.width(16.dp))
                 Column(Modifier.weight(1f)) {
-                    T(first.title.ifBlank { "…" }, maxLines = 2)
+                    T(first.title.ifBlank { "…" }, maxLines = 1)
                     Small(tile.listTitle.lowercase() + (if (list.size > 1) "   ${index + 1}/${list.size}" else ""), maxLines = 1)
                 }
             }

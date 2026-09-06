@@ -3,7 +3,9 @@ package com.freedomfighter.readerslauncher.widgets
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -17,6 +19,7 @@ import com.freedomfighter.readerslauncher.ui.Small
 import com.freedomfighter.readerslauncher.ui.T
 import com.freedomfighter.readerslauncher.ui.rowPadH
 import com.freedomfighter.readerslauncher.ui.rowPadV
+import com.freedomfighter.readerslauncher.ui.widgetTallHeight
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -56,6 +59,7 @@ fun ClockTileView(onLongPress: () -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
+            .height(widgetTallHeight())
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -64,9 +68,10 @@ fun ClockTileView(onLongPress: () -> Unit) {
                 },
                 onLongClick = onLongPress
             )
-            .padding(horizontal = rowPadH, vertical = rowPadV)
+            .padding(horizontal = rowPadH, vertical = rowPadV),
+        verticalArrangement = Arrangement.Center
     ) {
-        T(timeString(now), size = LocalTypo.current.big, lineHeightMul = 1.05f)
+        T(timeString(now), size = LocalTypo.current.big, lineHeightMul = 1.05f, maxLines = 1)
         Small(date.lowercase(), maxLines = 1)
     }
 }

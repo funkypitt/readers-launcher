@@ -12,7 +12,8 @@ No icons, no colours, no wallpaper: a single column of words.
   **widget**. Once the page is full, the menu says so instead of offering to add more.
   A special **grid** of 3 to 5 squares is pinned at the bottom for the unavoidable apps
   (phone, messages…); their icons are rendered as monochrome glyphs in the current theme.
-* Built-in widgets: **clock**, **weather** (Open-Meteo, no key; tap for five days),
+* Built-in widgets, all of a fixed height so nothing on the page ever shifts: **clock**,
+  **weather** (Open-Meteo, no key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
   first task, swipe for the following ones, ☐ to complete, + to add). Any standard app
   widget can be added too.

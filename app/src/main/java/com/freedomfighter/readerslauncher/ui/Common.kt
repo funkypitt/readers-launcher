@@ -37,6 +37,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -302,6 +303,24 @@ fun ReaderTextField(
 
 @Composable
 fun VSpace(h: Dp) = Spacer(Modifier.height(h))
+
+/**
+ * Built-in widgets have a rigid height derived from the text size, never from their content,
+ * so that swiping to another event or switching the weather to five days moves nothing else
+ * on the home screen. Two flavours: a two-line text widget, and the tall clock/weather one.
+ */
+@Composable
+fun widgetTwoLineHeight(): Dp {
+    val t = LocalTypo.current
+    return with(LocalDensity.current) { (t.tile * 1.3f).toDp() + (t.small * 1.35f).toDp() } + rowPadV * 2
+}
+
+@Composable
+fun widgetTallHeight(): Dp {
+    val t = LocalTypo.current
+    // The big line's glyphs need more than their nominal line height; give both lines slack.
+    return with(LocalDensity.current) { (t.big * 1.2f).toDp() + (t.small * 1.4f).toDp() } + rowPadV * 2
+}
 
 /** One haptic tick, if enabled. */
 @Composable

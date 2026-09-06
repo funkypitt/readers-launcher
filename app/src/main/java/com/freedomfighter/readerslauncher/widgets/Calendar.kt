@@ -13,7 +13,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +51,7 @@ import com.freedomfighter.readerslauncher.ui.TextRow
 import com.freedomfighter.readerslauncher.ui.rememberTick
 import com.freedomfighter.readerslauncher.ui.rowPadH
 import com.freedomfighter.readerslauncher.ui.rowPadV
+import com.freedomfighter.readerslauncher.ui.widgetTwoLineHeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -169,6 +172,7 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
+            .height(widgetTwoLineHeight())
             .pointerInput(events.size) {
                 var total = 0f
                 detectHorizontalDragGestures(
@@ -194,15 +198,16 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit) {
                 },
                 onLongClick = onLongPress
             )
-            .padding(horizontal = rowPadH, vertical = rowPadV)
+            .padding(horizontal = rowPadH, vertical = rowPadV),
+        verticalArrangement = Arrangement.Center
     ) {
         when {
-            !permitted -> T(stringResource(R.string.calendar_permission), size = typo.title, color = colors.dim)
-            e == null -> T(stringResource(R.string.calendar_none), size = typo.title, color = colors.dim)
+            !permitted -> T(stringResource(R.string.calendar_permission), size = typo.title, color = colors.dim, maxLines = 2)
+            e == null -> T(stringResource(R.string.calendar_none), size = typo.title, color = colors.dim, maxLines = 2)
             else -> {
-                T(e.title, maxLines = 2)
+                // Exactly two lines: the title, then when. The location would make the tile grow.
+                T(e.title, maxLines = 1)
                 Small(whenString(e, now) + (if (events.size > 1) "   ${index + 1}/${events.size}" else ""), maxLines = 1)
-                if (!e.location.isNullOrBlank()) Small(e.location, maxLines = 1)
             }
         }
     }
