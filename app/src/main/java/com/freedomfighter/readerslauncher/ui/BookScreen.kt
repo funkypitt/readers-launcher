@@ -229,6 +229,11 @@ private fun Reader(app: App, slotIndex: Int, slot: BookSlot, swipeBack: Modifier
         return
     }
 
+    // Keep the screen on while a page is open: a slow reader must never be locked out mid-page.
+    // Released when leaving the book, and after 15 minutes without a page turn.
+    var lastTurn by remember { mutableStateOf(System.currentTimeMillis()) }
+    KeepScreenOn(lastTurn)
+
     var chapter by remember(slot.fileName) { mutableStateOf(slot.chapter.coerceIn(0, b.chapters.size - 1)) }
     // The character we want at the top of the page; re-resolved whenever the layout changes.
     var wantedChar by remember(slot.fileName) { mutableStateOf(slot.charOffset) }
@@ -278,10 +283,12 @@ private fun Reader(app: App, slotIndex: Int, slot: BookSlot, swipeBack: Modifier
 
         fun goTo(c: Int, charOffset: Int) { chapter = c; wantedChar = charOffset }
         fun next() {
+            lastTurn = System.currentTimeMillis()
             if (page + 1 < layout.pageCount) { page++; wantedChar = layout.pageStartChar(page) }
             else if (chapter + 1 < b.chapters.size) goTo(chapter + 1, 0)
         }
         fun prev() {
+            lastTurn = System.currentTimeMillis()
             if (page > 0) { page--; wantedChar = layout.pageStartChar(page) }
             else if (chapter > 0) goTo(chapter - 1, Int.MAX_VALUE)
         }
@@ -350,6 +357,21 @@ private fun WindowInsets.asPaddingValuesTop(): androidx.compose.ui.unit.Dp =
 @Composable
 private fun WindowInsets.asPaddingValuesBottom(): androidx.compose.ui.unit.Dp =
     with(LocalDensity.current) { getBottom(this).toDp() }
+
+@Composable
+private fun KeepScreenOn(lastTurn: Long) {
+    val view = androidx.compose.ui.platform.LocalView.current
+    val window = (view.context.findActivity())?.window
+    androidx.compose.runtime.DisposableEffect(window) {
+        window?.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        onDispose { window?.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+    }
+    LaunchedEffect(lastTurn, window) {
+        window?.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        kotlinx.coroutines.delay(15 * 60_000L)
+        window?.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+}
 
 /** Table of contents: tap a chapter to jump there. */
 @Composable

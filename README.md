@@ -19,6 +19,7 @@ No icons, no colours, no wallpaper: a single column of words.
 * Two **books** live beside the home screen: swipe right for the left one, left for the
   right one. A very plain reader — tap the right half of the page to go forward, the left
   half to go back, long press for chapters and text size — and it reopens where you stopped.
+  The screen stays on while a page is open (released after 15 minutes without a page turn).
   EPUB, MOBI (PalmDoc), FB2 and plain text; no PDF.
 * English by default; French, German, Spanish, Portuguese and Russian follow the device
   language.
