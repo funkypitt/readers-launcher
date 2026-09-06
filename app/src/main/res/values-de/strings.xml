@@ -58,7 +58,7 @@
     <string name="widget_tasks">Aufgaben</string>
     <string name="widget_calendar_desc">nächster Termin, wischen für die folgenden</string>
     <string name="widget_weather_desc">Uhrzeit und Wetter heute, antippen für fünf Tage</string>
-    <string name="widget_tasks_desc">erste Aufgabe einer Tasks.org-Liste</string>
+    <string name="widget_tasks_desc">erste Aufgabe einer Tasks.org-Liste, wischen für die folgenden</string>
     <string name="widget_clock_desc">Uhrzeit und Datum</string>
     <string name="widget_bind_failed">dieses Widget konnte nicht hinzugefügt werden</string>
     <string name="widget_not_installed">die App des Widgets wurde entfernt</string>

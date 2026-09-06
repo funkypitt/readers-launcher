@@ -58,7 +58,7 @@
     <string name="widget_tasks">tarefas</string>
     <string name="widget_calendar_desc">próximo evento, deslize para os seguintes</string>
     <string name="widget_weather_desc">hora e tempo de hoje, toque para cinco dias</string>
-    <string name="widget_tasks_desc">primeira tarefa de uma lista do Tasks.org</string>
+    <string name="widget_tasks_desc">primeira tarefa de uma lista do Tasks.org, deslize para as seguintes</string>
     <string name="widget_clock_desc">hora e data</string>
     <string name="widget_bind_failed">não foi possível adicionar este widget</string>
     <string name="widget_not_installed">a app do widget foi removida</string>

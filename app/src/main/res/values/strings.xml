@@ -99,7 +99,7 @@
     <string name="tasks_choose_list_legacy">choose a list. This version of Tasks.org is read-only from outside: the box opens the task and + opens the editor. Tasks.org 15.11 or later completes and adds directly.</string>
     <string name="tasks_no_lists">no list found — create one in Tasks.org first</string>
     <string name="tasks_loading">…</string>
-    <string name="widget_tasks_desc">first task of a Tasks.org list</string>
+    <string name="widget_tasks_desc">first task of a Tasks.org list, swipe for the following ones</string>
 
     <!-- settings -->
     <string name="settings_title">settings</string>

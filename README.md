@@ -12,10 +12,11 @@ No icons, no colours, no wallpaper: a single column of words.
   monochrome glyphs in the current theme.
 * Built-in widgets: **clock**, **weather** (Open-Meteo, no key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
-  first task, ☐ to complete, + to add). Any standard app widget can be added too.
+  first task, swipe for the following ones, ☐ to complete, + to add). Any standard app
+  widget can be added too.
 * Two **books** live beside the home screen: swipe right for the left one, left for the
   right one. A very plain reader — tap the right half of the page to go forward, the left
-  half to go back, long press for chapters and text size — that reopens where you stopped.
+  half to go back, long press for chapters and text size — and it reopens where you stopped.
   EPUB, MOBI (PalmDoc), FB2 and plain text; no PDF.
 * English by default; French, German, Spanish, Portuguese and Russian follow the device
   language.
@@ -34,6 +35,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe down | notification shade |
 | swipe right / left | the book on that side (long press in the reader for its menu) |
 | swipe left / right on the agenda tile | next / previous upcoming event |
+| swipe left / right on the tasks tile | next / previous open task |
 | tap the weather tile | one day ↔ five days |
 | long press a grid square | choose / change / clear the app, number of squares |
 
@@ -52,8 +54,9 @@ open-source task app. Tasks.org keeps lists on the phone or syncs them with CalD
 (Nextcloud, iCloud…), Google Tasks, Microsoft To Do or EteSync — so any backend works, and
 the launcher never talks to a server itself.
 
-Setup is two taps: *add widget → tasks* asks for Tasks.org's read/write permission, then
-lists your lists. Pick one.
+Setup takes two taps: *add widget → tasks* asks for Tasks.org's read/write permission,
+then lists your lists. Pick one. The tile shows the first open task; swipe left or right
+to step through the others.
 
 * With Tasks.org **15.11 or later** (its public content-provider API), ☐ completes the task
   in place and + adds one directly.
@@ -80,7 +83,7 @@ plain text.
 ```
 
 Kotlin, Jetpack Compose (foundation only, no Material), kotlinx-serialization for the
-single `home.json` state file. No other dependency. minSdk 26, targetSdk 34.
+single `home.json` state file. No other dependencies. minSdk 26, targetSdk 34.
 
 Export / import of the whole configuration is available in settings (a JSON file).
 

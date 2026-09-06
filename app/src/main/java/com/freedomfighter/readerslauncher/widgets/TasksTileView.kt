@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,12 +25,14 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -54,6 +57,7 @@ import com.freedomfighter.readerslauncher.ui.rowPadV
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 /**
  * Tasks tile: "☐ first task   +". The box completes it, + adds one, the text opens Tasks.org.
@@ -70,6 +74,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
     val listId = tile.listId.toLongOrNull() ?: -1L
     val now = rememberNow()
     var tasks by remember(tile.id) { mutableStateOf<List<TasksOrg.Task>?>(null) }
+    var index by remember(tile.id) { mutableIntStateOf(0) }
     var error by remember { mutableStateOf(false) }
     var adding by remember { mutableStateOf(false) }
     var generation by remember { mutableIntStateOf(0) }
@@ -94,11 +99,28 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
         onDispose { runCatching { cr.unregisterContentObserver(observer) } }
     }
 
-    val first = tasks?.firstOrNull()
+    val list = tasks ?: emptyList()
+    if (index >= list.size) index = maxOf(0, list.size - 1)
+    val first = list.getOrNull(index)
     val ready = repo.ready
     Row(
         Modifier
             .fillMaxWidth()
+            // Swipe left → next task, right → previous, exactly like the agenda tile. The drag is
+            // consumed here, so the home screen does not read it as a book-slot swipe.
+            .pointerInput(list.size) {
+                var total = 0f
+                detectHorizontalDragGestures(
+                    onDragStart = { total = 0f },
+                    onDragEnd = {
+                        if (abs(total) > 60.dp.toPx()) {
+                            val next = if (total < 0) index + 1 else index - 1
+                            if (next in list.indices) { index = next; tick() }
+                        }
+                    },
+                    onHorizontalDrag = { change, delta -> total += delta; change.consume() }
+                )
+            }
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -125,7 +147,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
                 Box(Modifier.width(16.dp))
                 Column(Modifier.weight(1f)) {
                     T(first.title.ifBlank { "…" }, maxLines = 2)
-                    Small(tile.listTitle.lowercase() + (tasks?.size?.let { if (it > 1) " · $it" else "" } ?: ""), maxLines = 1)
+                    Small(tile.listTitle.lowercase() + (if (list.size > 1) "   ${index + 1}/${list.size}" else ""), maxLines = 1)
                 }
             }
         }

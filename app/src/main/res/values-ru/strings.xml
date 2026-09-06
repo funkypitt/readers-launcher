@@ -58,7 +58,7 @@
     <string name="widget_tasks">задачи</string>
     <string name="widget_calendar_desc">ближайшее событие, проведите для следующих</string>
     <string name="widget_weather_desc">время и погода на сегодня, нажмите для пяти дней</string>
-    <string name="widget_tasks_desc">первая задача из списка Tasks.org</string>
+    <string name="widget_tasks_desc">первая задача из списка Tasks.org, проведите для следующих</string>
     <string name="widget_clock_desc">время и дата</string>
     <string name="widget_bind_failed">не удалось добавить этот виджет</string>
     <string name="widget_not_installed">приложение виджета удалено</string>
