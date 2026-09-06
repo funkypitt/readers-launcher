@@ -36,7 +36,9 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
     val home by app.store.state.collectAsState()
     val tile = home.tiles.firstOrNull { it.id == tileId } as? CategoryTile
     val tick = rememberTick()
+    val settings by app.prefs.settings.collectAsState()
     var menuFor by remember { mutableStateOf<AppRef?>(null) }
+    var shortcutsFor by remember { mutableStateOf<AppRef?>(null) }
     BackHandler { nav.pop() }
     if (tile == null) { nav.pop(); return }
 
@@ -48,19 +50,13 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
             }
             LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)) {
                 itemsIndexed(tile.apps, key = { _, r -> r.key }) { _, ref ->
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = { app.apps.launch(ref); nav.home() },
-                                onLongClick = { tick(); menuFor = ref }
-                            )
-                            .padding(horizontal = rowPadH, vertical = rowPadV)
-                    ) {
-                        T(home.labelFor(app, ref), Modifier.fillMaxWidth(), maxLines = 1)
-                    }
+                    // Same gestures as an app tile on the home screen: tap, long press, double tap.
+                    TextTile(
+                        home.labelFor(app, ref),
+                        onClick = { app.apps.launch(ref); nav.home() },
+                        onLongPress = { tick(); menuFor = ref },
+                        onDoubleTap = if (settings.doubleTapShortcuts) ({ tick(); shortcutsFor = ref }) else null
+                    )
                 }
             }
         }
@@ -69,6 +65,7 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
                 title = home.labelFor(app, ref),
                 items = buildList {
                     add(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(ref); nav.home() })
+                    add(MenuItem(stringResource(R.string.menu_shortcuts)) { shortcutsFor = ref })
                     add(MenuItem(stringResource(R.string.menu_remove_from_category)) {
                         app.store.replaceTile(tile.copy(apps = tile.apps - ref))
                     })
@@ -78,6 +75,9 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
                 },
                 onDismiss = { menuFor = null }
             )
+        }
+        shortcutsFor?.let { ref ->
+            ShortcutsMenu(app, ref, home.labelFor(app, ref), onDismiss = { shortcutsFor = null })
         }
     }
 }
