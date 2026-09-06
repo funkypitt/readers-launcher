@@ -131,4 +131,7 @@
     <string name="reader_menu_remove">retirer de ce côté</string>
     <string name="reader_menu_home">accueil</string>
     <string name="hint_full">l\'écran d\'accueil est plein</string>
+    <string name="menu_shortcuts">raccourcis</string>
+    <string name="shortcuts_none">aucun raccourci</string>
+    <string name="settings_double_tap_app">double toucher sur une app montre ses raccourcis : %1$s</string>
 </resources>

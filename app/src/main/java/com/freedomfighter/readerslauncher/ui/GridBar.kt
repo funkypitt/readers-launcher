@@ -3,6 +3,8 @@ package com.freedomfighter.readerslauncher.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,23 +38,30 @@ import kotlinx.coroutines.withContext
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GridBar(grid: Grid, app: App, onLongPress: (Int) -> Unit) {
+fun GridBar(grid: Grid, app: App, onLongPress: (Int) -> Unit, onDoubleTap: ((AppRef) -> Unit)? = null) {
     val colors = LocalColors.current
     Column(Modifier.fillMaxWidth()) {
         Rule()
         Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp)) {
             for (i in 0 until grid.columns) {
                 val ref = grid.slot(i)
+                val gestures = if (onDoubleTap != null && ref != null) Modifier.pointerInput(ref, i) {
+                    detectTapGestures(
+                        onTap = { app.apps.launch(ref) },
+                        onLongPress = { onLongPress(i) },
+                        onDoubleTap = { onDoubleTap(ref) }
+                    )
+                } else Modifier.combinedClickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null,
+                    onClick = { if (ref != null) app.apps.launch(ref) else onLongPress(i) },
+                    onLongClick = { onLongPress(i) }
+                )
                 Box(
                     Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .combinedClickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = { if (ref != null) app.apps.launch(ref) else onLongPress(i) },
-                            onLongClick = { onLongPress(i) }
-                        ),
+                        .then(gestures),
                     contentAlignment = Alignment.Center
                 ) {
                     if (ref == null) {

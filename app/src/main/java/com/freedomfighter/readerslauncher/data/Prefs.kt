@@ -20,6 +20,8 @@ data class Settings(
     val showStatusBar: Boolean = true,
     val haptics: Boolean = true,
     val autoRotate: Boolean = false,
+    /** Double tap on an app tile or grid square lists its shortcuts (costs ~300 ms on a single tap). */
+    val doubleTapShortcuts: Boolean = true,
     /** Reader text size in sp; 0 = automatic from screen size. */
     val readerSp: Int = 0
 )
@@ -53,6 +55,7 @@ class Prefs(context: Context) {
         showStatusBar = sp.getBoolean(K_STATUS_BAR, true),
         haptics = sp.getBoolean(K_HAPTICS, true),
         autoRotate = sp.getBoolean(K_ROTATE, false),
+        doubleTapShortcuts = sp.getBoolean(K_DT_SHORTCUTS, true),
         readerSp = sp.getInt(K_READER_SP, 0)
     )
 
@@ -68,6 +71,7 @@ class Prefs(context: Context) {
     fun setShowStatusBar(v: Boolean) = sp.edit().putBoolean(K_STATUS_BAR, v).apply()
     fun setHaptics(v: Boolean) = sp.edit().putBoolean(K_HAPTICS, v).apply()
     fun setAutoRotate(v: Boolean) = sp.edit().putBoolean(K_ROTATE, v).apply()
+    fun setDoubleTapShortcuts(v: Boolean) = sp.edit().putBoolean(K_DT_SHORTCUTS, v).apply()
     fun setReaderSp(v: Int) = sp.edit().putInt(K_READER_SP, v).apply()
 
     /** Flip between the two monochrome palettes (SYSTEM resolves to whatever is showing now). */
@@ -95,6 +99,7 @@ class Prefs(context: Context) {
         private const val K_STATUS_BAR = "show_status_bar"
         private const val K_HAPTICS = "haptics"
         private const val K_ROTATE = "auto_rotate"
+        private const val K_DT_SHORTCUTS = "double_tap_shortcuts"
         private const val K_READER_SP = "reader_sp"
     }
 }

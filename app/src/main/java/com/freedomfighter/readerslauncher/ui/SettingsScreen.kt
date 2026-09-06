@@ -90,6 +90,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                 TextRow(stringResource(R.string.settings_status_bar, onOff(s.showStatusBar)), size = typo.title) { app.prefs.setShowStatusBar(!s.showStatusBar) }
                 TextRow(stringResource(R.string.settings_haptics, onOff(s.haptics)), size = typo.title) { app.prefs.setHaptics(!s.haptics) }
                 TextRow(stringResource(R.string.settings_rotation, onOff(s.autoRotate)), size = typo.title) { app.prefs.setAutoRotate(!s.autoRotate) }
+                TextRow(stringResource(R.string.settings_double_tap_app, onOff(s.doubleTapShortcuts)), size = typo.title) { app.prefs.setDoubleTapShortcuts(!s.doubleTapShortcuts) }
                 Rule(Modifier.padding(vertical = 8.dp))
                 TextRow(stringResource(R.string.settings_arrange), size = typo.title) { nav.push(Screen.Arrange) }
                 TextRow(stringResource(R.string.settings_hidden), size = typo.title) { nav.push(Screen.Hidden) }

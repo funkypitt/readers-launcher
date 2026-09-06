@@ -85,6 +85,7 @@ internal sealed class HomeMenu {
     data object Empty : HomeMenu()
     data class ForTile(val tile: Tile) : HomeMenu()
     data class GridSlot(val index: Int) : HomeMenu()
+    data class Shortcuts(val ref: AppRef) : HomeMenu()
 }
 
 internal sealed class HomePrompt {
@@ -271,7 +272,9 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                                     state = state,
                                     nav = nav,
                                     onLongPress = { tick(); menu = HomeMenu.ForTile(tile) },
-                                    onNeedCity = { prompt = HomePrompt.WeatherCity(it) }
+                                    onNeedCity = { prompt = HomePrompt.WeatherCity(it) },
+                                    doubleTapShortcuts = settings.doubleTapShortcuts,
+                                    onShortcuts = { tick(); menu = HomeMenu.Shortcuts(it) }
                                 )
                             }
                         }
@@ -281,7 +284,8 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                     GridBar(
                         grid = grid,
                         app = app,
-                        onLongPress = { i -> tick(); menu = HomeMenu.GridSlot(i) }
+                        onLongPress = { i -> tick(); menu = HomeMenu.GridSlot(i) },
+                        onDoubleTap = if (settings.doubleTapShortcuts) ({ ref -> tick(); menu = HomeMenu.Shortcuts(ref) }) else null
                     )
                 }
                 Box(Modifier.windowInsetsPadding(WindowInsets.navigationBars))
@@ -323,12 +327,14 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 title = tileTitle(m.tile, state, app),
                 items = tileMenuItems(
                     tile = m.tile, app = app, state = state, nav = nav, activity = activity,
-                    onPrompt = { prompt = it }
+                    onPrompt = { prompt = it },
+                    onShortcuts = { ref -> menu = HomeMenu.Shortcuts(ref) }
                 ),
                 onDismiss = { menu = null },
                 // When the column fills the screen there is no empty space left to long-press.
                 footer = homeItems
             )
+            is HomeMenu.Shortcuts -> ShortcutsMenu(app, m.ref, state.labelFor(app, m.ref), onDismiss = { menu = null })
             is HomeMenu.GridSlot -> {
                 val grid = state.grid ?: Grid()
                 val slot = grid.slot(m.index)
@@ -343,6 +349,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                             })
                         } else {
                             add(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(slot) })
+                            add(MenuItem(stringResource(R.string.menu_shortcuts)) { menu = HomeMenu.Shortcuts(slot) })
                             add(MenuItem(stringResource(R.string.menu_change_app)) {
                                 nav.push(Screen.Apps(PickMode.Single { ref ->
                                     nav.pop(); app.store.setGrid((app.store.state.value.grid ?: Grid()).withSlot(m.index, ref))
@@ -411,7 +418,8 @@ private fun tileMenuItems(
     state: HomeState,
     nav: Nav,
     activity: Activity?,
-    onPrompt: (HomePrompt) -> Unit
+    onPrompt: (HomePrompt) -> Unit,
+    onShortcuts: (AppRef) -> Unit
 ): List<MenuItem> {
     val context = LocalContext.current
     val index = state.tiles.indexOfFirst { it.id == tile.id }
@@ -427,6 +435,7 @@ private fun tileMenuItems(
     return when (tile) {
         is AppTile -> buildList {
             add(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(tile.app) })
+            add(MenuItem(stringResource(R.string.menu_shortcuts)) { onShortcuts(tile.app) })
             add(MenuItem(stringResource(R.string.menu_rename)) { onPrompt(HomePrompt.Rename(tile.app, state.labelFor(app, tile.app))) })
             addAll(moveItems)
             add(MenuItem(stringResource(R.string.menu_app_info)) { app.apps.openAppInfo(tile.app) })
@@ -473,10 +482,17 @@ private fun TileView(
     state: HomeState,
     nav: Nav,
     onLongPress: () -> Unit,
-    onNeedCity: (WeatherTile) -> Unit
+    onNeedCity: (WeatherTile) -> Unit,
+    doubleTapShortcuts: Boolean = false,
+    onShortcuts: (AppRef) -> Unit = {}
 ) {
     when (tile) {
-        is AppTile -> TextTile(state.labelFor(app, tile.app), onClick = { app.apps.launch(tile.app) }, onLongPress = onLongPress)
+        is AppTile -> TextTile(
+            state.labelFor(app, tile.app),
+            onClick = { app.apps.launch(tile.app) },
+            onLongPress = onLongPress,
+            onDoubleTap = if (doubleTapShortcuts) ({ onShortcuts(tile.app) }) else null
+        )
         is CategoryTile -> TextTile(tile.name, onClick = { nav.push(Screen.Category(tile.id)) }, onLongPress = onLongPress)
         is ClockTile -> ClockTileView(onLongPress)
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
@@ -489,16 +505,21 @@ private fun TileView(
 /** A plain word. This is what most of the home screen is made of. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TextTile(label: String, onClick: () -> Unit, onLongPress: () -> Unit) {
+fun TextTile(label: String, onClick: () -> Unit, onLongPress: () -> Unit, onDoubleTap: (() -> Unit)? = null) {
+    // With a double-tap handler the single tap waits for the double-tap window (~300 ms);
+    // without one, the plain combined click fires immediately.
+    val gestures = if (onDoubleTap != null) Modifier.pointerInput(onClick, onLongPress, onDoubleTap) {
+        detectTapGestures(onTap = { onClick() }, onLongPress = { onLongPress() }, onDoubleTap = { onDoubleTap() })
+    } else Modifier.combinedClickable(
+        interactionSource = MutableInteractionSource(),
+        indication = null,
+        onClick = onClick,
+        onLongClick = onLongPress
+    )
     Box(
         Modifier
             .fillMaxWidth()
-            .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick,
-                onLongClick = onLongPress
-            )
+            .then(gestures)
             .padding(horizontal = rowPadH, vertical = rowPadV)
     ) {
         T(label, Modifier.fillMaxWidth(), maxLines = 1)

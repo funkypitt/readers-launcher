@@ -131,4 +131,7 @@
     <string name="reader_menu_remove">remover deste lado</string>
     <string name="reader_menu_home">início</string>
     <string name="hint_full">o ecrã inicial está cheio</string>
+    <string name="menu_shortcuts">atalhos</string>
+    <string name="shortcuts_none">sem atalhos</string>
+    <string name="settings_double_tap_app">toque duplo numa app mostra os seus atalhos: %1$s</string>
 </resources>

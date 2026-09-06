@@ -59,6 +59,7 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
     var menuFor by remember { mutableStateOf<AppEntry?>(null) }
     var renameFor by remember { mutableStateOf<AppEntry?>(null) }
     var addToCategoryFor by remember { mutableStateOf<AppEntry?>(null) }
+    var shortcutsFor by remember { mutableStateOf<AppEntry?>(null) }
     val focus = remember { FocusRequester() }
 
     val hiddenKeys = remember(home.hidden) { home.hidden.map { it.key }.toSet() }
@@ -157,6 +158,7 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
                 title = label,
                 items = buildList {
                     add(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(entry.ref); nav.home() })
+                    add(MenuItem(stringResource(R.string.menu_shortcuts)) { shortcutsFor = entry })
                     if (!onHome) add(MenuItem(stringResource(R.string.menu_add_to_home)) { app.store.addTile(AppTile(app = entry.ref)) })
                     if (home.tiles.any { it is CategoryTile })
                         add(MenuItem(stringResource(R.string.menu_add_to_category)) { addToCategoryFor = entry })
@@ -177,6 +179,9 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
                 },
                 onDismiss = { menuFor = null }
             )
+        }
+        shortcutsFor?.let { entry ->
+            ShortcutsMenu(app, entry.ref, home.renames[entry.ref.key] ?: entry.label, onDismiss = { shortcutsFor = null })
         }
         renameFor?.let { entry ->
             TextPrompt(

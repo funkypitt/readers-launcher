@@ -131,4 +131,7 @@
     <string name="reader_menu_remove">убрать с этой стороны</string>
     <string name="reader_menu_home">главный экран</string>
     <string name="hint_full">главный экран заполнен</string>
+    <string name="menu_shortcuts">ярлыки действий</string>
+    <string name="shortcuts_none">нет ярлыков</string>
+    <string name="settings_double_tap_app">двойное нажатие на приложение показывает его ярлыки: %1$s</string>
 </resources>

@@ -153,4 +153,7 @@
     <string name="reader_menu_remove">remove from this side</string>
     <string name="reader_menu_home">home</string>
     <string name="hint_full">the home screen is full</string>
+    <string name="menu_shortcuts">shortcuts</string>
+    <string name="shortcuts_none">no shortcuts</string>
+    <string name="settings_double_tap_app">double tap on an app shows its shortcuts: %1$s</string>
 </resources>

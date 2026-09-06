@@ -131,4 +131,7 @@
     <string name="reader_menu_remove">von dieser Seite entfernen</string>
     <string name="reader_menu_home">Start</string>
     <string name="hint_full">der Startbildschirm ist voll</string>
+    <string name="menu_shortcuts">Verknüpfungen</string>
+    <string name="shortcuts_none">keine Verknüpfungen</string>
+    <string name="settings_double_tap_app">Doppeltippen auf eine App zeigt ihre Verknüpfungen: %1$s</string>
 </resources>

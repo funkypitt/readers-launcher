@@ -322,6 +322,23 @@ fun widgetTallHeight(): Dp {
     return with(LocalDensity.current) { (t.big * 1.2f).toDp() + (t.small * 1.4f).toDp() } + rowPadV * 2
 }
 
+/** Text menu of an app's shortcuts (static + dynamic). */
+@Composable
+fun ShortcutsMenu(app: com.freedomfighter.readerslauncher.App, ref: com.freedomfighter.readerslauncher.data.AppRef, title: String, onDismiss: () -> Unit) {
+    val shortcuts = remember(ref) { app.apps.shortcuts(ref) }
+    TextMenu(
+        title = title,
+        items = if (shortcuts.isEmpty()) listOf(MenuItem(stringResource(R.string.shortcuts_none)) { })
+        else shortcuts.map { info ->
+            MenuItem((info.shortLabel ?: info.longLabel ?: info.id).toString(), info.longLabel?.toString()?.takeIf { it != info.shortLabel?.toString() }) {
+                app.apps.startShortcut(info)
+            }
+        },
+        footer = listOf(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(ref) }),
+        onDismiss = onDismiss
+    )
+}
+
 /** One haptic tick, if enabled. */
 @Composable
 fun rememberTick(): () -> Unit {

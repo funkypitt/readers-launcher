@@ -33,6 +33,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | long press on a tile | open · edit · rename · move · arrange · remove · app info · uninstall, plus add / flip theme / settings |
 | arrange tiles | drag a row anywhere in the list, across as many rows as needed |
 | tap a tile | open the app / the category |
+| double tap an app tile or grid square | its app shortcuts (also under "shortcuts" in the long-press menus; can be turned off in settings) |
 | double tap on empty space | flip the theme |
 | swipe up | all apps, alphabetical, with search; long press an app for its options |
 | swipe up and hold | text list of recently used apps ("open apps") |

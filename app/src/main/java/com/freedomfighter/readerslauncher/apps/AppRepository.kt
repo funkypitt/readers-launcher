@@ -148,6 +148,34 @@ class AppRepository(private val context: Context) {
         }
     }
 
+    /** Static and dynamic app shortcuts. Only the default launcher may read them; else empty. */
+    fun shortcuts(ref: AppRef): List<android.content.pm.ShortcutInfo> {
+        val query = LauncherApps.ShortcutQuery()
+            .setPackage(ref.packageName)
+            .setQueryFlags(
+                LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST or
+                    LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC or
+                    LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED
+            )
+        return try {
+            (launcherApps.getShortcuts(query, userHandle(ref)) ?: emptyList())
+                .filter { it.isEnabled }
+                .sortedBy { it.rank }
+        } catch (e: Exception) {
+            Log.w(TAG, "shortcuts unavailable (not the default launcher?)", e)
+            emptyList()
+        }
+    }
+
+    fun startShortcut(info: android.content.pm.ShortcutInfo) {
+        try {
+            launcherApps.startShortcut(info, null, null)
+        } catch (e: Exception) {
+            Log.w(TAG, "shortcut failed", e)
+            Toast.makeText(context, "cannot open shortcut", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     /** Full-colour icon (cached). Used only as the base for the monochrome rendering. */
     fun icon(ref: AppRef): Drawable? {
         iconCache[ref.key]?.let { return it }

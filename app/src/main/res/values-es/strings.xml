@@ -131,4 +131,7 @@
     <string name="reader_menu_remove">quitar de este lado</string>
     <string name="reader_menu_home">inicio</string>
     <string name="hint_full">la pantalla de inicio está llena</string>
+    <string name="menu_shortcuts">accesos directos</string>
+    <string name="shortcuts_none">sin accesos directos</string>
+    <string name="settings_double_tap_app">doble toque en una app muestra sus accesos directos: %1$s</string>
 </resources>
