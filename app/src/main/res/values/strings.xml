@@ -92,7 +92,7 @@
     <string name="tasks_offline">tasks unavailable</string>
     <string name="tasks_setup_needed">set up tasks</string>
     <string name="tasks_setup_title">tasks setup</string>
-    <string name="tasks_setup_help">The tasks tile reads a list from Tasks.org, the open-source task app (F-Droid). Tasks.org keeps the list on the phone or syncs it with CalDAV, Google Tasks, Microsoft To Do or EteSync. Nothing to configure here beyond allowing access.</string>
+    <string name="tasks_setup_help">The tasks tile reads a list from Reader\'s Tasks (CalDAV: Infomaniak, Nextcloud, Tasks.org Cloud…) or from Tasks.org. Choose the app, allow access if asked, pick a list.</string>
     <string name="tasks_install">install Tasks.org</string>
     <string name="tasks_grant">allow access to tasks</string>
     <string name="tasks_choose_list">choose a list</string>
@@ -156,4 +156,7 @@
     <string name="menu_shortcuts">shortcuts</string>
     <string name="shortcuts_none">no shortcuts</string>
     <string name="settings_double_tap_app">double tap on an app shows its shortcuts: %1$s</string>
+    <string name="book_slot_left">left of the home screen</string>
+    <string name="book_slot_right">right of the home screen</string>
+    <string name="tasks_not_installed">not installed</string>
 </resources>

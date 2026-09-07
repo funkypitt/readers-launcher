@@ -134,4 +134,7 @@
     <string name="menu_shortcuts">accesos directos</string>
     <string name="shortcuts_none">sin accesos directos</string>
     <string name="settings_double_tap_app">doble toque en una app muestra sus accesos directos: %1$s</string>
+    <string name="book_slot_left">a la izquierda del inicio</string>
+    <string name="book_slot_right">a la derecha del inicio</string>
+    <string name="tasks_not_installed">no instalada</string>
 </resources>

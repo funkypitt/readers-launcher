@@ -1,6 +1,7 @@
 package com.freedomfighter.readerslauncher
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -37,6 +40,8 @@ class MainActivity : ComponentActivity() {
     private val app get() = application as App
     private val nav = Nav()
     private var widgetConfigCallback: ((Boolean) -> Unit)? = null
+    /** A book handed over by "open with" / "share", waiting for the user to pick a side. */
+    val incomingBook = androidx.compose.runtime.mutableStateOf<Uri?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         // Drop tiles whose app disappeared while we were not running.
         app.apps.apps.value.takeIf { it.isNotEmpty() }?.let { purgeMissing() }
+        takeBook(intent)
 
         setContent {
             val settings by app.prefs.settings.collectAsState()
@@ -54,6 +60,7 @@ class MainActivity : ComponentActivity() {
             ReaderTheme(settings) {
                 SystemBars(settings.showStatusBar)
                 Root(nav, app)
+                IncomingBook(this, app, nav)
             }
         }
     }
@@ -75,8 +82,20 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         // Home button: always return to the top of the home screen.
         nav.home()
+        takeBook(intent)
+    }
+
+    private fun takeBook(intent: Intent?) {
+        val uri = when (intent?.action) {
+            Intent.ACTION_VIEW -> intent.data
+            Intent.ACTION_SEND -> @Suppress("DEPRECATION") (intent.getParcelableExtra(Intent.EXTRA_STREAM) as? Uri)
+            else -> null
+        } ?: return
+        incomingBook.value = uri
+        intent?.action = null
     }
 
     /** Launch a widget's configuration activity; [onDone] receives whether it succeeded. */
@@ -117,6 +136,34 @@ private fun SystemBars(show: Boolean) {
         c.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         if (show) c.show(WindowInsetsCompat.Type.statusBars()) else c.hide(WindowInsetsCompat.Type.statusBars())
     }
+}
+
+/** "open with" a book: ask which side, import, open it. */
+@Composable
+private fun IncomingBook(activity: MainActivity, app: App, nav: Nav) {
+    val uri = activity.incomingBook.value ?: return
+    val context = androidx.compose.ui.platform.LocalContext.current
+    fun into(slot: Int) {
+        activity.incomingBook.value = null
+        // Clearing the uri removes this composable, so the work runs in the activity's scope,
+        // not in a composition scope that would be cancelled with it.
+        activity.lifecycleScope.launch {
+            val r = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { app.books.importInto(slot, uri) }
+            if (r.isSuccess) { nav.home(); nav.push(Screen.Book(slot)) }
+            else {
+                android.util.Log.w("IncomingBook", "import failed", r.exceptionOrNull())
+                android.widget.Toast.makeText(context, R.string.reader_unsupported, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    com.freedomfighter.readerslauncher.ui.TextMenu(
+        title = androidx.compose.ui.res.stringResource(R.string.reader_open_book),
+        items = listOf(
+            com.freedomfighter.readerslauncher.ui.MenuItem(androidx.compose.ui.res.stringResource(R.string.book_slot_left)) { into(0) },
+            com.freedomfighter.readerslauncher.ui.MenuItem(androidx.compose.ui.res.stringResource(R.string.book_slot_right)) { into(1) }
+        ),
+        onDismiss = { activity.incomingBook.value = null }
+    )
 }
 
 @Composable

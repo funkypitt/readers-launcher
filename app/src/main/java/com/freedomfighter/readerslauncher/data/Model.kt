@@ -62,7 +62,9 @@ data class CalendarTile(
 data class TasksTile(
     override val id: String = newId(),
     val listId: String,
-    val listTitle: String
+    val listTitle: String,
+    /** "tasksorg" (default, older tiles) or "readers". */
+    val source: String = "tasksorg"
 ) : Tile()
 
 @Serializable

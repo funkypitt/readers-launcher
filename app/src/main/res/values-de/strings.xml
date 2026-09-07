@@ -134,4 +134,7 @@
     <string name="menu_shortcuts">Verknüpfungen</string>
     <string name="shortcuts_none">keine Verknüpfungen</string>
     <string name="settings_double_tap_app">Doppeltippen auf eine App zeigt ihre Verknüpfungen: %1$s</string>
+    <string name="book_slot_left">links vom Startbildschirm</string>
+    <string name="book_slot_right">rechts vom Startbildschirm</string>
+    <string name="tasks_not_installed">nicht installiert</string>
 </resources>

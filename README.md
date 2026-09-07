@@ -54,14 +54,16 @@ last use. This needs the "usage access" special permission (settings → usage a
 
 ## Tasks widget
 
-The tasks tile reads a list from [Tasks.org](https://f-droid.org/packages/org.tasks/), the
-open-source task app. Tasks.org keeps lists on the phone or syncs them with CalDAV
-(Nextcloud, iCloud…), Google Tasks, Microsoft To Do or EteSync — so any backend works, and
-the launcher never talks to a server itself.
+The tasks tile reads a list from one of two apps, chosen in its setup:
 
-Setup takes two taps: *add widget → tasks* asks for Tasks.org's read/write permission,
-then lists your lists. Pick one. The tile shows the first open task; swipe left or right
-to step through the others.
+* [Reader's Tasks](https://github.com/funkypitt/readers-tasks-android), the companion
+  CalDAV client in the same black-and-white style (Infomaniak, Nextcloud, Tasks.org
+  Cloud…). No permission prompt: both apps are signed with the same key.
+* [Tasks.org](https://f-droid.org/packages/org.tasks/), which also syncs with Google
+  Tasks, Microsoft To Do or EteSync.
+
+The launcher never talks to a server itself. The tile shows the first open task; swipe
+left or right to step through the others, ☐ completes, + adds.
 
 * With Tasks.org **15.11 or later** (its public content-provider API), ☐ completes the task
   in place and + adds one directly.
@@ -74,6 +76,8 @@ added, completed or synced.
 ## Books
 
 Two slots, left and right of the home screen, each remembering its own book and position.
+Any ebook opened from a file manager or shared to the launcher ("open with") asks which
+side to put it on.
 Opening a book copies it into the launcher's private storage, so it keeps working after the
 original file moves. Text only: images, footnote links and styling are dropped, chapters are
 paginated to the screen, and the reading size defaults to a value derived from the screen

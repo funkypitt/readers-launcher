@@ -77,7 +77,7 @@
     <string name="tasks_offline">tâches indisponibles</string>
     <string name="tasks_setup_needed">configurer les tâches</string>
     <string name="tasks_setup_title">configuration des tâches</string>
-    <string name="tasks_setup_help">La tuile tâches lit une liste de Tasks.org, l\'app de tâches open source (F-Droid). Tasks.org garde la liste sur le téléphone ou la synchronise avec CalDAV, Google Tasks, Microsoft To Do ou EteSync. Rien à configurer ici, à part autoriser l\'accès.</string>
+    <string name="tasks_setup_help">La tuile tâches lit une liste de Reader\'s Tasks (CalDAV : Infomaniak, Nextcloud, Tasks.org Cloud…) ou de Tasks.org. Choisissez l\'app, autorisez l\'accès si demandé, puis une liste.</string>
     <string name="tasks_install">installer Tasks.org</string>
     <string name="tasks_grant">autoriser l\'accès aux tâches</string>
     <string name="tasks_choose_list">choisir une liste</string>
@@ -134,4 +134,7 @@
     <string name="menu_shortcuts">raccourcis</string>
     <string name="shortcuts_none">aucun raccourci</string>
     <string name="settings_double_tap_app">double toucher sur une app montre ses raccourcis : %1$s</string>
+    <string name="book_slot_left">à gauche de l\'accueil</string>
+    <string name="book_slot_right">à droite de l\'accueil</string>
+    <string name="tasks_not_installed">non installée</string>
 </resources>

@@ -134,4 +134,7 @@
     <string name="menu_shortcuts">ярлыки действий</string>
     <string name="shortcuts_none">нет ярлыков</string>
     <string name="settings_double_tap_app">двойное нажатие на приложение показывает его ярлыки: %1$s</string>
+    <string name="book_slot_left">слева от главного экрана</string>
+    <string name="book_slot_right">справа от главного экрана</string>
+    <string name="tasks_not_installed">не установлено</string>
 </resources>

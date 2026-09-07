@@ -134,4 +134,7 @@
     <string name="menu_shortcuts">atalhos</string>
     <string name="shortcuts_none">sem atalhos</string>
     <string name="settings_double_tap_app">toque duplo numa app mostra os seus atalhos: %1$s</string>
+    <string name="book_slot_left">à esquerda do início</string>
+    <string name="book_slot_right">à direita do início</string>
+    <string name="tasks_not_installed">não instalada</string>
 </resources>

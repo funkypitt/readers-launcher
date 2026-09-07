@@ -72,10 +72,10 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
     val typo = LocalTypo.current
     val tick = rememberTick()
     val scope = rememberCoroutineScope()
-    val repo = remember { TasksOrg.get(context) }
-    val listId = tile.listId.toLongOrNull() ?: -1L
+    val repo = remember(tile.source) { TaskSource.of(context, tile.source) }
+    val listId = tile.listId
     val now = rememberNow()
-    var tasks by remember(tile.id) { mutableStateOf<List<TasksOrg.Task>?>(null) }
+    var tasks by remember(tile.id) { mutableStateOf<List<TaskSource.Task>?>(null) }
     var index by remember(tile.id) { mutableIntStateOf(0) }
     var error by remember { mutableStateOf(false) }
     var adding by remember { mutableStateOf(false) }
@@ -96,8 +96,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
             override fun onChange(selfChange: Boolean) { generation++ }
         }
         val cr = context.contentResolver
-        runCatching { cr.registerContentObserver(TasksOrg.API_TASKS_URI, true, observer) }
-        runCatching { cr.registerContentObserver(TasksOrg.LEGACY_URI, true, observer) }
+        repo.observedUris.forEach { uri -> runCatching { cr.registerContentObserver(uri, true, observer) } }
         onDispose { runCatching { cr.unregisterContentObserver(observer) } }
     }
 
@@ -143,8 +142,8 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
                     tick()
                     val t = first
                     scope.launch {
-                        val done = withContext(Dispatchers.IO) { repo.complete(t.id) }
-                        if (done) { tasks = tasks?.filterNot { it.id == t.id }; reload() } else repo.openTask(t.id)
+                        val done = withContext(Dispatchers.IO) { repo.complete(listId, t) }
+                        if (done) { tasks = tasks?.filterNot { it.id == t.id }; reload() } else repo.openTask(listId, t)
                     }
                 }, align = TextAlign.Start)
                 Box(Modifier.width(16.dp))
@@ -174,37 +173,39 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
 }
 
 /**
- * Setup: Tasks.org installed? → permissions → choose a list.
+ * Setup: which task app (Reader's Tasks or Tasks.org), then its lists.
  * Creates a tile when [tileId] is null, otherwise re-targets the existing tile.
  */
 @Composable
 fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val repo = remember { TasksOrg.get(context) }
     val typo = LocalTypo.current
     val colors = LocalColors.current
-    var installed by remember { mutableStateOf(repo.isInstalled) }
-    var granted by remember { mutableStateOf(repo.hasPermissions) }
-    var lists by remember { mutableStateOf<List<TasksOrg.TaskList>?>(null) }
+    val sources = remember { TaskSource.all(context) }
+    val existing = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? TasksTile }
+    var chosen by remember { mutableStateOf<TaskSource?>(existing?.let { e -> sources.firstOrNull { it.id == e.source } }
+        ?: sources.filter { it.isInstalled }.singleOrNull()) }
+    var installed by remember { mutableStateOf(sources.map { it.id to it.isInstalled }) }
+    var granted by remember { mutableStateOf(chosen?.ready ?: false) }
+    var lists by remember { mutableStateOf<List<TaskSource.TaskList>?>(null) }
     var error by remember { mutableStateOf(false) }
     BackHandler { nav.pop() }
 
-    val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        granted = repo.hasPermissions
-    }
+    val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted = chosen?.ready ?: false }
     val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val obs = androidx.lifecycle.LifecycleEventObserver { _, e ->
-            if (e == androidx.lifecycle.Lifecycle.Event.ON_RESUME) { installed = repo.isInstalled; granted = repo.hasPermissions }
+            if (e == androidx.lifecycle.Lifecycle.Event.ON_RESUME) { installed = sources.map { it.id to it.isInstalled }; granted = chosen?.ready ?: false }
         }
         lifecycleOwner.lifecycle.addObserver(obs)
         onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
     }
-    LaunchedEffect(installed, granted) {
-        if (installed && !granted) permLauncher.launch(TasksOrg.PERMISSIONS)
-        if (installed && granted) {
-            val r = withContext(Dispatchers.IO) { runCatching { repo.lists() } }
+    LaunchedEffect(chosen, granted) {
+        val src = chosen ?: return@LaunchedEffect
+        lists = null
+        if (src.isInstalled && !src.ready && src.permissions.isNotEmpty()) permLauncher.launch(src.permissions)
+        if (src.ready) {
+            val r = withContext(Dispatchers.IO) { runCatching { src.lists() } }
             r.onSuccess { lists = it; error = false }.onFailure { error = true }
         }
     }
@@ -217,17 +218,31 @@ fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
                     Small(stringResource(R.string.tasks_setup_help), Modifier.padding(horizontal = rowPadH, vertical = 12.dp), maxLines = 8)
                     Rule()
                 }
-                when {
-                    !installed -> item {
-                        TextRow(stringResource(R.string.tasks_install), secondary = "F-Droid · org.tasks", size = typo.title) { repo.openStore() }
+                // Source choice: one line per app, the chosen one inverted.
+                items(sources, key = { it.id }) { src ->
+                    val isInstalled = installed.firstOrNull { it.first == src.id }?.second ?: false
+                    TextRow(
+                        src.label,
+                        inverted = src == chosen,
+                        secondary = if (isInstalled) null else stringResource(R.string.tasks_not_installed),
+                        size = typo.title
+                    ) {
+                        if (isInstalled) { chosen = src; granted = src.ready }
+                        else if (src is TasksOrgSource) src.openStore()
+                        else runCatching { context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/funkypitt/readers-tasks-android")).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) }
                     }
-                    !granted -> item {
-                        TextRow(stringResource(R.string.tasks_grant), size = typo.title) { permLauncher.launch(TasksOrg.PERMISSIONS) }
+                }
+                item { Rule(Modifier.padding(top = 8.dp)) }
+                val src = chosen
+                when {
+                    src == null -> Unit
+                    !src.ready -> item {
+                        TextRow(stringResource(R.string.tasks_grant), size = typo.title) { if (src.permissions.isNotEmpty()) permLauncher.launch(src.permissions) else src.openApp() }
                     }
                     else -> {
                         item {
                             Small(
-                                if (repo.apiAvailable) stringResource(R.string.tasks_choose_list) else stringResource(R.string.tasks_choose_list_legacy),
+                                if (src is TasksOrgSource && !src.apiAvailable) stringResource(R.string.tasks_choose_list_legacy) else stringResource(R.string.tasks_choose_list),
                                 Modifier.padding(horizontal = rowPadH, vertical = 10.dp), maxLines = 4
                             )
                             if (error) Small(stringResource(R.string.tasks_offline), Modifier.padding(horizontal = rowPadH, vertical = 6.dp), color = colors.dim)
@@ -235,9 +250,9 @@ fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
                         }
                         items(lists ?: emptyList(), key = { it.id }) { l ->
                             TextRow(l.title, secondary = l.account.ifBlank { null }) {
-                                val existing = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? TasksTile }
-                                if (existing != null) app.store.replaceTile(existing.copy(listId = l.id.toString(), listTitle = l.title))
-                                else app.store.addTile(TasksTile(listId = l.id.toString(), listTitle = l.title))
+                                val current = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? TasksTile }
+                                if (current != null) app.store.replaceTile(current.copy(listId = l.id, listTitle = l.title, source = src.id))
+                                else app.store.addTile(TasksTile(listId = l.id, listTitle = l.title, source = src.id))
                                 nav.pop()
                             }
                         }
@@ -246,5 +261,4 @@ fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
             }
         }
     }
-    @Suppress("UNUSED_VARIABLE") val unused = scope
 }
