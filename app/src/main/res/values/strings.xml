@@ -164,4 +164,6 @@
     <string name="open_in_littre">open in Le Littré</string>
     <string name="agenda_open">open the agenda</string>
     <string name="menu_source">source: %1$s</string>
+    <string name="calendar_opens_with">opens with</string>
+    <string name="calendar_app_default">whatever the system picks</string>
 </resources>

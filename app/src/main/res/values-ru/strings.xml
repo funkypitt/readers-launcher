@@ -142,4 +142,6 @@
     <string name="open_in_littre">открыть в Le Littré</string>
     <string name="agenda_open">открыть календарь</string>
     <string name="menu_source">источник: %1$s</string>
+    <string name="calendar_opens_with">открывать в</string>
+    <string name="calendar_app_default">по выбору системы</string>
 </resources>

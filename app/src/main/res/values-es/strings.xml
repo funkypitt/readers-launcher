@@ -142,4 +142,6 @@
     <string name="open_in_littre">abrir en Le Littré</string>
     <string name="agenda_open">abrir la agenda</string>
     <string name="menu_source">fuente: %1$s</string>
+    <string name="calendar_opens_with">se abre con</string>
+    <string name="calendar_app_default">lo que elija el sistema</string>
 </resources>

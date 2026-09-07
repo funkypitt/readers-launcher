@@ -142,4 +142,6 @@
     <string name="open_in_littre">in Le Littré öffnen</string>
     <string name="agenda_open">Kalender öffnen</string>
     <string name="menu_source">Quelle: %1$s</string>
+    <string name="calendar_opens_with">öffnet mit</string>
+    <string name="calendar_app_default">Systemauswahl</string>
 </resources>

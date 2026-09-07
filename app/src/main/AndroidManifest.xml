@@ -34,6 +34,7 @@
         <package android:name="org.tasks" />
         <package android:name="com.freedomfighter.readerstasks" />
         <package android:name="ch.littre.littre_app" />
+        <package android:name="com.freedomfighter.readerscalendar" />
         <provider android:authorities="ch.littre.littre_app.wotd" />
         <provider android:authorities="com.freedomfighter.readerstasks" />
         <provider android:authorities="org.tasks.api" />
@@ -44,6 +45,10 @@
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="content" android:host="com.android.calendar" android:pathPrefix="/time" />
         </intent>
     </queries>
 

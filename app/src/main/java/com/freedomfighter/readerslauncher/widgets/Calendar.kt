@@ -114,19 +114,44 @@ object CalendarSource {
         return out
     }
 
-    fun open(context: Context, e: EventInfo) {
+    const val READERS_CALENDAR = "com.freedomfighter.readerscalendar"
+
+    private fun timeIntent(): Intent {
+        val builder = CalendarContract.CONTENT_URI.buildUpon().appendPath("time")
+        ContentUris.appendId(builder, System.currentTimeMillis())
+        return Intent(Intent.ACTION_VIEW).setData(builder.build())
+    }
+
+    /** Installed apps that show a calendar day: (package, label). */
+    fun calendarApps(context: Context): List<Pair<String, String>> {
+        val pm = context.packageManager
+        return pm.queryIntentActivities(timeIntent(), 0)
+            .map { it.activityInfo.packageName to it.loadLabel(pm).toString() }
+            .distinctBy { it.first }
+            .sortedWith(compareBy({ it.first != READERS_CALENDAR }, { it.second.lowercase() }))
+    }
+
+    /** Reader's Calendar when installed, else the system's choice. */
+    fun defaultApp(context: Context): String = if (calendarApps(context).any { it.first == READERS_CALENDAR }) READERS_CALENDAR else ""
+
+    /** Aim the intent at the chosen app when it is installed and handles it; otherwise let the system pick. */
+    private fun Intent.target(context: Context, app: String): Intent {
+        if (app.isNotEmpty() && context.packageManager.queryIntentActivities(Intent(this).setPackage(app), 0).isNotEmpty()) setPackage(app)
+        return addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    fun open(context: Context, e: EventInfo, app: String = "") {
         val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, e.id)
         val intent = Intent(Intent.ACTION_VIEW).setData(uri)
             .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, e.begin)
             .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, e.end)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        runCatching { context.startActivity(intent) }.onFailure { openApp(context) }
+            .target(context, app)
+        runCatching { context.startActivity(intent) }.onFailure { openApp(context, app) }
     }
 
-    fun openApp(context: Context) {
-        val builder = CalendarContract.CONTENT_URI.buildUpon().appendPath("time")
-        ContentUris.appendId(builder, System.currentTimeMillis())
-        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW).setData(builder.build()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+    fun openApp(context: Context, app: String = "") {
+        runCatching { context.startActivity(timeIntent().target(context, app)) }
+            .onFailure { if (app.isNotEmpty()) runCatching { context.startActivity(timeIntent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } }
     }
 }
 
@@ -232,14 +257,14 @@ fun AgendaScreen(nav: Nav, app: App, tileId: String) {
     Page {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(stringResource(R.string.widget_calendar), onBack = { nav.pop() })
-            TextRow(stringResource(R.string.agenda_open), size = typo.title, onClick = { CalendarSource.openApp(context) })
+            TextRow(stringResource(R.string.agenda_open), size = typo.title, onClick = { CalendarSource.openApp(context, tile.app) })
             Rule()
             LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)) {
                 for ((label, list) in listOf(R.string.calendar_today to today, R.string.calendar_tomorrow to tomorrow)) {
                     item { Small(stringResource(label), Modifier.padding(horizontal = rowPadH).padding(top = 18.dp, bottom = 4.dp), color = colors.dim) }
                     if (list.isEmpty()) item { Small(stringResource(R.string.calendar_none), Modifier.padding(horizontal = rowPadH, vertical = 8.dp)) }
                     items(list, key = { "${label}-${it.id}-${it.begin}" }) { e ->
-                        TextRow(e.title, secondary = whenString(e, now) + (if (!e.location.isNullOrBlank()) " · " + e.location else ""), onClick = { CalendarSource.open(context, e) })
+                        TextRow(e.title, secondary = whenString(e, now) + (if (!e.location.isNullOrBlank()) " · " + e.location else ""), onClick = { CalendarSource.open(context, e, tile.app) })
                     }
                 }
             }
@@ -261,16 +286,19 @@ fun CalendarSetupScreen(nav: Nav, app: App, tileId: String?) {
     }
     var selected by remember { mutableStateOf(existing?.calendarIds?.toSet() ?: emptySet()) }
     LaunchedEffect(calendars) { if (existing == null && selected.isEmpty()) selected = calendars.map { it.id }.toSet() }
+    val apps = remember { CalendarSource.calendarApps(context) }
+    var chosenApp by remember { mutableStateOf(existing?.app ?: CalendarSource.defaultApp(context)) }
+    val colors = LocalColors.current
 
     Page {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(
-                stringResource(R.string.calendar_choose), onBack = { nav.pop() },
+                stringResource(R.string.widget_calendar), onBack = { nav.pop() },
                 trailing = stringResource(R.string.action_ok),
                 onTrailing = {
                     val ids = selected.toList()
-                    if (existing != null) app.store.replaceTile(existing.copy(calendarIds = ids))
-                    else app.store.addTile(CalendarTile(calendarIds = ids))
+                    if (existing != null) app.store.replaceTile(existing.copy(calendarIds = ids, app = chosenApp))
+                    else app.store.addTile(CalendarTile(calendarIds = ids, app = chosenApp))
                     nav.pop()
                 }
             )
@@ -279,6 +307,13 @@ fun CalendarSetupScreen(nav: Nav, app: App, tileId: String?) {
                 Rule()
             }
             LazyColumn(contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)) {
+                // Which app opens when the tile or an event is tapped: Reader's Calendar first when installed.
+                item { Small(stringResource(R.string.calendar_opens_with), Modifier.padding(horizontal = rowPadH).padding(top = 10.dp, bottom = 4.dp), color = colors.dim) }
+                items(apps, key = { "app-" + it.first }) { (pkg, label) ->
+                    TextRow(label, inverted = pkg == chosenApp) { chosenApp = pkg }
+                }
+                item { TextRow(stringResource(R.string.calendar_app_default), inverted = chosenApp == "") { chosenApp = "" } }
+                item { Small(stringResource(R.string.calendar_choose), Modifier.padding(horizontal = rowPadH).padding(top = 22.dp, bottom = 4.dp), color = colors.dim) }
                 items(calendars, key = { it.id }) { c ->
                     TextRow(c.name, inverted = c.id in selected, secondary = c.account) {
                         selected = if (c.id in selected) selected - c.id else selected + c.id

@@ -59,7 +59,9 @@ data class WeatherTile(
 @SerialName("calendar")
 data class CalendarTile(
     override val id: String = newId(),
-    val calendarIds: List<Long>
+    val calendarIds: List<Long>,
+    /** Package of the calendar app the tile opens; "" = whatever the system picks. */
+    val app: String = ""
 ) : Tile()
 
 @Serializable
