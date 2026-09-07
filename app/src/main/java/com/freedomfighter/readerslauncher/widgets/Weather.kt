@@ -40,7 +40,9 @@ data class Forecast(
     val currentTemp: Double,
     val currentCode: Int,
     val days: List<DayForecast>,
-    val fetchedAt: Long
+    val fetchedAt: Long,
+    /** "open-meteo" or "meteosuisse". */
+    val source: String = "open-meteo"
 )
 
 sealed class WeatherState {
@@ -97,7 +99,8 @@ class WeatherRepo private constructor(private val context: Context) {
                     }
                     Triple(loc.latitude, loc.longitude, placeName(loc.latitude, loc.longitude))
                 }
-                val f = fetch(lat, lon, name)
+                // Swiss places: MeteoSwiss first (the app's own forecast service), Open-Meteo otherwise.
+                val f = fetchSwiss(lat, lon, name) ?: fetch(lat, lon, name)
                 flow.value = WeatherState.Ready(f)
                 context.getSharedPreferences("weather", Context.MODE_PRIVATE).edit()
                     .putString(keyOf(place), json.encodeToString(Forecast.serializer(), f)).apply()
@@ -159,6 +162,58 @@ class WeatherRepo private constructor(private val context: Context) {
         return Forecast(name, lat, lon, r.current.temperature_2m, r.current.weather_code, days, System.currentTimeMillis())
     }
 
+    // ---- MeteoSwiss ----------------------------------------------------------------------
+
+    @Serializable private data class MsCurrent(val icon: Int = 0, val temperature: Double = 0.0)
+    @Serializable private data class MsDay(val dayDate: String, val iconDay: Int = 0, val temperatureMax: Double = 0.0, val temperatureMin: Double = 0.0)
+    @Serializable private data class MsResponse(val currentWeather: MsCurrent? = null, val forecast: List<MsDay> = emptyList())
+    @Serializable private data class GaAttributes(val plz: Int? = null, val langtext: String? = null)
+    @Serializable private data class GaResult(val attributes: GaAttributes = GaAttributes())
+    @Serializable private data class GaResponse(val results: List<GaResult> = emptyList())
+
+    private fun inSwitzerland(lat: Double, lon: Double) = lat in 45.75..47.9 && lon in 5.9..10.6
+
+    /**
+     * Forecast from MeteoSwiss for a Swiss place: the postal code comes from swisstopo's
+     * geo.admin.ch identify service, the forecast from the MeteoSwiss app's own JSON service
+     * (the one the community integrations use). Any failure → null → Open-Meteo.
+     */
+    private fun fetchSwiss(lat: Double, lon: Double, name: String): Forecast? {
+        if (!inSwitzerland(lat, lon)) return null
+        return try {
+            val ga = "https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometry=%.5f,%.5f".format(Locale.US, lon, lat) +
+                "&geometryType=esriGeometryPoint&layers=all:ch.swisstopo-vd.ortschaftenverzeichnis_plz&sr=4326&tolerance=0&returnGeometry=false"
+            val hit = json.decodeFromString(GaResponse.serializer(), Http.get(ga)).results.firstOrNull()?.attributes
+            val plz = hit?.plz ?: return null
+            val r = json.decodeFromString(MsResponse.serializer(), Http.get("https://app-prod-ws.meteoswiss-app.ch/v1/plzDetail?plz=${plz}00"))
+            val current = r.currentWeather ?: return null
+            if (r.forecast.isEmpty()) return null
+            val days = r.forecast.take(5).map { DayForecast(it.dayDate, swissToWmo(it.iconDay), it.temperatureMin, it.temperatureMax) }
+            Forecast(name.ifBlank { hit.langtext ?: "" }, lat, lon, current.temperature, swissToWmo(current.icon), days, System.currentTimeMillis(), "meteosuisse")
+        } catch (e: Exception) {
+            Log.w(TAG, "MeteoSwiss unavailable, falling back to Open-Meteo", e)
+            null
+        }
+    }
+
+    /**
+     * MeteoSwiss symbol codes (1–42 day, 101–142 night, from the official icon spreadsheet)
+     * → the WMO-style code the glyphs are chosen from.
+     */
+    private fun swissToWmo(code: Int): Int = when (code) {
+        1, 26, 101 -> 0
+        2, 3, 4, 102, 103, 104 -> 2
+        5, 35, 105, 126 -> 3
+        27, 28, 127, 128 -> 45
+        6, 9, 14, 17, 29, 33, 106, 109, 114, 117, 129, 133 -> 61
+        20, 120 -> 65
+        7, 10, 15, 18, 21, 31, 39, 107, 110, 115, 118, 121, 131, 139 -> 68
+        8, 11, 16, 19, 22, 30, 34, 37, 42, 108, 111, 116, 119, 122, 130, 134, 137, 142 -> 71
+        12, 36, 40, 41, 112, 136, 140, 141 -> 95
+        13, 23, 24, 25, 32, 38, 113, 123, 124, 125, 132, 138 -> 96
+        else -> 3
+    }
+
     @Serializable private data class GeoResult(val name: String, val latitude: Double, val longitude: Double, val country: String? = null, val admin1: String? = null)
     @Serializable private data class GeoResponse(val results: List<GeoResult> = emptyList())
 
@@ -191,7 +246,7 @@ fun wmoIcon(code: Int): String = when (code) {
     1, 2 -> "wx_partly"
     3 -> "wx_cloud"
     45, 48 -> "wx_fog"
-    in 51..67, in 80..82 -> "wx_rain"
+    in 51..69, in 80..82 -> "wx_rain"
     in 71..77, 85, 86 -> "wx_snow"
     in 95..99 -> "wx_thunder"
     else -> "wx_cloud"

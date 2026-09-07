@@ -141,4 +141,5 @@
     <string name="widget_word_desc">слово дня из словаря Литтре, нажмите для определения</string>
     <string name="open_in_littre">открыть в Le Littré</string>
     <string name="agenda_open">открыть календарь</string>
+    <string name="menu_source">источник: %1$s</string>
 </resources>

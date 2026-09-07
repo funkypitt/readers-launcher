@@ -153,6 +153,10 @@ private fun Context.findActivityCompat(): android.app.Activity? = findActivity()
 
 @Composable
 fun weatherMenuItems(tile: WeatherTile, app: App, context: Context, onChooseCity: () -> Unit): List<MenuItem> = buildList {
+    val current = WeatherRepo.get(context).state(tile.place).value
+    if (current is WeatherState.Ready) {
+        add(MenuItem(stringResource(R.string.menu_source, if (current.forecast.source == "meteosuisse") "MétéoSuisse" else "Open-Meteo")) { })
+    }
     add(MenuItem(stringResource(R.string.menu_refresh)) { WeatherRepo.get(context).refresh(tile.place, force = true) })
     add(MenuItem(stringResource(R.string.menu_units, if (tile.fahrenheit) "°F" else "°C")) {
         app.store.replaceTile(tile.copy(fahrenheit = !tile.fahrenheit))

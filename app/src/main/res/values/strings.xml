@@ -163,4 +163,5 @@
     <string name="widget_word_desc">the Littré\'s word of the day, tap for the definition</string>
     <string name="open_in_littre">open in Le Littré</string>
     <string name="agenda_open">open the agenda</string>
+    <string name="menu_source">source: %1$s</string>
 </resources>
