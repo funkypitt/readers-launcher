@@ -184,5 +184,6 @@ private fun Root(nav: Nav, app: App) {
         Screen.Recents -> RecentsScreen(nav, app)
         is Screen.Book -> BookScreen(nav, app, screen.slot)
         is Screen.BookChapters -> BookChaptersScreen(nav, app, screen.slot)
+        Screen.Word -> com.freedomfighter.readerslauncher.widgets.WordScreen(nav, app)
     }
 }

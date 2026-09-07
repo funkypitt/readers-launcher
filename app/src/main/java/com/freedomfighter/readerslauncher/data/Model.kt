@@ -37,6 +37,11 @@ data class CategoryTile(
 @SerialName("clock")
 data class ClockTile(override val id: String = newId()) : Tile()
 
+/** The Littré's word of the day (read from the dictionary app). */
+@Serializable
+@SerialName("word")
+data class WordTile(override val id: String = newId()) : Tile()
+
 @Serializable
 data class Place(val name: String, val latitude: Double, val longitude: Double)
 

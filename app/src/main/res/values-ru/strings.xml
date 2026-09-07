@@ -137,4 +137,7 @@
     <string name="book_slot_left">слева от главного экрана</string>
     <string name="book_slot_right">справа от главного экрана</string>
     <string name="tasks_not_installed">не установлено</string>
+    <string name="widget_word">mot du jour</string>
+    <string name="widget_word_desc">слово дня из словаря Литтре, нажмите для определения</string>
+    <string name="open_in_littre">открыть в Le Littré</string>
 </resources>

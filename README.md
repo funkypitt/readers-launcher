@@ -13,6 +13,8 @@ No icons, no colours, no wallpaper: a single column of words.
   A special **grid** of 3 to 5 squares is pinned at the bottom for the unavoidable apps
   (phone, messages…); their icons are rendered as monochrome glyphs in the current theme.
 * Built-in widgets, all of a fixed height so nothing on the page ever shifts: **clock**,
+  **mot du jour** (the Littré dictionary's word of the day, from
+  [Le Littré](https://github.com/funkypitt/littre-app); tap for the definition),
   **weather** (Open-Meteo, no key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
   first task, swipe for the following ones, ☐ to complete, + to add). Any standard app

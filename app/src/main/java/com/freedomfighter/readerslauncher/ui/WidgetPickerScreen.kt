@@ -28,6 +28,7 @@ import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.data.AppWidgetTile
 import com.freedomfighter.readerslauncher.data.ClockTile
 import com.freedomfighter.readerslauncher.data.WeatherTile
+import com.freedomfighter.readerslauncher.data.WordTile
 import com.freedomfighter.readerslauncher.widgets.WeatherRepo
 
 private data class ProviderRow(val appLabel: String, val info: AppWidgetProviderInfo) {
@@ -116,6 +117,11 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
                         app.store.addTile(WeatherTile())
                         WeatherRepo.get(context).requestLocationPermission(activity)
                         nav.pop()
+                    }
+                }
+                item {
+                    TextRow(stringResource(R.string.widget_word), secondary = stringResource(R.string.widget_word_desc)) {
+                        app.store.addTile(WordTile()); nav.pop()
                     }
                 }
                 item {

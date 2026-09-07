@@ -137,4 +137,7 @@
     <string name="book_slot_left">à gauche de l\'accueil</string>
     <string name="book_slot_right">à droite de l\'accueil</string>
     <string name="tasks_not_installed">non installée</string>
+    <string name="widget_word">mot du jour</string>
+    <string name="widget_word_desc">le mot du jour du Littré, toucher pour la définition</string>
+    <string name="open_in_littre">ouvrir dans Le Littré</string>
 </resources>

@@ -58,6 +58,8 @@ import com.freedomfighter.readerslauncher.data.HomeState
 import com.freedomfighter.readerslauncher.data.TasksTile
 import com.freedomfighter.readerslauncher.data.Tile
 import com.freedomfighter.readerslauncher.data.WeatherTile
+import com.freedomfighter.readerslauncher.data.WordTile
+import com.freedomfighter.readerslauncher.widgets.WordTileView
 import com.freedomfighter.readerslauncher.widgets.AppWidgetTileView
 import com.freedomfighter.readerslauncher.widgets.CalendarTileView
 import com.freedomfighter.readerslauncher.widgets.ClockTileView
@@ -405,6 +407,7 @@ private fun tileTitle(tile: Tile, state: HomeState, app: App): String? = when (t
     is AppTile -> state.labelFor(app, tile.app)
     is CategoryTile -> tile.name
     is ClockTile -> stringResource(R.string.widget_clock)
+    is WordTile -> stringResource(R.string.widget_word)
     is WeatherTile -> stringResource(R.string.widget_weather)
     is CalendarTile -> stringResource(R.string.widget_calendar)
     is TasksTile -> stringResource(R.string.widget_tasks) + " · " + tile.listTitle
@@ -451,6 +454,7 @@ private fun tileMenuItems(
             add(remove)
         }
         is ClockTile -> moveItems + remove
+        is WordTile -> moveItems + remove
         is WeatherTile -> buildList {
             addAll(weatherMenuItems(tile, app, context, onChooseCity = { onPrompt(HomePrompt.WeatherCity(tile)) }))
             addAll(moveItems)
@@ -495,6 +499,7 @@ private fun TileView(
         )
         is CategoryTile -> TextTile(tile.name, onClick = { nav.push(Screen.Category(tile.id)) }, onLongPress = onLongPress)
         is ClockTile -> ClockTileView(onLongPress)
+        is WordTile -> WordTileView(nav, onLongPress)
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
         is CalendarTile -> CalendarTileView(tile, app, onLongPress)
         is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) })

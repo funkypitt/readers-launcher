@@ -28,6 +28,7 @@ sealed class Screen {
     /** slot 0 = left of home (swipe right), 1 = right of home (swipe left). */
     data class Book(val slot: Int) : Screen()
     data class BookChapters(val slot: Int) : Screen()
+    data object Word : Screen()
 }
 
 /** Tiny back stack. The home screen is always at the bottom. */

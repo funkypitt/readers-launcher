@@ -137,4 +137,7 @@
     <string name="book_slot_left">links vom Startbildschirm</string>
     <string name="book_slot_right">rechts vom Startbildschirm</string>
     <string name="tasks_not_installed">nicht installiert</string>
+    <string name="widget_word">mot du jour</string>
+    <string name="widget_word_desc">das Wort des Tages aus dem Littré, antippen für die Definition</string>
+    <string name="open_in_littre">in Le Littré öffnen</string>
 </resources>

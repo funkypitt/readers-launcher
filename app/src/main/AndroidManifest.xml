@@ -33,6 +33,8 @@
     <queries>
         <package android:name="org.tasks" />
         <package android:name="com.freedomfighter.readerstasks" />
+        <package android:name="ch.littre.littre_app" />
+        <provider android:authorities="ch.littre.littre_app.wotd" />
         <provider android:authorities="com.freedomfighter.readerstasks" />
         <provider android:authorities="org.tasks.api" />
         <intent>
