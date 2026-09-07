@@ -29,6 +29,7 @@ sealed class Screen {
     data class Book(val slot: Int) : Screen()
     data class BookChapters(val slot: Int) : Screen()
     data object Word : Screen()
+    data class Agenda(val tileId: String) : Screen()
 }
 
 /** Tiny back stack. The home screen is always at the bottom. */

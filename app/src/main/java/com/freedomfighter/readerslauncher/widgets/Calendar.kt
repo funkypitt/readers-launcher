@@ -94,7 +94,8 @@ object CalendarSource {
         val out = ArrayList<EventInfo>()
         context.contentResolver.query(
             builder.build(), proj,
-            "${CalendarContract.Instances.CALENDAR_ID} IN ($sel) AND ${CalendarContract.Instances.STATUS} != ${CalendarContract.Instances.STATUS_CANCELED}",
+            // STATUS is NULL for many locally created events; "NULL != x" would drop them.
+            "${CalendarContract.Instances.CALENDAR_ID} IN ($sel) AND (${CalendarContract.Instances.STATUS} IS NULL OR ${CalendarContract.Instances.STATUS} != ${CalendarContract.Instances.STATUS_CANCELED})",
             null, "${CalendarContract.Instances.BEGIN} ASC"
         )?.use { c ->
             while (c.moveToNext() && out.size < max) {
@@ -154,7 +155,7 @@ fun whenString(e: EventInfo, now: Long): String {
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit) {
+fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOpen: () -> Unit = {}) {
     val context = LocalContext.current
     val colors = LocalColors.current
     val typo = LocalTypo.current
@@ -190,11 +191,8 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit) {
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {
-                    when {
-                        !permitted -> permLauncher.launch(Manifest.permission.READ_CALENDAR)
-                        e != null -> CalendarSource.open(context, e)
-                        else -> CalendarSource.openApp(context)
-                    }
+                    // A tap shows today's and tomorrow's events in the launcher's own style.
+                    if (!permitted) permLauncher.launch(Manifest.permission.READ_CALENDAR) else onOpen()
                 },
                 onLongClick = onLongPress
             )
@@ -208,6 +206,42 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit) {
                 // Exactly two lines: the title, then when. The location would make the tile grow.
                 T(e.title, maxLines = 1)
                 Small(whenString(e, now) + (if (events.size > 1) "   ${index + 1}/${events.size}" else ""), maxLines = 1)
+            }
+        }
+    }
+}
+
+/** Today's and tomorrow's events of the tile's calendars, as text; "open the agenda" on top. */
+@Composable
+fun AgendaScreen(nav: Nav, app: App, tileId: String) {
+    val context = LocalContext.current
+    val typo = LocalTypo.current
+    val colors = LocalColors.current
+    val tile = app.store.state.value.tiles.firstOrNull { it.id == tileId } as? CalendarTile
+    BackHandler { nav.pop() }
+    if (tile == null) { nav.pop(); return }
+    val now = rememberNow()
+    val events by produceState<List<EventInfo>>(emptyList(), tile.calendarIds, now / 60_000) {
+        value = withContext(Dispatchers.IO) { CalendarSource.upcoming(context, tile.calendarIds, max = 200) }
+    }
+    val cal = Calendar.getInstance()
+    fun startOfDay(t: Long): Long { cal.timeInMillis = t; cal.set(Calendar.HOUR_OF_DAY, 0); cal.set(Calendar.MINUTE, 0); cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0); return cal.timeInMillis }
+    val today0 = startOfDay(now); val tomorrow0 = today0 + 86_400_000L; val after0 = tomorrow0 + 86_400_000L
+    val today = events.filter { it.begin < tomorrow0 && it.end > today0 }
+    val tomorrow = events.filter { it.begin < after0 && it.end > tomorrow0 && it.begin >= tomorrow0 }
+    Page {
+        Column(Modifier.fillMaxSize()) {
+            ScreenTitle(stringResource(R.string.widget_calendar), onBack = { nav.pop() })
+            TextRow(stringResource(R.string.agenda_open), size = typo.title, onClick = { CalendarSource.openApp(context) })
+            Rule()
+            LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)) {
+                for ((label, list) in listOf(R.string.calendar_today to today, R.string.calendar_tomorrow to tomorrow)) {
+                    item { Small(stringResource(label), Modifier.padding(horizontal = rowPadH).padding(top = 18.dp, bottom = 4.dp), color = colors.dim) }
+                    if (list.isEmpty()) item { Small(stringResource(R.string.calendar_none), Modifier.padding(horizontal = rowPadH, vertical = 8.dp)) }
+                    items(list, key = { "${label}-${it.id}-${it.begin}" }) { e ->
+                        TextRow(e.title, secondary = whenString(e, now) + (if (!e.location.isNullOrBlank()) " · " + e.location else ""), onClick = { CalendarSource.open(context, e) })
+                    }
+                }
             }
         }
     }

@@ -140,4 +140,5 @@
     <string name="widget_word">mot du jour</string>
     <string name="widget_word_desc">le mot du jour du Littré, toucher pour la définition</string>
     <string name="open_in_littre">ouvrir dans Le Littré</string>
+    <string name="agenda_open">ouvrir l\'agenda</string>
 </resources>

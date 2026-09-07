@@ -41,6 +41,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe up and hold | text list of recently used apps ("open apps") |
 | swipe down | notification shade |
 | swipe right / left | the book on that side (long press in the reader for its menu) |
+| tap the agenda tile | today's and tomorrow's events, with "open the agenda" on top |
 | swipe left / right on the agenda tile | next / previous upcoming event |
 | swipe left / right on the tasks tile | next / previous open task |
 | tap the weather tile | one day ↔ five days |

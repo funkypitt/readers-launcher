@@ -501,7 +501,7 @@ private fun TileView(
         is ClockTile -> ClockTileView(onLongPress)
         is WordTile -> WordTileView(nav, onLongPress)
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
-        is CalendarTile -> CalendarTileView(tile, app, onLongPress)
+        is CalendarTile -> CalendarTileView(tile, app, onLongPress, onOpen = { nav.push(Screen.Agenda(tile.id)) })
         is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) })
         is AppWidgetTile -> AppWidgetTileView(tile, app, onLongPress)
     }

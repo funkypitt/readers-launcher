@@ -185,5 +185,6 @@ private fun Root(nav: Nav, app: App) {
         is Screen.Book -> BookScreen(nav, app, screen.slot)
         is Screen.BookChapters -> BookChaptersScreen(nav, app, screen.slot)
         Screen.Word -> com.freedomfighter.readerslauncher.widgets.WordScreen(nav, app)
+        is Screen.Agenda -> com.freedomfighter.readerslauncher.widgets.AgendaScreen(nav, app, screen.tileId)
     }
 }

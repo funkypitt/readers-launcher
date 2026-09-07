@@ -4,7 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -28,8 +35,9 @@ import com.freedomfighter.readerslauncher.ui.ScreenTitle
 import com.freedomfighter.readerslauncher.ui.Small
 import com.freedomfighter.readerslauncher.ui.T
 import com.freedomfighter.readerslauncher.ui.TextRow
-import com.freedomfighter.readerslauncher.ui.TextTile
 import com.freedomfighter.readerslauncher.ui.rowPadH
+import com.freedomfighter.readerslauncher.ui.rowPadV
+import com.freedomfighter.readerslauncher.ui.widgetTwoLineHeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -56,7 +64,8 @@ object Littre {
     }
 }
 
-/** A text tile with only the word; tap shows the definition, long press the tile menu. */
+/** The word with a dim "mot du jour" under it; tap shows the definition, long press the tile menu. */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WordTileView(nav: Nav, onLongPress: () -> Unit) {
     val context = LocalContext.current
@@ -65,10 +74,25 @@ fun WordTileView(nav: Nav, onLongPress: () -> Unit) {
     val word by produceState<WordOfDay?>(null, day, now / (30 * 60_000)) {
         value = withContext(Dispatchers.IO) { Littre.today(context) }
     }
-    val colors = LocalColors.current
-    val label = word?.word?.lowercase() ?: if (Littre.isInstalled(context)) stringResource(R.string.widget_word) else "Le Littré"
-    TextTile(label, onClick = { if (word != null) nav.push(Screen.Word) else Littre.open(context) }, onLongPress = onLongPress)
-    @Suppress("UNUSED_VARIABLE") val unused = colors
+    val label = word?.word?.lowercase() ?: if (Littre.isInstalled(context)) "…" else "Le Littré"
+    // Two lines, like the agenda tile: the word, then a dim "mot du jour" so it does not read
+    // as an app or category name.
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .height(widgetTwoLineHeight())
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { if (word != null) nav.push(Screen.Word) else Littre.open(context) },
+                onLongClick = onLongPress
+            )
+            .padding(horizontal = rowPadH, vertical = rowPadV),
+        verticalArrangement = Arrangement.Center
+    ) {
+        T(label, maxLines = 1)
+        Small(stringResource(R.string.widget_word), maxLines = 1)
+    }
 }
 
 /** The full definition, as text, in the launcher's own style. */
