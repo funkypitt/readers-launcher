@@ -543,7 +543,7 @@ fun TextTile(label: String, onClick: () -> Unit, onLongPress: () -> Unit, onDoub
             .padding(horizontal = rowPadH),
         contentAlignment = Alignment.CenterStart
     ) {
-        T(label, Modifier.fillMaxWidth(), maxLines = 1)
+        T(label, Modifier.fillMaxWidth(), size = LocalTypo.current.nav, maxLines = 1)
     }
 }
 

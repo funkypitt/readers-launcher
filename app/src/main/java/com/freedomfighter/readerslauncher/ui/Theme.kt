@@ -32,6 +32,8 @@ data class ReaderTypography(
     val tile: TextUnit,
     val alignLeft: Boolean
 ) {
+    /** App and category names: one step above the widgets, they are where the page leads. */
+    val nav: TextUnit get() = tile * 1.15f
     val small: TextUnit get() = tile * 0.62f
     val title: TextUnit get() = tile * 0.8f
     val big: TextUnit get() = tile * 2.2f

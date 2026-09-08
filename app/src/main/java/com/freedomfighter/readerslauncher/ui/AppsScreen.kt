@@ -141,7 +141,8 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
                         TextRow(
                             text = label,
                             inverted = isSel,
-                            secondary = if (entry.isWorkProfile) "work" else null
+                            secondary = if (entry.isWorkProfile) "work" else null,
+                            size = LocalTypo.current.nav
                         )
                     }
                 }
