@@ -144,4 +144,11 @@
     <string name="menu_source">Quelle: %1$s</string>
     <string name="calendar_opens_with">öffnet mit</string>
     <string name="calendar_app_default">Systemauswahl</string>
+    <string name="widget_book">Buch</string>
+    <string name="widget_book_desc">das aktuelle Buch, antippen zum Weiterlesen</string>
+    <string name="book_none">ein Buch öffnen</string>
+    <string name="widget_notes">Notizen</string>
+    <string name="widget_notes_desc">die letzte Notiz, wischen für die anderen, + schreibt eine</string>
+    <string name="notes_none">keine Notiz</string>
+    <string name="notes_untitled">ohne Titel</string>
 </resources>

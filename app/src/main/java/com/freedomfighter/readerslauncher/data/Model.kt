@@ -42,6 +42,16 @@ data class ClockTile(override val id: String = newId()) : Tile()
 @SerialName("word")
 data class WordTile(override val id: String = newId()) : Tile()
 
+/** The book being read (from Reader's Books' provider). */
+@Serializable
+@SerialName("book")
+data class BookTile(override val id: String = newId()) : Tile()
+
+/** The latest notes (from Reader's Notes' provider), swipe for the next. */
+@Serializable
+@SerialName("notes")
+data class NotesTile(override val id: String = newId()) : Tile()
+
 @Serializable
 data class Place(val name: String, val latitude: Double, val longitude: Double)
 

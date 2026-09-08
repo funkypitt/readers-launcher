@@ -166,4 +166,11 @@
     <string name="menu_source">source: %1$s</string>
     <string name="calendar_opens_with">opens with</string>
     <string name="calendar_app_default">whatever the system picks</string>
+    <string name="widget_book">book</string>
+    <string name="widget_book_desc">the book you were reading, tap to carry on</string>
+    <string name="book_none">open a book</string>
+    <string name="widget_notes">notes</string>
+    <string name="widget_notes_desc">the latest note, swipe for the others, + writes one</string>
+    <string name="notes_none">no note yet</string>
+    <string name="notes_untitled">untitled</string>
 </resources>

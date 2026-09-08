@@ -29,6 +29,8 @@ import com.freedomfighter.readerslauncher.data.AppWidgetTile
 import com.freedomfighter.readerslauncher.data.ClockTile
 import com.freedomfighter.readerslauncher.data.WeatherTile
 import com.freedomfighter.readerslauncher.data.WordTile
+import com.freedomfighter.readerslauncher.data.BookTile
+import com.freedomfighter.readerslauncher.data.NotesTile
 import com.freedomfighter.readerslauncher.widgets.WeatherRepo
 
 private data class ProviderRow(val appLabel: String, val info: AppWidgetProviderInfo) {
@@ -122,6 +124,16 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
                 item {
                     TextRow(stringResource(R.string.widget_word), secondary = stringResource(R.string.widget_word_desc)) {
                         app.store.addTile(WordTile()); nav.pop()
+                    }
+                }
+                item {
+                    TextRow(stringResource(R.string.widget_book), secondary = stringResource(R.string.widget_book_desc)) {
+                        app.store.addTile(BookTile()); nav.pop()
+                    }
+                }
+                item {
+                    TextRow(stringResource(R.string.widget_notes), secondary = stringResource(R.string.widget_notes_desc)) {
+                        app.store.addTile(NotesTile()); nav.pop()
                     }
                 }
                 item {

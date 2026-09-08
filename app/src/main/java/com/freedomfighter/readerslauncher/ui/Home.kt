@@ -59,6 +59,10 @@ import com.freedomfighter.readerslauncher.data.TasksTile
 import com.freedomfighter.readerslauncher.data.Tile
 import com.freedomfighter.readerslauncher.data.WeatherTile
 import com.freedomfighter.readerslauncher.data.WordTile
+import com.freedomfighter.readerslauncher.data.BookTile
+import com.freedomfighter.readerslauncher.data.NotesTile
+import com.freedomfighter.readerslauncher.widgets.BookTileView
+import com.freedomfighter.readerslauncher.widgets.NotesTileView
 import com.freedomfighter.readerslauncher.widgets.WordTileView
 import com.freedomfighter.readerslauncher.widgets.AppWidgetTileView
 import com.freedomfighter.readerslauncher.widgets.CalendarTileView
@@ -408,6 +412,8 @@ private fun tileTitle(tile: Tile, state: HomeState, app: App): String? = when (t
     is CategoryTile -> tile.name
     is ClockTile -> stringResource(R.string.widget_clock)
     is WordTile -> stringResource(R.string.widget_word)
+    is BookTile -> stringResource(R.string.widget_book)
+    is NotesTile -> stringResource(R.string.widget_notes)
     is WeatherTile -> stringResource(R.string.widget_weather)
     is CalendarTile -> stringResource(R.string.widget_calendar)
     is TasksTile -> stringResource(R.string.widget_tasks) + " · " + tile.listTitle
@@ -455,6 +461,8 @@ private fun tileMenuItems(
         }
         is ClockTile -> moveItems + remove
         is WordTile -> moveItems + remove
+        is BookTile -> moveItems + remove
+        is NotesTile -> moveItems + remove
         is WeatherTile -> buildList {
             addAll(weatherMenuItems(tile, app, context, onChooseCity = { onPrompt(HomePrompt.WeatherCity(tile)) }))
             addAll(moveItems)
@@ -500,6 +508,8 @@ private fun TileView(
         is CategoryTile -> TextTile(tile.name, onClick = { nav.push(Screen.Category(tile.id)) }, onLongPress = onLongPress)
         is ClockTile -> ClockTileView(onLongPress)
         is WordTile -> WordTileView(nav, onLongPress)
+        is BookTile -> BookTileView(onLongPress)
+        is NotesTile -> NotesTileView(onLongPress)
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
         is CalendarTile -> CalendarTileView(tile, app, onLongPress, onOpen = { nav.push(Screen.Agenda(tile.id)) })
         is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) })

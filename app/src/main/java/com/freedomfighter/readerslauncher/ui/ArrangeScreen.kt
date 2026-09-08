@@ -21,6 +21,8 @@ import com.freedomfighter.readerslauncher.data.TasksTile
 import com.freedomfighter.readerslauncher.data.Tile
 import com.freedomfighter.readerslauncher.data.WeatherTile
 import com.freedomfighter.readerslauncher.data.WordTile
+import com.freedomfighter.readerslauncher.data.BookTile
+import com.freedomfighter.readerslauncher.data.NotesTile
 
 /** Drag tiles to reorder the home column. Widgets are shown by name here. */
 @Composable
@@ -32,13 +34,17 @@ fun ArrangeScreen(nav: Nav, app: App) {
         "weather" to stringResource(R.string.widget_weather),
         "calendar" to stringResource(R.string.widget_calendar),
         "tasks" to stringResource(R.string.widget_tasks),
-        "word" to stringResource(R.string.widget_word)
+        "word" to stringResource(R.string.widget_word),
+        "book" to stringResource(R.string.widget_book),
+        "notes" to stringResource(R.string.widget_notes)
     )
     fun label(t: Tile): String = when (t) {
         is AppTile -> home.labelFor(app, t.app)
         is CategoryTile -> t.name
         is ClockTile -> "— " + names["clock"]
         is WordTile -> "— " + names["word"]
+        is BookTile -> "— " + names["book"]
+        is NotesTile -> "— " + names["notes"]
         is WeatherTile -> "— " + names["weather"]
         is CalendarTile -> "— " + names["calendar"]
         is TasksTile -> "— " + names["tasks"] + " · " + t.listTitle

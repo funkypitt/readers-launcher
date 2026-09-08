@@ -144,4 +144,11 @@
     <string name="menu_source">источник: %1$s</string>
     <string name="calendar_opens_with">открывать в</string>
     <string name="calendar_app_default">по выбору системы</string>
+    <string name="widget_book">книга</string>
+    <string name="widget_book_desc">текущая книга, нажмите, чтобы продолжить</string>
+    <string name="book_none">открыть книгу</string>
+    <string name="widget_notes">заметки</string>
+    <string name="widget_notes_desc">последняя заметка, смахните для остальных, + пишет новую</string>
+    <string name="notes_none">заметок нет</string>
+    <string name="notes_untitled">без названия</string>
 </resources>

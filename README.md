@@ -42,6 +42,8 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe up and hold | text list of recently used apps ("open apps") |
 | swipe down | notification shade |
 | swipe right / left | the book on that side (long press in the reader for its menu) |
+| the book tile | the book you were reading in [Reader's Books](https://github.com/funkypitt/readers-books), a dim "book" under it; tap carries on at the current page |
+| the notes tile | the latest note from [Reader's Notes](https://github.com/funkypitt/readers-notes); swipe sideways for the others, tap opens it, + writes a new one |
 | tap the agenda tile | today's and tomorrow's events, with "open the agenda" on top. The tile's setup chooses which calendar app opens: [Reader's Calendar](https://github.com/funkypitt/readers-calendar) when installed, otherwise whatever the system picks |
 | swipe left / right on the agenda tile | next / previous upcoming event |
 | swipe left / right on the tasks tile | next / previous open task |
