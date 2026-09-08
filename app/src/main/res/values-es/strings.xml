@@ -151,4 +151,5 @@
     <string name="widget_notes_desc">la última nota, desliza para las demás, + escribe una</string>
     <string name="notes_none">ninguna nota</string>
     <string name="notes_untitled">sin título</string>
+    <string name="arrange_fill">%1$d de %2$d celdas ocupadas</string>
 </resources>

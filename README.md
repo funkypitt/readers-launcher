@@ -44,6 +44,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe right / left | the book on that side (long press in the reader for its menu) |
 | the book tile | the book you were reading in [Reader's Books](https://github.com/funkypitt/readers-books), a dim "book" under it; tap carries on at the current page |
 | the notes tile | the latest note from [Reader's Notes](https://github.com/funkypitt/readers-notes); swipe sideways for the others, tap opens it, + writes a new one |
+| the page | a fixed grid of cells, each half a text row: a text row takes 2, a two-line widget 3, the clock or the weather 4, an app widget its declared height rounded up. Adding is refused when the cells are used up; "arrange tiles" shows the count |
 | tap the agenda tile | today's and tomorrow's events, with "open the agenda" on top. The tile's setup chooses which calendar app opens: [Reader's Calendar](https://github.com/funkypitt/readers-calendar) when installed, otherwise whatever the system picks |
 | swipe left / right on the agenda tile | next / previous upcoming event |
 | swipe left / right on the tasks tile | next / previous open task |

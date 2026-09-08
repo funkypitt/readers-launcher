@@ -53,6 +53,8 @@ fun ArrangeScreen(nav: Nav, app: App) {
     Page {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(stringResource(R.string.menu_arrange), onBack = { nav.pop() })
+            val used = home.tiles.sumOf { tileCells(it) }
+            if (app.pageCells > 0) Small(stringResource(R.string.arrange_fill, used, app.pageCells), Modifier.padding(horizontal = rowPadH).padding(top = 8.dp))
             Small(stringResource(R.string.arrange_hint), Modifier.padding(horizontal = rowPadH, vertical = 10.dp))
             ReorderableList(
                 items = home.tiles,

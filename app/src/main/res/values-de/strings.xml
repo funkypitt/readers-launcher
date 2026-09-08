@@ -151,4 +151,5 @@
     <string name="widget_notes_desc">die letzte Notiz, wischen für die anderen, + schreibt eine</string>
     <string name="notes_none">keine Notiz</string>
     <string name="notes_untitled">ohne Titel</string>
+    <string name="arrange_fill">%1$d von %2$d Zellen belegt</string>
 </resources>

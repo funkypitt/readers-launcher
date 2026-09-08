@@ -9,6 +9,8 @@ import com.freedomfighter.readerslauncher.data.HomeStore
 import com.freedomfighter.readerslauncher.data.Prefs
 
 class App : Application() {
+    /** Cells the home page holds, as last measured (0 = unknown). */
+    var pageCells: Int = 0
     lateinit var prefs: Prefs
     lateinit var store: HomeStore
     lateinit var apps: AppRepository

@@ -309,18 +309,35 @@ fun VSpace(h: Dp) = Spacer(Modifier.height(h))
  * so that swiping to another event or switching the weather to five days moves nothing else
  * on the home screen. Two flavours: a two-line text widget, and the tall clock/weather one.
  */
+/**
+ * The page grid. A cell is half a text row (half a line of tile-size text plus one row
+ * padding), and every tile occupies a whole number of cells: a text row 2, a two-line
+ * widget 3, the clock and the weather 4, an app widget its declared height rounded up.
+ * The page holds a fixed number of cells, so "full" is exact and the leftover is always
+ * smaller than one cell.
+ */
 @Composable
-fun widgetTwoLineHeight(): Dp {
+fun cellHeight(): Dp {
     val t = LocalTypo.current
-    return with(LocalDensity.current) { (t.tile * 1.3f).toDp() + (t.small * 1.35f).toDp() } + rowPadV * 2
+    return with(LocalDensity.current) { (t.tile * 1.25f).toDp() } / 2 + rowPadV
 }
 
-@Composable
-fun widgetTallHeight(): Dp {
-    val t = LocalTypo.current
-    // The big line's glyphs need more than their nominal line height; give both lines slack.
-    return with(LocalDensity.current) { (t.big * 1.2f).toDp() + (t.small * 1.4f).toDp() } + rowPadV * 2
+fun tileCells(tile: com.freedomfighter.readerslauncher.data.Tile): Int = when (tile) {
+    is com.freedomfighter.readerslauncher.data.AppTile, is com.freedomfighter.readerslauncher.data.CategoryTile -> 2
+    is com.freedomfighter.readerslauncher.data.WordTile, is com.freedomfighter.readerslauncher.data.CalendarTile,
+    is com.freedomfighter.readerslauncher.data.TasksTile, is com.freedomfighter.readerslauncher.data.BookTile,
+    is com.freedomfighter.readerslauncher.data.NotesTile -> 3
+    is com.freedomfighter.readerslauncher.data.ClockTile, is com.freedomfighter.readerslauncher.data.WeatherTile -> 4
+    is com.freedomfighter.readerslauncher.data.AppWidgetTile -> tile.cellCount()
 }
+
+const val TEXT_ROW_CELLS = 2
+
+@Composable
+fun widgetTwoLineHeight(): Dp = cellHeight() * 3
+
+@Composable
+fun widgetTallHeight(): Dp = cellHeight() * 4
 
 /** Text menu of an app's shortcuts (static + dynamic). */
 @Composable

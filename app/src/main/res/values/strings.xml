@@ -173,4 +173,5 @@
     <string name="widget_notes_desc">the latest note, swipe for the others, + writes one</string>
     <string name="notes_none">no note yet</string>
     <string name="notes_untitled">untitled</string>
+    <string name="arrange_fill">%1$d of %2$d cells in use</string>
 </resources>

@@ -29,7 +29,6 @@ import com.freedomfighter.readerslauncher.ui.TextTile
 import com.freedomfighter.readerslauncher.ui.findActivity
 import com.freedomfighter.readerslauncher.ui.rowPadH
 
-const val TILE_UNIT_DP = 72
 
 /**
  * Wraps an AppWidgetHostView and steals a long press for the launcher's tile menu,
@@ -79,7 +78,7 @@ fun AppWidgetTileView(tile: AppWidgetTile, app: App, onLongPress: () -> Unit) {
         TextTile(stringResource(R.string.widget_not_installed) + " · " + tile.label, onClick = {}, onLongPress = onLongPress)
         return
     }
-    val heightDp = (TILE_UNIT_DP * tile.height).dp
+    val heightDp = com.freedomfighter.readerslauncher.ui.cellHeight() * tile.cellCount()
     val density = LocalDensity.current
     Box(Modifier.fillMaxWidth().height(heightDp).padding(horizontal = rowPadH / 2)) {
         AndroidView(

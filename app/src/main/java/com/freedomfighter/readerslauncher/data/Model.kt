@@ -89,10 +89,14 @@ data class TasksTile(
 data class AppWidgetTile(
     override val id: String = newId(),
     val appWidgetId: Int,
-    /** Height in tile units (1 = one text tile, up to 4). */
+    /** Legacy height in 72 dp units; superseded by [cells]. */
     val height: Int = 2,
-    val label: String = ""
-) : Tile()
+    val label: String = "",
+    /** Height in page cells (half text rows); 0 = derive from the legacy [height]. */
+    val cells: Int = 0
+) : Tile() {
+    fun cellCount(): Int = if (cells > 0) cells else (height * 2).coerceIn(2, 12)
+}
 
 /** The "key apps" grid pinned at the bottom: 3 to 5 squares, each optionally holding an app. */
 @Serializable

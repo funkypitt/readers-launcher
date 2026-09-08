@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -126,23 +127,22 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
     var menu by ui::menu
     var prompt by ui::prompt
     var isDefault by remember { mutableStateOf(isDefaultLauncher(context)) }
-    // The home screen is a fixed page, never a scrolling list: measure what the column can
-    // hold so that adding is refused once it is full.
+    // The home screen is a fixed page of cells, never a scrolling list: the page holds a
+    // whole number of cells and every tile takes a whole number of them.
     var availableHeight by remember { mutableStateOf(0) }
-    var usedHeight by remember { mutableStateOf(0) }
     val density = androidx.compose.ui.platform.LocalDensity.current
-    val oneRowPx = with(density) { (LocalTypo.current.tile.toPx() * 1.25f + (rowPadV * 2).toPx()).toInt() }
-    // The last row's bottom padding may hang below the page: nothing follows it, so the text
-    // stays whole. Without this slack a gap of almost a full row was refused as "full".
-    val slackPx = with(density) { (rowPadV - 8.dp).toPx().toInt() }   // keep a breath above the grid rule
-    val roomForRow = availableHeight > 0 && availableHeight - usedHeight >= oneRowPx - slackPx
+    val cellPx = with(density) { cellHeight().toPx() }
+    val capacity = if (availableHeight > 0) (availableHeight / cellPx).toInt() else 0
+    val usedCells = state.tiles.sumOf { tileCells(it) }
+    LaunchedEffect(capacity) { app.pageCells = capacity }
+    val roomForRow = capacity > 0 && capacity - usedCells >= TEXT_ROW_CELLS
     // A tile that was just added and does not fit is taken back.
     var knownIds by remember { mutableStateOf(state.tiles.map { it.id }.toSet()) }
-    LaunchedEffect(usedHeight, availableHeight, state.tiles) {
+    LaunchedEffect(usedCells, capacity, state.tiles) {
         val ids = state.tiles.map { it.id }
         val added = ids.filterNot { it in knownIds }
         knownIds = ids.toSet()
-        if (availableHeight > 0 && usedHeight > availableHeight + slackPx && added.isNotEmpty()) {
+        if (capacity > 0 && usedCells > capacity && added.isNotEmpty()) {
             added.forEach { id ->
                 (state.tiles.firstOrNull { it.id == id } as? AppWidgetTile)?.let { app.widgetHost.deleteAppWidgetId(it.appWidgetId) }
                 app.store.removeTile(id)
@@ -273,9 +273,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         .clipToBounds()
                         .onSizeChanged { availableHeight = it.height }
                 ) {
-                    // Measured unbounded: a column clamps its reported height to the page, which
-                    // hid every overflow. This way usedHeight is the true content height.
-                    Column(Modifier.fillMaxWidth().wrapContentHeight(align = Alignment.Top, unbounded = true).onSizeChanged { usedHeight = it.height }) {
+                    Column(Modifier.fillMaxWidth()) {
                         state.tiles.forEach { tile ->
                             key(tile.id) {
                                 TileView(
@@ -540,8 +538,10 @@ fun TextTile(label: String, onClick: () -> Unit, onLongPress: () -> Unit, onDoub
     Box(
         Modifier
             .fillMaxWidth()
+            .height(cellHeight() * TEXT_ROW_CELLS)
             .then(gestures)
-            .padding(horizontal = rowPadH, vertical = rowPadV)
+            .padding(horizontal = rowPadH),
+        contentAlignment = Alignment.CenterStart
     ) {
         T(label, Modifier.fillMaxWidth(), maxLines = 1)
     }
