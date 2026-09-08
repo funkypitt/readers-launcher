@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -131,14 +132,17 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
     var usedHeight by remember { mutableStateOf(0) }
     val density = androidx.compose.ui.platform.LocalDensity.current
     val oneRowPx = with(density) { (LocalTypo.current.tile.toPx() * 1.25f + (rowPadV * 2).toPx()).toInt() }
-    val roomForRow = availableHeight > 0 && availableHeight - usedHeight >= oneRowPx
+    // The last row's bottom padding may hang below the page: nothing follows it, so the text
+    // stays whole. Without this slack a gap of almost a full row was refused as "full".
+    val slackPx = with(density) { (rowPadV - 8.dp).toPx().toInt() }   // keep a breath above the grid rule
+    val roomForRow = availableHeight > 0 && availableHeight - usedHeight >= oneRowPx - slackPx
     // A tile that was just added and does not fit is taken back.
     var knownIds by remember { mutableStateOf(state.tiles.map { it.id }.toSet()) }
     LaunchedEffect(usedHeight, availableHeight, state.tiles) {
         val ids = state.tiles.map { it.id }
         val added = ids.filterNot { it in knownIds }
         knownIds = ids.toSet()
-        if (availableHeight > 0 && usedHeight > availableHeight && added.isNotEmpty()) {
+        if (availableHeight > 0 && usedHeight > availableHeight + slackPx && added.isNotEmpty()) {
             added.forEach { id ->
                 (state.tiles.firstOrNull { it.id == id } as? AppWidgetTile)?.let { app.widgetHost.deleteAppWidgetId(it.appWidgetId) }
                 app.store.removeTile(id)
@@ -269,7 +273,9 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         .clipToBounds()
                         .onSizeChanged { availableHeight = it.height }
                 ) {
-                    Column(Modifier.fillMaxWidth().onSizeChanged { usedHeight = it.height }) {
+                    // Measured unbounded: a column clamps its reported height to the page, which
+                    // hid every overflow. This way usedHeight is the true content height.
+                    Column(Modifier.fillMaxWidth().wrapContentHeight(align = Alignment.Top, unbounded = true).onSizeChanged { usedHeight = it.height }) {
                         state.tiles.forEach { tile ->
                             key(tile.id) {
                                 TileView(
