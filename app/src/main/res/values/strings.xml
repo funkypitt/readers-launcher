@@ -174,4 +174,5 @@
     <string name="notes_none">no note yet</string>
     <string name="notes_untitled">untitled</string>
     <string name="arrange_fill">%1$d of %2$d cells in use</string>
+    <string name="agenda_new_event">+ new event</string>
 </resources>

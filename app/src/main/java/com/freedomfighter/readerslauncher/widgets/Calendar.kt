@@ -15,6 +15,10 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Alignment
+import com.freedomfighter.readerslauncher.ui.noRippleClickable
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -149,6 +153,12 @@ object CalendarSource {
         runCatching { context.startActivity(intent) }.onFailure { openApp(context, app) }
     }
 
+    /** The most frequent action of a calendar, one tap from the home screen. */
+    fun newEvent(context: Context, app: String = "") {
+        val intent = Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI).target(context, app)
+        runCatching { context.startActivity(intent) }.onFailure { openApp(context, app) }
+    }
+
     fun openApp(context: Context, app: String = "") {
         runCatching { context.startActivity(timeIntent().target(context, app)) }
             .onFailure { if (app.isNotEmpty()) runCatching { context.startActivity(timeIntent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } }
@@ -195,7 +205,7 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOp
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     val e = events.getOrNull(index)
-    Column(
+    Row(
         Modifier
             .fillMaxWidth()
             .height(widgetTwoLineHeight())
@@ -222,17 +232,21 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOp
                 onLongClick = onLongPress
             )
             .padding(horizontal = rowPadH, vertical = rowPadV),
-        verticalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        when {
-            !permitted -> T(stringResource(R.string.calendar_permission), size = typo.title, color = colors.dim, maxLines = 2)
-            e == null -> T(stringResource(R.string.calendar_none), size = typo.title, color = colors.dim, maxLines = 2)
-            else -> {
-                // Exactly two lines: the title, then when. The location would make the tile grow.
-                T(e.title, maxLines = 1)
-                Small(whenString(e, now) + (if (events.size > 1) "   ${index + 1}/${events.size}" else ""), maxLines = 1)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+            when {
+                !permitted -> T(stringResource(R.string.calendar_permission), size = typo.title, color = colors.dim, maxLines = 2)
+                e == null -> T(stringResource(R.string.calendar_none), size = typo.title, color = colors.dim, maxLines = 2)
+                else -> {
+                    // Exactly two lines: the title, then when. The location would make the tile grow.
+                    T(e.title, maxLines = 1)
+                    Small(whenString(e, now) + (if (events.size > 1) "   ${index + 1}/${events.size}" else ""), maxLines = 1)
+                }
             }
         }
+        // creating an event is the one frequent action: a tap away, like the notes and tasks tiles
+        if (permitted) T("+", Modifier.noRippleClickable { CalendarSource.newEvent(context, tile.app) }.padding(start = 24.dp, end = 4.dp, top = 8.dp, bottom = 8.dp), size = typo.tile, align = TextAlign.End)
     }
 }
 
@@ -258,6 +272,7 @@ fun AgendaScreen(nav: Nav, app: App, tileId: String) {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(stringResource(R.string.widget_calendar), onBack = { nav.pop() })
             TextRow(stringResource(R.string.agenda_open), size = typo.title, onClick = { CalendarSource.openApp(context, tile.app) })
+            TextRow(stringResource(R.string.agenda_new_event), size = typo.title, onClick = { CalendarSource.newEvent(context, tile.app) })
             Rule()
             LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)) {
                 for ((label, list) in listOf(R.string.calendar_today to today, R.string.calendar_tomorrow to tomorrow)) {

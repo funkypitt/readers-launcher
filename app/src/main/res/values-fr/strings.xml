@@ -152,4 +152,5 @@
     <string name="notes_none">aucune note</string>
     <string name="notes_untitled">sans titre</string>
     <string name="arrange_fill">%1$d cellules sur %2$d occupées</string>
+    <string name="agenda_new_event">+ nouvel événement</string>
 </resources>
