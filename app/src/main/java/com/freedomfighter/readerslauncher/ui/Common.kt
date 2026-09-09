@@ -236,20 +236,23 @@ fun TextPrompt(
     val focus = remember { FocusRequester() }
     BackHandler(onBack = onCancel)
     LaunchedEffect(Unit) { focus.requestFocus() }
+    // Centred in whatever the keyboard leaves free, never under it: a bottom sheet was hidden
+    // by the keyboard on some phones.
     Box(
         Modifier
             .fillMaxSize()
             .background(colors.bg.copy(alpha = 0.6f))
             .noRippleClickable(onClick = onCancel)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .imePadding()
     ) {
         Column(
             Modifier
-                .align(Alignment.BottomCenter)
+                .align(Alignment.Center)
                 .fillMaxWidth()
                 .background(colors.bg)
                 .noRippleClickable { }
-                .windowInsetsPadding(WindowInsets.navigationBars)
         ) {
             Rule(color = colors.fg)
             Small(title, Modifier.padding(horizontal = rowPadH).padding(top = 14.dp))
@@ -267,7 +270,7 @@ fun TextPrompt(
                     TextRow(confirm, inverted = value.isNotBlank(), onClick = { if (value.isNotBlank()) onDone(value.trim()) })
                 }
             }
-            Spacer(Modifier.height(8.dp))
+            Rule(color = colors.fg)
         }
     }
 }
