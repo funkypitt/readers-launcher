@@ -11,6 +11,8 @@ import com.freedomfighter.readerslauncher.data.Prefs
 class App : Application() {
     /** Cells the home page holds, as last measured (0 = unknown). */
     var pageCells: Int = 0
+    /** Bumped after a task is added from the home prompt, so the tasks tile reloads. */
+    val tasksChanged = kotlinx.coroutines.flow.MutableStateFlow(0)
     lateinit var prefs: Prefs
     lateinit var store: HomeStore
     lateinit var apps: AppRepository

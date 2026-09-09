@@ -74,6 +74,9 @@ import com.freedomfighter.readerslauncher.widgets.WeatherTileView
 import com.freedomfighter.readerslauncher.widgets.appWidgetMenuItems
 import com.freedomfighter.readerslauncher.widgets.weatherMenuItems
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 import kotlin.math.abs
 
 fun Context.findActivity(): Activity? {
@@ -101,6 +104,7 @@ internal sealed class HomePrompt {
     data class RenameCategory(val tile: CategoryTile) : HomePrompt()
     data class NewCategory(val apps: List<AppRef>) : HomePrompt()
     data class WeatherCity(val tile: WeatherTile) : HomePrompt()
+    data class NewTask(val tile: TasksTile) : HomePrompt()
 }
 
 /**
@@ -283,6 +287,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                                     nav = nav,
                                     onLongPress = { tick(); menu = HomeMenu.ForTile(tile) },
                                     onNeedCity = { prompt = HomePrompt.WeatherCity(it) },
+                                    onNewTask = { prompt = HomePrompt.NewTask(it) },
                                     doubleTapShortcuts = settings.doubleTapShortcuts,
                                     onShortcuts = { tick(); menu = HomeMenu.Shortcuts(it) }
                                 )
@@ -396,6 +401,20 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 onDone = { app.store.addTile(CategoryTile(name = it, apps = p.apps)); prompt = null },
                 onCancel = { prompt = null }
             )
+            // Raised at the home level, not inside the tile: a prompt drawn inside a fixed-height
+            // tile is clipped to it and hidden by the keyboard when the tile sits low on the page.
+            is HomePrompt.NewTask -> TextPrompt(
+                title = stringResource(R.string.tasks_new_prompt), confirm = stringResource(R.string.action_done),
+                onDone = { title ->
+                    prompt = null
+                    val src = com.freedomfighter.readerslauncher.widgets.TaskSource.of(context, p.tile.source)
+                    scope.launch {
+                        val done = withContext(Dispatchers.IO) { runCatching { src.insert(p.tile.listId, title) }.getOrDefault(false) }
+                        if (done) app.tasksChanged.value++ else src.newTaskInApp(title)
+                    }
+                },
+                onCancel = { prompt = null }
+            )
             is HomePrompt.WeatherCity -> TextPrompt(
                 title = stringResource(R.string.weather_city_prompt), initial = p.tile.place?.name ?: "",
                 onDone = { query ->
@@ -499,6 +518,7 @@ private fun TileView(
     nav: Nav,
     onLongPress: () -> Unit,
     onNeedCity: (WeatherTile) -> Unit,
+    onNewTask: (TasksTile) -> Unit = {},
     doubleTapShortcuts: Boolean = false,
     onShortcuts: (AppRef) -> Unit = {}
 ) {
@@ -516,7 +536,7 @@ private fun TileView(
         is NotesTile -> NotesTileView(onLongPress)
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
         is CalendarTile -> CalendarTileView(tile, app, onLongPress, onOpen = { nav.push(Screen.Agenda(tile.id)) })
-        is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) })
+        is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) }, onAdd = { onNewTask(tile) })
         is AppWidgetTile -> AppWidgetTileView(tile, app, onLongPress)
     }
 }

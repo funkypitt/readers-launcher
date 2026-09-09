@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,7 +67,7 @@ import kotlin.math.abs
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: () -> Unit) {
+fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: () -> Unit, onAdd: () -> Unit = {}) {
     val context = LocalContext.current
     val colors = LocalColors.current
     val typo = LocalTypo.current
@@ -78,7 +79,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
     var tasks by remember(tile.id) { mutableStateOf<List<TaskSource.Task>?>(null) }
     var index by remember(tile.id) { mutableIntStateOf(0) }
     var error by remember { mutableStateOf(false) }
-    var adding by remember { mutableStateOf(false) }
+    val changed by app.tasksChanged.collectAsState()
     var generation by remember { mutableIntStateOf(0) }
 
     fun reload() {
@@ -88,7 +89,7 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
             r.onSuccess { tasks = it; error = false }.onFailure { error = true }
         }
     }
-    LaunchedEffect(listId, now / (10 * 60_000), generation, repo.ready) { reload() }
+    LaunchedEffect(listId, now / (10 * 60_000), generation, repo.ready, changed) { reload() }
 
     // Tasks.org notifies its provider URIs on every change; follow them.
     DisposableEffect(listId) {
@@ -155,21 +156,9 @@ fun TasksTileView(tile: TasksTile, app: App, onLongPress: () -> Unit, onSetup: (
         }
         if (ready) {
             Box(Modifier.width(16.dp))
-            T("+", Modifier.noRippleClickable { adding = true }, align = TextAlign.End)
+            T("+", Modifier.noRippleClickable { onAdd() }, align = TextAlign.End)
         }
     }
-    if (adding) TextPrompt(
-        title = stringResource(R.string.tasks_new_prompt),
-        confirm = stringResource(R.string.action_done),
-        onDone = { title ->
-            adding = false
-            scope.launch {
-                val done = withContext(Dispatchers.IO) { repo.insert(listId, title) }
-                if (done) reload() else repo.newTaskInApp(title)
-            }
-        },
-        onCancel = { adding = false }
-    )
 }
 
 /**
