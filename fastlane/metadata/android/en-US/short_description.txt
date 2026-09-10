@@ -1,0 +1,1 @@
+Black-and-white, text-only launcher for e-ink phones: a single column of words

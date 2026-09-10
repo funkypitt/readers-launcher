@@ -1,0 +1,12 @@
+Un lanceur Android noir et blanc, texte seulement, dans l'esprit du Light Phone, pensé pour les téléphones e-ink et pour qui veut un écran d'accueil silencieux. Pas d'icônes, pas de couleurs, pas de fond d'écran : une seule colonne de mots.
+
+• Chaque écran est blanc sur noir ou noir sur blanc. On bascule d'un double tap sur l'espace vide, depuis une tuile de réglages rapides, ou dans les réglages (qui proposent aussi « suivre le système »).
+• L'écran d'accueil est une page fixe qui ne défile jamais. Il porte une colonne de tuiles : une application (son nom), une catégorie (un nom qui ouvre une liste d'applications en texte) ou un widget. Une petite grille de 3 à 5 cases en bas garde les applications incontournables (téléphone, messages…) en glyphes monochromes. D'autres pages d'accueil si vous le souhaitez, par balayage latéral.
+• Des widgets texte intégrés, de hauteur fixe pour que rien ne bouge jamais sur la page : horloge, météo (MétéoSuisse ou Open-Meteo, sans clé), agenda (prochain événement, + pour en ajouter), tâches (une liste de Reader's Tasks ou Tasks.org : ☐ pour terminer, + pour ajouter), mot du jour (Le Littré), mindful (Reader's Mindful Tool), enregistreur (Reader's Recorder), notes (Reader's Notes), livre (Reader's Books). N'importe quel widget d'application standard peut aussi être ajouté.
+• Deux livres vivent à côté de l'écran d'accueil : balayer à droite ou à gauche ouvre une liseuse très sobre (EPUB, MOBI, FB2, texte brut) qui reprend où vous vous étiez arrêté.
+• Balayer vers le haut : toutes les applications, par ordre alphabétique, avec recherche ; balayer et maintenir : la liste texte des applications récentes ; balayer vers le bas : le volet de notifications. Un appui long pour le reste : ajouter, modifier, renommer, déplacer, ranger par glisser, retirer, infos, désinstaller.
+• Export et import de toute la configuration en un fichier JSON.
+
+Le lanceur ne parle jamais lui-même à un serveur (la tuile météo interroge directement MétéoSuisse ou Open-Meteo, sans clé). Pas de compte, pas de pistage. Anglais, français, allemand, espagnol, portugais, russe. Logiciel libre, licence MIT ; la liste des applications et la liaison des widgets suivent µLauncher (MIT).
+
+Pierre Gallaz · développé avec Claude Code

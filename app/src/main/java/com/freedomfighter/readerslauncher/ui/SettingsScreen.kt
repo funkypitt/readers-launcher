@@ -109,6 +109,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                     size = typo.title,
                     secondary = if (about) stringResource(R.string.settings_about_line) else null
                 ) { about = !about }
+                TextRow(stringResource(R.string.credits), size = typo.title) { }
             }
         }
     }

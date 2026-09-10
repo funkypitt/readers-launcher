@@ -1,0 +1,12 @@
+A black-and-white, text-only Android launcher in the spirit of the Light Phone, made for e-ink phones and for anyone who wants a quiet home screen. No icons, no colours, no wallpaper: a single column of words.
+
+• Every screen is white on black or black on white. Flip between the two with a double tap on empty space, from a quick-settings tile, or in settings (which also offers "follow system").
+• The home screen is a fixed page that never scrolls. It holds a column of tiles: an app (its name), a category (a name that opens a text list of apps), or a widget. A small grid of 3 to 5 squares at the bottom keeps the unavoidable apps (phone, messages…) as monochrome glyphs. More home pages if you want them, swiped sideways.
+• Built-in text widgets of fixed height, so nothing on the page ever shifts: clock, weather (MeteoSwiss or Open-Meteo, no key), agenda (next event, + to add), tasks (a list from Reader's Tasks or Tasks.org: ☐ to complete, + to add), word of the day (Le Littré), mindful (Reader's Mindful Tool), recorder (Reader's Recorder), notes (Reader's Notes), book (Reader's Books). Any standard app widget can be added too.
+• Two books live beside the home screen: swipe right or left for a very plain reader (EPUB, MOBI, FB2, plain text) that reopens where you stopped.
+• Swipe up for all apps, alphabetical, with search; swipe up and hold for a text list of recently used apps; swipe down for the notification shade. Long press for everything else: add, edit, rename, move, arrange by drag, remove, app info, uninstall.
+• Export and import of the whole configuration as a JSON file.
+
+The launcher never talks to a server itself (the weather tile asks MeteoSwiss or Open-Meteo directly, without a key). No account, no tracking. English, French, German, Spanish, Portuguese, Russian. Free software, MIT licence; the app listing and widget binding follow µLauncher (MIT).
+
+Pierre Gallaz · developed with Claude Code

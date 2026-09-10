@@ -115,6 +115,7 @@
     <string name="settings_import">импорт настроек</string>
     <string name="settings_about">reader\'s launcher %1$s</string>
     <string name="settings_about_line">чёрно-белый, только текст. Лицензия MIT.</string>
+    <string name="credits">Pierre Gallaz · разработано с Claude Code</string>
     <string name="export_done">настройки экспортированы</string>
     <string name="import_done">настройки импортированы</string>
     <string name="import_failed">не удалось прочитать этот файл</string>

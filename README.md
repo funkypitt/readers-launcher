@@ -116,3 +116,11 @@ Export / import of the whole configuration is available in settings (a JSON file
 ## Licence
 
 MIT. See `LICENSE` for the µLauncher attribution.
+
+## Crédits / Credits
+
+© 2026 Pierre Gallaz. Développé avec [Claude Code](https://claude.com/claude-code) (Anthropic).
+Licence MIT, voir `LICENSE`.
+
+© 2026 Pierre Gallaz. Developed with [Claude Code](https://claude.com/claude-code) (Anthropic).
+MIT licence, see `LICENSE`.

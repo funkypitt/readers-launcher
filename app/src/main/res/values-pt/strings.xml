@@ -115,6 +115,7 @@
     <string name="settings_import">importar a configuração</string>
     <string name="settings_about">reader\'s launcher %1$s</string>
     <string name="settings_about_line">preto e branco, só texto. Licença MIT.</string>
+    <string name="credits">Pierre Gallaz · desenvolvido com Claude Code</string>
     <string name="export_done">configuração exportada</string>
     <string name="import_done">configuração importada</string>
     <string name="import_failed">não foi possível ler esse ficheiro</string>
