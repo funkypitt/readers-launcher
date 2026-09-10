@@ -55,24 +55,44 @@ internal fun rememberProviderGeneration(uri: android.net.Uri): Int {
     return generation
 }
 
-/** The book being read, a dim "book" under it; tap carries on at the current page. */
+/** The book being read, a dim "book" under it; swipe sideways for the ones opened before; tap carries on at the current page. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookTileView(onLongPress: () -> Unit) {
     val context = LocalContext.current
     val colors = LocalColors.current
+    val tick = rememberTick()
     val generation = rememberProviderGeneration(ReadersBooks.URI)
     val now = rememberNow()
-    val book by produceState<ReadersBooks.Book?>(null, generation, now / (10 * 60_000)) {
-        value = withContext(Dispatchers.IO) { ReadersBooks.current(context) }
+    val books by produceState<List<ReadersBooks.Book>?>(null, generation, now / (10 * 60_000)) {
+        value = withContext(Dispatchers.IO) { ReadersBooks.all(context) }
     }
+    var index by remember { mutableIntStateOf(0) }
+    val list = books ?: emptyList()
+    if (index >= list.size) index = maxOf(0, list.size - 1)
+    val book = list.getOrNull(index)
     val installed = ReadersBooks.isInstalled(context)
     val label = book?.title ?: if (installed) stringResource(R.string.book_none) else "Reader's Books"
-    val caption = stringResource(R.string.widget_book) + (book?.takeIf { it.progress > 0 }?.let { " · ${it.progress}%" } ?: "")
+    val caption = stringResource(R.string.widget_book) + (if (list.size > 1) " ${index + 1}/${list.size}" else "") + (book?.takeIf { it.progress > 0 }?.let { " · ${it.progress}%" } ?: "")
     Column(
         Modifier
             .fillMaxWidth()
             .height(widgetTwoLineHeight())
+            // Swipe left → the book opened before this one, right → the more recent one; the
+            // drag is consumed here so the home screen does not read it as a page or book-slot swipe.
+            .pointerInput(list.size) {
+                var total = 0f
+                detectHorizontalDragGestures(
+                    onDragStart = { total = 0f },
+                    onDragEnd = {
+                        if (abs(total) > 60.dp.toPx()) {
+                            val next = if (total < 0) index + 1 else index - 1
+                            if (next in list.indices) { index = next; tick() }
+                        }
+                    },
+                    onHorizontalDrag = { change, delta -> total += delta; change.consume() }
+                )
+            }
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

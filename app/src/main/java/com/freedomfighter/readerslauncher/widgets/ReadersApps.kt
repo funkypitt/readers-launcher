@@ -13,18 +13,18 @@ object ReadersBooks {
 
     fun isInstalled(context: Context) = runCatching { context.packageManager.getPackageInfo(PACKAGE, 0) }.isSuccess
 
-    /** The book most recently opened, or null. */
-    fun current(context: Context): Book? = runCatching {
+    /** Every book on the shelf, the most recently opened first. */
+    fun all(context: Context): List<Book> = runCatching {
+        val out = ArrayList<Book>()
         context.contentResolver.query(URI, null, null, null, null)?.use { c ->
             val id = c.getColumnIndex("id"); val title = c.getColumnIndex("title"); val progress = c.getColumnIndex("progress"); val opened = c.getColumnIndex("opened")
-            var best: Book? = null
-            while (c.moveToNext()) {
-                val b = Book(c.getString(id), c.getString(title), c.getInt(progress), c.getLong(opened))
-                if (best == null || b.opened > best.opened) best = b
-            }
-            best
+            while (c.moveToNext()) out += Book(c.getString(id), c.getString(title), c.getInt(progress), c.getLong(opened))
         }
-    }.getOrNull()
+        out.sortedByDescending { it.opened }
+    }.getOrDefault(emptyList())
+
+    /** The book most recently opened, or null. */
+    fun current(context: Context): Book? = all(context).firstOrNull()
 
     fun open(context: Context, book: Book?) {
         // explicit component: a content:// URI gets a MIME type from the provider, which no plain scheme/host filter matches
