@@ -178,4 +178,10 @@
     <string name="page_tap_next">toucher pour la page suivante</string>
     <string name="reader_or_page">ou une deuxième page d\'accueil</string>
     <string name="reader_or_page_hint">une autre page de tuiles ici plutôt qu\'un livre ; l\'emplacement du livre passe alors après la dernière page</string>
+    <string name="widget_recorder">enregistreur</string>
+    <string name="widget_recorder_desc">enregistrer d\'un toucher (Reader\'s Recorder) ; le dernier enregistrement dessous</string>
+    <string name="recorder_record">enregistrer</string>
+    <string name="recorder_recording">enregistrement</string>
+    <string name="recorder_paused">en pause</string>
+    <string name="recorder_tap_stop">toucher ■ pour arrêter</string>
 </resources>

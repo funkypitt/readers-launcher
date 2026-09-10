@@ -178,4 +178,10 @@
     <string name="page_tap_next">toque para a página seguinte</string>
     <string name="reader_or_page">ou uma segunda página inicial</string>
     <string name="reader_or_page_hint">outra página de mosaicos aqui em vez de um livro; o lugar do livro passa então para depois da última página</string>
+    <string name="widget_recorder">gravador</string>
+    <string name="widget_recorder_desc">grave com um toque (Reader\'s Recorder); a última gravação por baixo</string>
+    <string name="recorder_record">gravar</string>
+    <string name="recorder_recording">a gravar</string>
+    <string name="recorder_paused">em pausa</string>
+    <string name="recorder_tap_stop">toque em ■ para parar</string>
 </resources>

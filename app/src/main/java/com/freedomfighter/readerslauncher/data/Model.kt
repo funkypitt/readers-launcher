@@ -52,6 +52,11 @@ data class BookTile(override val id: String = newId()) : Tile()
 @SerialName("notes")
 data class NotesTile(override val id: String = newId()) : Tile()
 
+/** Reader's Recorder: record with one tap, the latest recording under it. */
+@Serializable
+@SerialName("recorder")
+data class RecorderTile(override val id: String = newId()) : Tile()
+
 /** Reader's Mindful Tool: a bowl every X minutes and/or a timed meditation, started from the tile. */
 @Serializable
 @SerialName("mindful")

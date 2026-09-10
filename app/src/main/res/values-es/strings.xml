@@ -178,4 +178,10 @@
     <string name="page_tap_next">toca para la página siguiente</string>
     <string name="reader_or_page">o una segunda página de inicio</string>
     <string name="reader_or_page_hint">otra página de fichas aquí en lugar de un libro; el libro pasa entonces después de la última página</string>
+    <string name="widget_recorder">grabadora</string>
+    <string name="widget_recorder_desc">graba con un toque (Reader\'s Recorder); la última grabación debajo</string>
+    <string name="recorder_record">grabar</string>
+    <string name="recorder_recording">grabando</string>
+    <string name="recorder_paused">en pausa</string>
+    <string name="recorder_tap_stop">toca ■ para parar</string>
 </resources>

@@ -178,4 +178,10 @@
     <string name="page_tap_next">antippen für die nächste Seite</string>
     <string name="reader_or_page">oder eine zweite Startseite</string>
     <string name="reader_or_page_hint">hier eine weitere Seite mit Kacheln statt eines Buches; der Buchplatz liegt dann hinter der letzten Seite</string>
+    <string name="widget_recorder">Rekorder</string>
+    <string name="widget_recorder_desc">mit einem Tipp aufnehmen (Reader\'s Recorder); die letzte Aufnahme darunter</string>
+    <string name="recorder_record">aufnehmen</string>
+    <string name="recorder_recording">Aufnahme</string>
+    <string name="recorder_paused">Pause</string>
+    <string name="recorder_tap_stop">■ antippen zum Stoppen</string>
 </resources>

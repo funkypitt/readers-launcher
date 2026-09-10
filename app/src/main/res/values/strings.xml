@@ -200,4 +200,10 @@
     <string name="page_tap_next">tap for the next page</string>
     <string name="reader_or_page">or a second home page</string>
     <string name="reader_or_page_hint">another page of tiles here instead of a book; the book slot then sits after the last page</string>
+    <string name="widget_recorder">recorder</string>
+    <string name="widget_recorder_desc">record with one tap (Reader\'s Recorder); the latest recording under it</string>
+    <string name="recorder_record">record</string>
+    <string name="recorder_recording">recording</string>
+    <string name="recorder_paused">paused</string>
+    <string name="recorder_tap_stop">tap ■ to stop</string>
 </resources>

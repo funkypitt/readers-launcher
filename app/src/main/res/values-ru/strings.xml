@@ -178,4 +178,10 @@
     <string name="page_tap_next">нажмите для следующей страницы</string>
     <string name="reader_or_page">или вторая главная страница</string>
     <string name="reader_or_page_hint">здесь ещё одна страница плиток вместо книги; место книги тогда будет после последней страницы</string>
+    <string name="widget_recorder">диктофон</string>
+    <string name="widget_recorder_desc">запись одним нажатием (Reader\'s Recorder); последняя запись под ним</string>
+    <string name="recorder_record">записать</string>
+    <string name="recorder_recording">запись</string>
+    <string name="recorder_paused">пауза</string>
+    <string name="recorder_tap_stop">нажмите ■, чтобы остановить</string>
 </resources>
