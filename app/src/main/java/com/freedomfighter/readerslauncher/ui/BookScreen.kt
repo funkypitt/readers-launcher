@@ -128,6 +128,12 @@ fun BookScreen(nav: Nav, app: App, slotIndex: Int) {
                         if (importError) stringResource(R.string.reader_unsupported) else stringResource(R.string.reader_hint_formats),
                         align = TextAlign.Center, maxLines = 3
                     )
+                    if (slotIndex == 1) {
+                        // The right-hand side can be another home page instead of a book; the book slot then moves after it.
+                        VSpace(40.dp)
+                        T(stringResource(R.string.reader_or_page), Modifier.noRippleClickable { app.store.setPage(app.store.addPage()); nav.pop() }, size = typo.title, align = TextAlign.Center)
+                        Small(stringResource(R.string.reader_or_page_hint), align = TextAlign.Center, maxLines = 3)
+                    }
                     VSpace(40.dp)
                     Small(stringResource(R.string.reader_hint_back), align = TextAlign.Center)
                 }

@@ -171,7 +171,7 @@ fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
     val typo = LocalTypo.current
     val colors = LocalColors.current
     val sources = remember { TaskSource.all(context) }
-    val existing = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? TasksTile }
+    val existing = tileId?.let { id -> app.store.state.value.allTiles.firstOrNull { it.id == id } as? TasksTile }
     var chosen by remember { mutableStateOf<TaskSource?>(existing?.let { e -> sources.firstOrNull { it.id == e.source } }
         ?: sources.filter { it.isInstalled }.singleOrNull()) }
     var installed by remember { mutableStateOf(sources.map { it.id to it.isInstalled }) }
@@ -239,7 +239,7 @@ fun TasksSetupScreen(nav: Nav, app: App, tileId: String?) {
                         }
                         items(lists ?: emptyList(), key = { it.id }) { l ->
                             TextRow(l.title, secondary = l.account.ifBlank { null }) {
-                                val current = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? TasksTile }
+                                val current = tileId?.let { id -> app.store.state.value.allTiles.firstOrNull { it.id == id } as? TasksTile }
                                 if (current != null) app.store.replaceTile(current.copy(listId = l.id, listTitle = l.title, source = src.id))
                                 else app.store.addTile(TasksTile(listId = l.id, listTitle = l.title, source = src.id))
                                 nav.pop()

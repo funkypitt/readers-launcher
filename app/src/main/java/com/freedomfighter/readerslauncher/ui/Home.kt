@@ -63,6 +63,8 @@ import com.freedomfighter.readerslauncher.data.WeatherTile
 import com.freedomfighter.readerslauncher.data.WordTile
 import com.freedomfighter.readerslauncher.data.BookTile
 import com.freedomfighter.readerslauncher.data.NotesTile
+import com.freedomfighter.readerslauncher.data.MindfulTile
+import com.freedomfighter.readerslauncher.widgets.MindfulTileView
 import com.freedomfighter.readerslauncher.widgets.BookTileView
 import com.freedomfighter.readerslauncher.widgets.NotesTileView
 import com.freedomfighter.readerslauncher.widgets.WordTileView
@@ -105,6 +107,7 @@ internal sealed class HomePrompt {
     data class NewCategory(val apps: List<AppRef>) : HomePrompt()
     data class WeatherCity(val tile: WeatherTile) : HomePrompt()
     data class NewTask(val tile: TasksTile) : HomePrompt()
+    data class MindfulMinutes(val tile: MindfulTile, val which: String) : HomePrompt()
 }
 
 /**
@@ -137,18 +140,21 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
     val density = androidx.compose.ui.platform.LocalDensity.current
     val cellPx = with(density) { cellHeight().toPx() }
     val capacity = if (availableHeight > 0) (availableHeight / cellPx).toInt() else 0
-    val usedCells = state.tiles.sumOf { tileCells(it) }
+    val page by app.store.currentPage.collectAsState()
+    val pageTiles = state.page(page)
+    val usedCells = pageTiles.sumOf { tileCells(it) }
     LaunchedEffect(capacity) { app.pageCells = capacity }
+    LaunchedEffect(state.pageCount) { app.store.setPage(page) }
     val roomForRow = capacity > 0 && capacity - usedCells >= TEXT_ROW_CELLS
     // A tile that was just added and does not fit is taken back.
-    var knownIds by remember { mutableStateOf(state.tiles.map { it.id }.toSet()) }
-    LaunchedEffect(usedCells, capacity, state.tiles) {
-        val ids = state.tiles.map { it.id }
-        val added = ids.filterNot { it in knownIds }
+    var knownIds by remember { mutableStateOf(state.allTiles.map { it.id }.toSet()) }
+    LaunchedEffect(usedCells, capacity, state.allTiles) {
+        val ids = state.allTiles.map { it.id }
+        val added = ids.filterNot { it in knownIds }.filter { id -> pageTiles.any { it.id == id } }
         knownIds = ids.toSet()
         if (capacity > 0 && usedCells > capacity && added.isNotEmpty()) {
             added.forEach { id ->
-                (state.tiles.firstOrNull { it.id == id } as? AppWidgetTile)?.let { app.widgetHost.deleteAppWidgetId(it.appWidgetId) }
+                (pageTiles.firstOrNull { it.id == id } as? AppWidgetTile)?.let { app.widgetHost.deleteAppWidgetId(it.appWidgetId) }
                 app.store.removeTile(id)
             }
             android.widget.Toast.makeText(context, R.string.hint_full, android.widget.Toast.LENGTH_SHORT).show()
@@ -247,7 +253,11 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                             if (!change.pressed) {
                                 if (horizontal && abs(dx) > swipeThresholdPx) {
                                     tick()
-                                    nav.push(Screen.Book(if (dx > 0) 0 else 1))
+                                    // Another page in that direction comes first; past the last one lies the book.
+                                    val current = app.store.currentPage.value
+                                    val count = app.store.state.value.pageCount
+                                    if (dx > 0) { if (current > 0) app.store.setPage(current - 1) else nav.push(Screen.Book(0)) }
+                                    else { if (current < count - 1) app.store.setPage(current + 1) else nav.push(Screen.Book(1)) }
                                 }
                                 break
                             }
@@ -278,7 +288,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         .onSizeChanged { availableHeight = it.height }
                 ) {
                     Column(Modifier.fillMaxWidth()) {
-                        state.tiles.forEach { tile ->
+                        pageTiles.forEach { tile ->
                             key(tile.id) {
                                 TileView(
                                     tile = tile,
@@ -288,12 +298,17 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                                     onLongPress = { tick(); menu = HomeMenu.ForTile(tile) },
                                     onNeedCity = { prompt = HomePrompt.WeatherCity(it) },
                                     onNewTask = { prompt = HomePrompt.NewTask(it) },
+                                    onMindfulMinutes = { t, which -> prompt = HomePrompt.MindfulMinutes(t, which) },
                                     doubleTapShortcuts = settings.doubleTapShortcuts,
                                     onShortcuts = { tick(); menu = HomeMenu.Shortcuts(it) }
                                 )
                             }
                         }
                     }
+                }
+                if (state.pageCount > 1) {
+                    // Which page this is: a dim dot per page, the current one filled.
+                    Small((0 until state.pageCount).joinToString(" ") { if (it == page) "●" else "○" }, Modifier.fillMaxWidth().padding(bottom = 4.dp), align = TextAlign.Center)
                 }
                 state.grid?.let { grid ->
                     GridBar(
@@ -306,10 +321,10 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 Box(Modifier.windowInsetsPadding(WindowInsets.navigationBars))
             }
 
-            if (state.tiles.isEmpty() && state.grid == null) {
+            if (pageTiles.isEmpty() && (state.grid == null || page > 0)) {
                 Small(
-                    stringResource(R.string.hint_empty),
-                    Modifier.align(Alignment.Center),
+                    stringResource(if (page > 0) R.string.hint_empty_page else R.string.hint_empty),
+                    Modifier.align(Alignment.Center).padding(horizontal = rowPadH),
                     align = TextAlign.Center
                 )
             }
@@ -325,6 +340,9 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 add(MenuItem(stringResource(R.string.hint_full)) { })
                 if (state.grid == null) add(MenuItem(stringResource(R.string.menu_add_grid)) { app.store.setGrid(Grid()) })
             }
+            // Pages: a new one goes after the last; an empty page other than the first can go.
+            add(MenuItem(stringResource(R.string.menu_add_page)) { app.store.setPage(app.store.addPage()) })
+            if (page > 0 && pageTiles.isEmpty()) add(MenuItem(stringResource(R.string.menu_remove_page)) { app.store.removePage(page) })
             // Reachable from every tile's menu too, since a full page leaves no empty space to double-tap.
             add(MenuItem(if (colors.isDark) stringResource(R.string.theme_light) else stringResource(R.string.theme_dark)) {
                 app.prefs.toggleTheme(systemDark)
@@ -415,6 +433,17 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 },
                 onCancel = { prompt = null }
             )
+            is HomePrompt.MindfulMinutes -> TextPrompt(
+                title = stringResource(if (p.which == "interval") R.string.mindful_every_prompt else R.string.mindful_minutes_prompt),
+                initial = (if (p.which == "interval") p.tile.intervalMin else p.tile.durationMin).toString(),
+                keyboard = androidx.compose.ui.text.input.KeyboardType.Number,
+                onDone = { text ->
+                    val m = text.trim().toIntOrNull()?.coerceIn(1, 240)
+                    if (m != null) app.store.replaceTile(if (p.which == "interval") p.tile.copy(intervalMin = m) else p.tile.copy(durationMin = m))
+                    prompt = null
+                },
+                onCancel = { prompt = null }
+            )
             is HomePrompt.WeatherCity -> TextPrompt(
                 title = stringResource(R.string.weather_city_prompt), initial = p.tile.place?.name ?: "",
                 onDone = { query ->
@@ -437,6 +466,7 @@ private fun tileTitle(tile: Tile, state: HomeState, app: App): String? = when (t
     is WordTile -> stringResource(R.string.widget_word)
     is BookTile -> stringResource(R.string.widget_book)
     is NotesTile -> stringResource(R.string.widget_notes)
+    is MindfulTile -> stringResource(R.string.widget_mindful)
     is WeatherTile -> stringResource(R.string.widget_weather)
     is CalendarTile -> stringResource(R.string.widget_calendar)
     is TasksTile -> stringResource(R.string.widget_tasks) + " · " + tile.listTitle
@@ -454,11 +484,15 @@ private fun tileMenuItems(
     onShortcuts: (AppRef) -> Unit
 ): List<MenuItem> {
     val context = LocalContext.current
-    val index = state.tiles.indexOfFirst { it.id == tile.id }
+    val pageIndex = state.pageOf(tile.id)
+    val pageTiles = state.page(pageIndex)
+    val index = pageTiles.indexOfFirst { it.id == tile.id }
     val moveItems = buildList {
         if (index > 0) add(MenuItem(stringResource(R.string.menu_move_up)) { app.store.moveTile(tile.id, -1) })
-        if (index < state.tiles.size - 1) add(MenuItem(stringResource(R.string.menu_move_down)) { app.store.moveTile(tile.id, 1) })
-        if (state.tiles.size > 2) add(MenuItem(stringResource(R.string.menu_arrange)) { nav.push(Screen.Arrange) })
+        if (index < pageTiles.size - 1) add(MenuItem(stringResource(R.string.menu_move_down)) { app.store.moveTile(tile.id, 1) })
+        if (pageIndex < state.pageCount - 1) add(MenuItem(stringResource(R.string.menu_move_next_page)) { app.store.moveTileToPage(tile.id, pageIndex + 1) })
+        if (pageIndex > 0) add(MenuItem(stringResource(R.string.menu_move_prev_page)) { app.store.moveTileToPage(tile.id, pageIndex - 1) })
+        if (pageTiles.size > 2) add(MenuItem(stringResource(R.string.menu_arrange)) { nav.push(Screen.Arrange) })
     }
     val remove = MenuItem(stringResource(R.string.menu_remove)) {
         if (tile is AppWidgetTile) app.widgetHost.deleteAppWidgetId(tile.appWidgetId)
@@ -486,6 +520,11 @@ private fun tileMenuItems(
         is WordTile -> moveItems + remove
         is BookTile -> moveItems + remove
         is NotesTile -> moveItems + remove
+        is MindfulTile -> buildList {
+            add(MenuItem(stringResource(R.string.menu_configure)) { nav.push(Screen.MindfulSetup(tile.id)) })
+            addAll(moveItems)
+            add(remove)
+        }
         is WeatherTile -> buildList {
             addAll(weatherMenuItems(tile, app, context, onChooseCity = { onPrompt(HomePrompt.WeatherCity(tile)) }))
             addAll(moveItems)
@@ -519,6 +558,7 @@ private fun TileView(
     onLongPress: () -> Unit,
     onNeedCity: (WeatherTile) -> Unit,
     onNewTask: (TasksTile) -> Unit = {},
+    onMindfulMinutes: (MindfulTile, String) -> Unit = { _, _ -> },
     doubleTapShortcuts: Boolean = false,
     onShortcuts: (AppRef) -> Unit = {}
 ) {
@@ -534,6 +574,7 @@ private fun TileView(
         is WordTile -> WordTileView(nav, onLongPress)
         is BookTile -> BookTileView(onLongPress)
         is NotesTile -> NotesTileView(onLongPress)
+        is MindfulTile -> MindfulTileView(tile, app, onLongPress, onMinutes = { onMindfulMinutes(tile, it) })
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
         is CalendarTile -> CalendarTileView(tile, app, onLongPress, onOpen = { nav.push(Screen.Agenda(tile.id)) })
         is TasksTile -> TasksTileView(tile, app, onLongPress, onSetup = { nav.push(Screen.TasksSetup(tile.id)) }, onAdd = { onNewTask(tile) })

@@ -65,7 +65,7 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
         val label = runCatching { info.loadLabel(context.packageManager) }.getOrDefault("widget")
         val minDp = info.minHeight / context.resources.displayMetrics.density
         val cells = kotlin.math.ceil(minDp / cellDp).toInt().coerceIn(2, 12)
-        val used = app.store.state.value.tiles.sumOf { tileCells(it) }
+        val used = app.store.state.value.page(app.store.currentPage.value).sumOf { tileCells(it) }
         if (app.pageCells > 0 && used + cells > app.pageCells) {
             app.widgetHost.deleteAppWidgetId(id)
             Toast.makeText(context, R.string.hint_full, Toast.LENGTH_SHORT).show()
@@ -141,6 +141,11 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
                 item {
                     TextRow(stringResource(R.string.widget_notes), secondary = stringResource(R.string.widget_notes_desc)) {
                         app.store.addTile(NotesTile()); nav.pop()
+                    }
+                }
+                item {
+                    TextRow(stringResource(R.string.widget_mindful), secondary = stringResource(R.string.widget_mindful_desc)) {
+                        nav.replace(Screen.MindfulSetup(null))
                     }
                 }
                 item {

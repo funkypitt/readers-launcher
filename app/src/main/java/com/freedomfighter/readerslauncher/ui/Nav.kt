@@ -24,6 +24,7 @@ sealed class Screen {
     data object WidgetPicker : Screen()
     data class CalendarSetup(val tileId: String?) : Screen()
     data class TasksSetup(val tileId: String?) : Screen()
+    data class MindfulSetup(val tileId: String?) : Screen()
     data object Recents : Screen()
     /** slot 0 = left of home (swipe right), 1 = right of home (swipe left). */
     data class Book(val slot: Int) : Screen()

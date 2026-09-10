@@ -31,6 +31,7 @@
     <uses-permission android:name="com.freedomfighter.readerstasks.permission.ACCESS" />
     <uses-permission android:name="com.freedomfighter.readersbooks.permission.ACCESS" />
     <uses-permission android:name="com.freedomfighter.readersnotes.permission.ACCESS" />
+    <uses-permission android:name="com.freedomfighter.readersmindful.permission.ACCESS" />
 
     <queries>
         <package android:name="org.tasks" />
@@ -39,8 +40,10 @@
         <package android:name="com.freedomfighter.readerscalendar" />
         <package android:name="com.freedomfighter.readersbooks" />
         <package android:name="com.freedomfighter.readersnotes" />
+        <package android:name="com.freedomfighter.readersmindful" />
         <provider android:authorities="com.freedomfighter.readersbooks" />
         <provider android:authorities="com.freedomfighter.readersnotes" />
+        <provider android:authorities="com.freedomfighter.readersmindful" />
         <provider android:authorities="ch.littre.littre_app.wotd" />
         <provider android:authorities="com.freedomfighter.readerstasks" />
         <provider android:authorities="org.tasks.api" />

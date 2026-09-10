@@ -34,7 +34,7 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
     val context = LocalContext.current
     val activity = context.findActivity()
     val home by app.store.state.collectAsState()
-    val tile = home.tiles.firstOrNull { it.id == tileId } as? CategoryTile
+    val tile = home.allTiles.firstOrNull { it.id == tileId } as? CategoryTile
     val tick = rememberTick()
     val settings by app.prefs.settings.collectAsState()
     var menuFor by remember { mutableStateOf<AppRef?>(null) }
@@ -86,7 +86,7 @@ fun CategoryScreen(nav: Nav, app: App, tileId: String) {
 @Composable
 fun CategoryEditScreen(nav: Nav, app: App, tileId: String) {
     val home by app.store.state.collectAsState()
-    val tile = home.tiles.firstOrNull { it.id == tileId } as? CategoryTile
+    val tile = home.allTiles.firstOrNull { it.id == tileId } as? CategoryTile
     var rename by remember { mutableStateOf(false) }
     var removeFor by remember { mutableStateOf<AppRef?>(null) }
     BackHandler { nav.pop() }
@@ -99,7 +99,7 @@ fun CategoryEditScreen(nav: Nav, app: App, tileId: String) {
             TextRow(stringResource(R.string.category_add_apps), size = LocalTypo.current.title, onClick = {
                 nav.push(Screen.Apps(PickMode.Multi(preselected = tile.apps) { picked ->
                     nav.pop()
-                    val current = app.store.state.value.tiles.firstOrNull { it.id == tileId } as? CategoryTile ?: return@Multi
+                    val current = app.store.state.value.allTiles.firstOrNull { it.id == tileId } as? CategoryTile ?: return@Multi
                     // Keep existing order for kept apps, append newly chosen ones.
                     val kept = current.apps.filter { it in picked }
                     val added = picked.filter { it !in kept }

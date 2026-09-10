@@ -7,7 +7,7 @@ No icons, no colours, no wallpaper: a single column of words.
   time with a double tap on empty home-screen space, from the long-press menu of any
   tile, from the quick-settings tile "Reader's theme", or in settings (which also offers
   "follow system").
-* The home screen is a single fixed page — it never scrolls. It holds a column of tiles:
+* The home screen is a fixed page — it never scrolls. It holds a column of tiles:
   an **app** (its name), a **category** (a name that opens a text list of apps), or a
   **widget**. Once the page is full, the menu says so instead of offering to add more.
   A special **grid** of 3 to 5 squares is pinned at the bottom for the unavoidable apps
@@ -18,10 +18,16 @@ No icons, no colours, no wallpaper: a single column of words.
   **weather** (MeteoSwiss for places in Switzerland, Open-Meteo elsewhere or as fallback, no
   key; tap for five days),
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
-  first task, swipe for the following ones, ☐ to complete, + to add). Any standard app
-  widget can be added too.
-* Two **books** live beside the home screen: swipe right for the left one, left for the
-  right one. A very plain reader — tap the right half of the page to go forward, the left
+  first task, swipe for the following ones, ☐ to complete, + to add), **mindful** (Reader's
+  Mindful Tool: a bowl every X minutes, a timed meditation). Any standard app widget can be
+  added too; its height is set in cells from its menu.
+* **More home pages** if you want them: "add a home page" in the long-press menu, or "or a
+  second home page" on the empty right-hand book slot. Swipe sideways between pages (dim
+  dots show which one you are on); each page has its own cells, the grid of key apps is
+  shared, and a tile's menu can move it to the next or previous page. An empty page other
+  than the first can be removed.
+* Two **books** live beside the home screen: swipe right for the left one, left past the
+  last page for the right one. A very plain reader — tap the right half of the page to go forward, the left
   half to go back, long press for chapters and text size — and it reopens where you stopped.
   The screen stays on while a page is open (released after 15 minutes without a page turn).
   EPUB, MOBI (PalmDoc), FB2 and plain text; no PDF.
@@ -43,6 +49,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe down | notification shade |
 | swipe right / left | the book on that side (long press in the reader for its menu) |
 | the book tile | the book you were reading in [Reader's Books](https://github.com/funkypitt/readers-books), a dim "book" under it; tap carries on at the current page |
+| the mindful tile | [Reader's Mindful Tool](https://github.com/funkypitt/readers-mindful): "a bowl every X min" and "meditate X min" on one tile (swipe between them) or just one, chosen when the tile is placed; tap the words to change the minutes, ▶ starts, ■ stops; a running meditation shows its countdown and a thin progress rule |
 | the notes tile | the latest note from [Reader's Notes](https://github.com/funkypitt/readers-notes); swipe sideways for the others, tap opens it, + writes a new one |
 | app and category names | one step larger than the widgets' text (about 15 %): they are where the page leads, widgets are what it tells |
 | the page | a fixed grid of cells, each half a text row: a text row takes 2, a two-line widget 3, the clock or the weather 4, an app widget its declared height rounded up. Adding is refused when the cells are used up; "arrange tiles" shows the count |

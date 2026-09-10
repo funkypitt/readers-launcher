@@ -181,6 +181,7 @@ private fun Root(nav: Nav, app: App) {
         Screen.WidgetPicker -> WidgetPickerScreen(nav, app)
         is Screen.CalendarSetup -> CalendarSetupScreen(nav, app, screen.tileId)
         is Screen.TasksSetup -> TasksSetupScreen(nav, app, screen.tileId)
+        is Screen.MindfulSetup -> com.freedomfighter.readerslauncher.widgets.MindfulSetupScreen(nav, app, screen.tileId)
         Screen.Recents -> RecentsScreen(nav, app)
         is Screen.Book -> BookScreen(nav, app, screen.slot)
         is Screen.BookChapters -> BookChaptersScreen(nav, app, screen.slot)

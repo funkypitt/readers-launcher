@@ -108,9 +108,11 @@ fun AppWidgetTileView(tile: AppWidgetTile, app: App, onLongPress: () -> Unit) {
 @Composable
 fun appWidgetMenuItems(tile: AppWidgetTile, app: App, activity: Activity?): List<MenuItem> = buildList {
     val info = app.widgetManager.getAppWidgetInfo(tile.appWidgetId)
-    val next = if (tile.height >= 4) 1 else tile.height + 1
-    add(MenuItem(stringResource(R.string.menu_height, "${tile.height}×"), "→ $next×") {
-        app.store.replaceTile(tile.copy(height = next))
+    // Height in page cells (half text rows), stepping up and wrapping round.
+    val cells = tile.cellCount()
+    val next = if (cells >= 8) 2 else cells + 1
+    add(MenuItem(stringResource(R.string.menu_height, "$cells"), "→ $next") {
+        app.store.replaceTile(tile.copy(cells = next))
     })
     if (info?.configure != null && activity is MainActivity &&
         (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P ||

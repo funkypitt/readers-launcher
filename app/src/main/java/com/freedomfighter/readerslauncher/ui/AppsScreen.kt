@@ -153,7 +153,7 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
         // Long-press menu (drawer only).
         menuFor?.let { entry ->
             val label = home.renames[entry.ref.key] ?: entry.label
-            val onHome = home.tiles.any { it is AppTile && it.app == entry.ref }
+            val onHome = home.allTiles.any { it is AppTile && it.app == entry.ref }
             val hidden = entry.ref.key in hiddenKeys
             TextMenu(
                 title = label,
@@ -161,7 +161,7 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
                     add(MenuItem(stringResource(R.string.menu_open)) { app.apps.launch(entry.ref); nav.home() })
                     add(MenuItem(stringResource(R.string.menu_shortcuts)) { shortcutsFor = entry })
                     if (!onHome) add(MenuItem(stringResource(R.string.menu_add_to_home)) { app.store.addTile(AppTile(app = entry.ref)) })
-                    if (home.tiles.any { it is CategoryTile })
+                    if (home.allTiles.any { it is CategoryTile })
                         add(MenuItem(stringResource(R.string.menu_add_to_category)) { addToCategoryFor = entry })
                     if (home.grid != null && home.grid!!.slots.take(home.grid!!.columns).any { it == null }) {
                         add(MenuItem(stringResource(R.string.menu_add_grid)) {
@@ -195,7 +195,7 @@ fun AppsScreen(nav: Nav, app: App, mode: PickMode) {
         addToCategoryFor?.let { entry ->
             TextMenu(
                 title = stringResource(R.string.menu_add_to_category),
-                items = home.tiles.filterIsInstance<CategoryTile>().map { cat ->
+                items = home.allTiles.filterIsInstance<CategoryTile>().map { cat ->
                     MenuItem(cat.name) {
                         if (entry.ref !in cat.apps) app.store.replaceTile(cat.copy(apps = cat.apps + entry.ref))
                     }

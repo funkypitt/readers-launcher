@@ -228,6 +228,7 @@ fun TextPrompt(
     title: String,
     initial: String = "",
     confirm: String = stringResource(R.string.action_ok),
+    keyboard: androidx.compose.ui.text.input.KeyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
     onDone: (String) -> Unit,
     onCancel: () -> Unit
 ) {
@@ -261,7 +262,8 @@ fun TextPrompt(
                 onValueChange = { value = it },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = rowPadH, vertical = 10.dp).focusRequester(focus),
                 imeAction = ImeAction.Done,
-                onImeAction = { if (value.isNotBlank()) onDone(value.trim()) }
+                onImeAction = { if (value.isNotBlank()) onDone(value.trim()) },
+                keyboard = keyboard
             )
             Rule()
             Row(Modifier.fillMaxWidth()) {
@@ -282,7 +284,8 @@ fun ReaderTextField(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     imeAction: ImeAction = ImeAction.Search,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
+    keyboard: androidx.compose.ui.text.input.KeyboardType = androidx.compose.ui.text.input.KeyboardType.Text
 ) {
     val colors = LocalColors.current
     val typo = LocalTypo.current
@@ -293,7 +296,7 @@ fun ReaderTextField(
         singleLine = true,
         textStyle = TextStyle(color = colors.fg, fontFamily = typo.family, fontWeight = typo.weight, fontSize = typo.tile),
         cursorBrush = SolidColor(colors.fg),
-        keyboardOptions = KeyboardOptions(imeAction = imeAction),
+        keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboard),
         keyboardActions = KeyboardActions(onAny = { onImeAction() }),
         decorationBox = { inner ->
             Box {
@@ -329,7 +332,7 @@ fun tileCells(tile: com.freedomfighter.readerslauncher.data.Tile): Int = when (t
     is com.freedomfighter.readerslauncher.data.AppTile, is com.freedomfighter.readerslauncher.data.CategoryTile -> 2
     is com.freedomfighter.readerslauncher.data.WordTile, is com.freedomfighter.readerslauncher.data.CalendarTile,
     is com.freedomfighter.readerslauncher.data.TasksTile, is com.freedomfighter.readerslauncher.data.BookTile,
-    is com.freedomfighter.readerslauncher.data.NotesTile -> 3
+    is com.freedomfighter.readerslauncher.data.NotesTile, is com.freedomfighter.readerslauncher.data.MindfulTile -> 3
     is com.freedomfighter.readerslauncher.data.ClockTile, is com.freedomfighter.readerslauncher.data.WeatherTile -> 4
     is com.freedomfighter.readerslauncher.data.AppWidgetTile -> tile.cellCount()
 }

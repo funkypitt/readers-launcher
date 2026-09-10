@@ -256,7 +256,7 @@ fun AgendaScreen(nav: Nav, app: App, tileId: String) {
     val context = LocalContext.current
     val typo = LocalTypo.current
     val colors = LocalColors.current
-    val tile = app.store.state.value.tiles.firstOrNull { it.id == tileId } as? CalendarTile
+    val tile = app.store.state.value.allTiles.firstOrNull { it.id == tileId } as? CalendarTile
     BackHandler { nav.pop() }
     if (tile == null) { nav.pop(); return }
     val now = rememberNow()
@@ -292,7 +292,7 @@ fun AgendaScreen(nav: Nav, app: App, tileId: String) {
 fun CalendarSetupScreen(nav: Nav, app: App, tileId: String?) {
     val context = LocalContext.current
     BackHandler { nav.pop() }
-    val existing = tileId?.let { id -> app.store.state.value.tiles.firstOrNull { it.id == id } as? CalendarTile }
+    val existing = tileId?.let { id -> app.store.state.value.allTiles.firstOrNull { it.id == id } as? CalendarTile }
     var granted by remember { mutableStateOf(CalendarSource.hasPermission(context)) }
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted = it }
     LaunchedEffect(Unit) { if (!granted) permLauncher.launch(Manifest.permission.READ_CALENDAR) }

@@ -52,6 +52,17 @@ data class BookTile(override val id: String = newId()) : Tile()
 @SerialName("notes")
 data class NotesTile(override val id: String = newId()) : Tile()
 
+/** Reader's Mindful Tool: a bowl every X minutes and/or a timed meditation, started from the tile. */
+@Serializable
+@SerialName("mindful")
+data class MindfulTile(
+    override val id: String = newId(),
+    /** "both" (swipe between the two), "interval" or "period". */
+    val mode: String = "both",
+    val intervalMin: Int = 10,
+    val durationMin: Int = 20
+) : Tile()
+
 @Serializable
 data class Place(val name: String, val latitude: Double, val longitude: Double)
 
@@ -113,14 +124,33 @@ data class Grid(
     }
 }
 
+/** A further home page, to the right of the first; the right-hand book slot sits after the last one. */
+@Serializable
+data class HomePage(val id: String = newId(), val tiles: List<Tile> = emptyList())
+
 @Serializable
 data class HomeState(
+    /** The first home page. */
     val tiles: List<Tile> = emptyList(),
+    /** The pages after it, in order. */
+    val morePages: List<HomePage> = emptyList(),
     val grid: Grid? = null,
     val hidden: List<AppRef> = emptyList(),
     /** Custom labels keyed by AppRef.key. */
     val renames: Map<String, String> = emptyMap(),
     val version: Int = 1
-)
+) {
+    val pageCount: Int get() = 1 + morePages.size
+    fun page(i: Int): List<Tile> = if (i <= 0) tiles else morePages.getOrNull(i - 1)?.tiles ?: emptyList()
+    val allTiles: List<Tile> get() = tiles + morePages.flatMap { it.tiles }
+    fun withPage(i: Int, list: List<Tile>): HomeState =
+        if (i <= 0) copy(tiles = list) else copy(morePages = morePages.mapIndexed { k, p -> if (k == i - 1) p.copy(tiles = list) else p })
+    /** Index of the page holding this tile (0 when unknown). */
+    fun pageOf(id: String): Int {
+        if (tiles.any { it.id == id }) return 0
+        val k = morePages.indexOfFirst { p -> p.tiles.any { it.id == id } }
+        return if (k < 0) 0 else k + 1
+    }
+}
 
 fun newId(): String = UUID.randomUUID().toString()

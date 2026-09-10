@@ -22,6 +22,10 @@ class HomeStore(context: Context) {
     private val _state = MutableStateFlow(load())
     val state: StateFlow<HomeState> = _state
 
+    /** The page on screen; not persisted, the launcher always opens on the first. */
+    val currentPage = MutableStateFlow(0)
+    fun setPage(i: Int) { currentPage.value = i.coerceIn(0, _state.value.pageCount - 1) }
+
     private fun load(): HomeState {
         if (!file.exists()) return HomeState()
         return try {
@@ -69,30 +73,60 @@ class HomeStore(context: Context) {
 
     // ---- convenience mutations -------------------------------------------------
 
-    fun addTile(tile: Tile) = update { it.copy(tiles = it.tiles + tile) }
+    /** Adds to the page on screen unless told otherwise. */
+    fun addTile(tile: Tile, page: Int = currentPage.value) = update { it.withPage(page, it.page(page) + tile) }
 
-    fun removeTile(id: String) = update { s -> s.copy(tiles = s.tiles.filterNot { it.id == id }) }
+    fun removeTile(id: String) = update { s ->
+        s.copy(tiles = s.tiles.filterNot { it.id == id }, morePages = s.morePages.map { p -> p.copy(tiles = p.tiles.filterNot { it.id == id }) })
+    }
 
     fun replaceTile(tile: Tile) = update { s ->
-        s.copy(tiles = s.tiles.map { if (it.id == tile.id) tile else it })
+        s.copy(
+            tiles = s.tiles.map { if (it.id == tile.id) tile else it },
+            morePages = s.morePages.map { p -> p.copy(tiles = p.tiles.map { if (it.id == tile.id) tile else it }) }
+        )
     }
 
     fun moveTile(id: String, delta: Int) = update { s ->
-        val list = s.tiles.toMutableList()
+        val page = s.pageOf(id)
+        val list = s.page(page).toMutableList()
         val i = list.indexOfFirst { it.id == id }
         val j = i + delta
         if (i < 0 || j < 0 || j >= list.size) return@update s
         val t = list.removeAt(i)
         list.add(j, t)
-        s.copy(tiles = list)
+        s.withPage(page, list)
     }
 
-    fun reorder(from: Int, to: Int) = update { s ->
-        if (from == to || from !in s.tiles.indices || to !in s.tiles.indices) return@update s
-        val list = s.tiles.toMutableList()
+    fun reorder(from: Int, to: Int, page: Int = currentPage.value) = update { s ->
+        val tiles = s.page(page)
+        if (from == to || from !in tiles.indices || to !in tiles.indices) return@update s
+        val list = tiles.toMutableList()
         val t = list.removeAt(from)
         list.add(to, t)
-        s.copy(tiles = list)
+        s.withPage(page, list)
+    }
+
+    // ---- pages ----
+
+    /** Appends an empty page and returns its index. */
+    fun addPage(): Int {
+        update { it.copy(morePages = it.morePages + HomePage()) }
+        return _state.value.pageCount - 1
+    }
+
+    /** Drops a page (never the first); its tiles go with it, so callers only offer this for an empty page. */
+    fun removePage(i: Int) {
+        if (i <= 0) return
+        update { s -> s.copy(morePages = s.morePages.filterIndexed { k, _ -> k != i - 1 }) }
+        setPage(currentPage.value)
+    }
+
+    fun moveTileToPage(id: String, page: Int) = update { s ->
+        val tile = s.allTiles.firstOrNull { it.id == id } ?: return@update s
+        val from = s.pageOf(id)
+        if (from == page || page !in 0 until s.pageCount) return@update s
+        s.withPage(from, s.page(from).filterNot { it.id == id }).let { it.withPage(page, it.page(page) + tile) }
     }
 
     fun setGrid(grid: Grid?) = update { it.copy(grid = grid) }
@@ -110,14 +144,16 @@ class HomeStore(context: Context) {
 
     /** Drop references to apps that no longer exist. Categories keep their name even if emptied. */
     fun purge(missing: (AppRef) -> Boolean) = update { s ->
+        fun clean(list: List<Tile>) = list.mapNotNull { t ->
+            when (t) {
+                is AppTile -> if (missing(t.app)) null else t
+                is CategoryTile -> t.copy(apps = t.apps.filterNot(missing))
+                else -> t
+            }
+        }
         s.copy(
-            tiles = s.tiles.mapNotNull { t ->
-                when (t) {
-                    is AppTile -> if (missing(t.app)) null else t
-                    is CategoryTile -> t.copy(apps = t.apps.filterNot(missing))
-                    else -> t
-                }
-            },
+            tiles = clean(s.tiles),
+            morePages = s.morePages.map { p -> p.copy(tiles = clean(p.tiles)) },
             grid = s.grid?.let { g -> g.copy(slots = g.slots.map { if (it != null && missing(it)) null else it }) },
             hidden = s.hidden.filterNot(missing)
         )

@@ -43,7 +43,7 @@ import kotlin.math.abs
 
 /** Re-query whenever the provider announces a change. */
 @Composable
-private fun rememberProviderGeneration(uri: android.net.Uri): Int {
+internal fun rememberProviderGeneration(uri: android.net.Uri): Int {
     val context = LocalContext.current
     var generation by remember { mutableIntStateOf(0) }
     DisposableEffect(uri) {
