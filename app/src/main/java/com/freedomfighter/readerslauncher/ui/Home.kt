@@ -66,6 +66,8 @@ import com.freedomfighter.readerslauncher.data.NotesTile
 import com.freedomfighter.readerslauncher.data.MindfulTile
 import com.freedomfighter.readerslauncher.data.RecorderTile
 import com.freedomfighter.readerslauncher.widgets.RecorderTileView
+import com.freedomfighter.readerslauncher.data.ListenTile
+import com.freedomfighter.readerslauncher.widgets.ListenTileView
 import com.freedomfighter.readerslauncher.widgets.MindfulTileView
 import com.freedomfighter.readerslauncher.widgets.BookTileView
 import com.freedomfighter.readerslauncher.widgets.NotesTileView
@@ -470,6 +472,7 @@ private fun tileTitle(tile: Tile, state: HomeState, app: App): String? = when (t
     is NotesTile -> stringResource(R.string.widget_notes)
     is MindfulTile -> stringResource(R.string.widget_mindful)
     is RecorderTile -> stringResource(R.string.widget_recorder)
+    is ListenTile -> stringResource(R.string.widget_listen)
     is WeatherTile -> stringResource(R.string.widget_weather)
     is CalendarTile -> stringResource(R.string.widget_calendar)
     is TasksTile -> stringResource(R.string.widget_tasks) + " · " + tile.listTitle
@@ -524,6 +527,7 @@ private fun tileMenuItems(
         is BookTile -> moveItems + remove
         is NotesTile -> moveItems + remove
         is RecorderTile -> moveItems + remove
+        is ListenTile -> moveItems + remove
         is MindfulTile -> buildList {
             add(MenuItem(stringResource(R.string.menu_configure)) { nav.push(Screen.MindfulSetup(tile.id)) })
             addAll(moveItems)
@@ -579,6 +583,7 @@ private fun TileView(
         is BookTile -> BookTileView(onLongPress)
         is NotesTile -> NotesTileView(onLongPress)
         is RecorderTile -> RecorderTileView(onLongPress)
+        is ListenTile -> ListenTileView(onLongPress)
         is MindfulTile -> MindfulTileView(tile, app, onLongPress, onMinutes = { onMindfulMinutes(tile, it) })
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
         is CalendarTile -> CalendarTileView(tile, app, onLongPress, onOpen = { nav.push(Screen.Agenda(tile.id)) })

@@ -25,6 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import kotlin.math.abs
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +54,38 @@ object ReadersRecorder {
 
     data class State(val recording: Boolean, val paused: Boolean, val elapsedMs: Long, val lastId: String, val lastTitle: String, val lastDurationMs: Long, val lastStatus: String, val count: Int)
 
+    val RECORDINGS: Uri = Uri.parse("content://$PACKAGE/recordings")
+    data class Rec(val id: String, val title: String, val whenLabel: String, val durationMs: Long, val status: String)
+    /** What the app's player is doing; [at] is when [positionMs] was read. */
+    data class Playback(val id: String, val playing: Boolean, val positionMs: Long, val durationMs: Long, val at: Long)
+
     fun isInstalled(context: Context) = runCatching { context.packageManager.getPackageInfo(PACKAGE, 0) }.isSuccess
+
+    /** Finished recordings, newest first. */
+    fun recordings(context: Context): List<Rec> = runCatching {
+        val out = ArrayList<Rec>()
+        context.contentResolver.query(RECORDINGS, null, null, null, null)?.use { c ->
+            val id = c.getColumnIndexOrThrow("id"); val title = c.getColumnIndexOrThrow("title"); val w = c.getColumnIndexOrThrow("when")
+            val d = c.getColumnIndexOrThrow("duration_ms"); val st = c.getColumnIndexOrThrow("status")
+            while (c.moveToNext()) out += Rec(c.getString(id), c.getString(title) ?: "", c.getString(w) ?: "", c.getLong(d), c.getString(st) ?: "")
+        }
+        out
+    }.getOrDefault(emptyList())
+
+    fun playback(context: Context): Playback? = runCatching {
+        context.contentResolver.query(URI, null, null, null, null)?.use { c ->
+            if (!c.moveToFirst()) return null
+            val idx = c.getColumnIndex("play_id"); if (idx < 0) return null
+            Playback(c.getString(idx) ?: "", c.getString(c.getColumnIndexOrThrow("play_state")) == "playing",
+                c.getLong(c.getColumnIndexOrThrow("play_pos_ms")), c.getLong(c.getColumnIndexOrThrow("play_dur_ms")), c.getLong(c.getColumnIndexOrThrow("play_at")))
+        }
+    }.getOrNull()
+
+    /** Play this recording, or pause / resume it if it is the one playing. */
+    fun togglePlay(context: Context, id: String) {
+        val i = Intent("$PACKAGE.PLAY_TOGGLE").setClassName(PACKAGE, "$PACKAGE.PlayerService").putExtra("id", id)
+        runCatching { ContextCompat.startForegroundService(context, i) }
+    }
 
     fun state(context: Context): State? = runCatching {
         context.contentResolver.query(URI, null, null, null, null)?.use { c ->
@@ -144,6 +178,83 @@ fun RecorderTileView(onLongPress: () -> Unit) {
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
                 T(if (recording) "■" else "●", size = typo.title, color = if (recording) colors.bg else colors.fg, align = TextAlign.Center)
+            }
+        }
+    }
+}
+
+
+/**
+ * The listen tile: one recording, newest first; swipe left for the older ones, right to come
+ * back. ▶ plays it through Reader's Recorder's player (❚❚ pauses), the text opens it.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ListenTileView(onLongPress: () -> Unit) {
+    val context = LocalContext.current
+    val colors = LocalColors.current
+    val typo = LocalTypo.current
+    val tick = rememberTick()
+    val installed = ReadersRecorder.isInstalled(context)
+    val genList = rememberProviderGeneration(ReadersRecorder.RECORDINGS)
+    val genState = rememberProviderGeneration(ReadersRecorder.URI)
+    val recs by produceState<List<ReadersRecorder.Rec>>(emptyList(), genList) { value = withContext(Dispatchers.IO) { ReadersRecorder.recordings(context) } }
+    val pb by produceState<ReadersRecorder.Playback?>(null, genState) { value = withContext(Dispatchers.IO) { ReadersRecorder.playback(context) } }
+    var index by remember { mutableIntStateOf(0) }
+    if (index >= recs.size) index = maxOf(0, recs.size - 1)
+    val r = recs.getOrNull(index)
+    val p = pb
+    val isThis = r != null && p != null && p.id == r.id
+    val playing = isThis && p!!.playing
+    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(playing) { while (playing) { now = System.currentTimeMillis(); delay(1000L - now % 1000) } }
+    val position = when { !isThis -> 0L; playing -> p!!.positionMs + (now - p.at); else -> p!!.positionMs }
+    val title = when { !installed -> "Reader's Recorder"; r == null -> stringResource(R.string.listen_none); else -> r.title }
+    val caption = when {
+        !installed || r == null -> stringResource(R.string.widget_listen)
+        isThis -> clock(position.coerceIn(0L, p!!.durationMs)) + " / " + clock(p.durationMs)
+        else -> stringResource(R.string.widget_listen) + (if (recs.size > 1) " ${index + 1}/${recs.size}" else "") + " · " +
+            (if (r.title.trim() != r.whenLabel) r.whenLabel + " · " else "") + clock(r.durationMs)
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(widgetTwoLineHeight())
+            // Swipe left → the recording before this one, right → the more recent; consumed here so the
+            // home screen does not read it as a page or book-slot swipe.
+            .pointerInput(recs.size) {
+                var total = 0f
+                detectHorizontalDragGestures(
+                    onDragStart = { total = 0f },
+                    onDragEnd = {
+                        if (abs(total) > 60.dp.toPx()) {
+                            val next = if (total < 0) index + 1 else index - 1
+                            if (next in recs.indices) { index = next; tick() }
+                        }
+                    },
+                    onHorizontalDrag = { change, delta -> total += delta; change.consume() }
+                )
+            }
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { ReadersRecorder.open(context, r?.id) },
+                onLongClick = onLongPress
+            )
+            .padding(horizontal = rowPadH, vertical = rowPadV),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+            T(title, maxLines = 1, color = if (r != null) colors.fg else colors.dim)
+            Small(caption, maxLines = 1)
+        }
+        if (installed && r != null) {
+            Box(
+                Modifier.padding(start = 16.dp).background(if (playing) colors.fg else Color.Transparent)
+                    .noRippleClickable { tick(); ReadersRecorder.togglePlay(context, r.id) }
+                    .padding(horizontal = 14.dp, vertical = 6.dp)
+            ) {
+                T(if (playing) "❚❚" else "▶", size = typo.title, color = if (playing) colors.bg else colors.fg, align = TextAlign.Center)
             }
         }
     }

@@ -25,6 +25,7 @@ import com.freedomfighter.readerslauncher.data.BookTile
 import com.freedomfighter.readerslauncher.data.NotesTile
 import com.freedomfighter.readerslauncher.data.MindfulTile
 import com.freedomfighter.readerslauncher.data.RecorderTile
+import com.freedomfighter.readerslauncher.data.ListenTile
 
 /** Drag tiles to reorder the home column. Widgets are shown by name here. */
 @Composable
@@ -40,7 +41,8 @@ fun ArrangeScreen(nav: Nav, app: App) {
         "book" to stringResource(R.string.widget_book),
         "notes" to stringResource(R.string.widget_notes),
         "mindful" to stringResource(R.string.widget_mindful),
-        "recorder" to stringResource(R.string.widget_recorder)
+        "recorder" to stringResource(R.string.widget_recorder),
+        "listen" to stringResource(R.string.widget_listen)
     )
     fun label(t: Tile): String = when (t) {
         is AppTile -> home.labelFor(app, t.app)
@@ -51,6 +53,7 @@ fun ArrangeScreen(nav: Nav, app: App) {
         is NotesTile -> "— " + names["notes"]
         is MindfulTile -> "— " + names["mindful"]
         is RecorderTile -> "— " + names["recorder"]
+        is ListenTile -> "— " + names["listen"]
         is WeatherTile -> "— " + names["weather"]
         is CalendarTile -> "— " + names["calendar"]
         is TasksTile -> "— " + names["tasks"] + " · " + t.listTitle

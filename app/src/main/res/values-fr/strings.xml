@@ -185,4 +185,7 @@
     <string name="recorder_recording">enregistrement</string>
     <string name="recorder_paused">en pause</string>
     <string name="recorder_tap_stop">toucher ■ pour arrêter</string>
+    <string name="widget_listen">enregistrements</string>
+    <string name="widget_listen_desc">écouter les enregistrements de Reader\'s Recorder, balayer du plus récent aux plus anciens</string>
+    <string name="listen_none">rien d\'enregistré pour l\'instant</string>
 </resources>
