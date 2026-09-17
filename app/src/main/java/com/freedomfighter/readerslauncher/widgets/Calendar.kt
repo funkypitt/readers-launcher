@@ -195,12 +195,18 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOp
     val colors = LocalColors.current
     val typo = LocalTypo.current
     val tick = rememberTick()
-    val now = rememberNow()
-    var index by remember(tile.id) { mutableIntStateOf(0) }
+    val now = rememberNow()   // ticks on the minute: an event's end or the hour before one shows within it
     val permitted = CalendarSource.hasPermission(context)
-    val events by produceState<List<EventInfo>>(emptyList(), tile.calendarIds, now / (5 * 60_000), permitted) {
+    val fetched by produceState<List<EventInfo>>(emptyList(), tile.calendarIds, now / (5 * 60_000), permitted) {
         value = withContext(Dispatchers.IO) { CalendarSource.upcoming(context, tile.calendarIds) }
     }
+    // the list may be up to five minutes old: what has ended since is dropped at every tick
+    val events = remember(fetched, now) { fetched.filter { it.end > now } }
+    // the tile opens on AgendaPick's choice (not on today's all-day event all day long); swiping
+    // still walks the list in time order from there, and the choice comes back when it changes
+    val picked = remember(events, now) { AgendaPick.line(events, now) }
+    val pickedIndex = picked?.let { p -> events.indexOfFirst { it.id == p.id && it.begin == p.begin } }?.coerceAtLeast(0) ?: 0
+    var index by remember(tile.id, picked?.id, picked?.begin) { mutableIntStateOf(pickedIndex) }
     LaunchedEffect(events.size) { if (index >= events.size) index = maxOf(0, events.size - 1) }
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
