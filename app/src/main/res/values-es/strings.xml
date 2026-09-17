@@ -188,4 +188,24 @@
     <string name="widget_listen">grabaciones</string>
     <string name="widget_listen_desc">escuchar las grabaciones de Reader\'s Recorder, deslizar de la más reciente a las anteriores</string>
     <string name="listen_none">nada grabado todavía</string>
+    <string name="backup_home">hacer copia de la pantalla de inicio</string>
+    <string name="backup_home_desc">un archivo para otro teléfono: páginas, mosaicos, apps, aspecto — sin contraseñas</string>
+    <string name="restore_backup">restaurar una copia</string>
+    <string name="restore_foreign">no es una copia de Reader\'s Launcher</string>
+    <string name="restore_too_new">esta copia viene de un Reader\'s Launcher más reciente (formato %1$d): actualice primero el launcher</string>
+    <string name="restore_summary">hecha el %1$s · %2$d páginas · %3$d mosaicos</string>
+    <string name="restore_replaces">reemplaza la pantalla de inicio y el aspecto de este teléfono</string>
+    <string name="restore_missing">no están en este teléfono — toque para su página en la tienda</string>
+    <string name="restore_widgets_gone">widgets que ya no se ofrecen</string>
+    <string name="restore_all_there">todas las apps de esta pantalla están en este teléfono</string>
+    <string name="restore_explain">Las apps que faltan se omiten: su mosaico desaparece y la columna se cierra, una categoría conserva sus otras apps, una casilla de la cuadrícula queda vacía. Un widget que falta queda como una línea que puede quitar. Las apps ocultas y los nombres nuevos se conservan para más tarde. Los widgets se colocan de nuevo uno a uno; Android puede pedir permiso para cada uno.</string>
+    <string name="restore_anyway">restaurar de todos modos</string>
+    <string name="restore_do">restaurar</string>
+    <string name="restore_cancel">cancelar</string>
+    <string name="restore_done">pantalla de inicio restaurada</string>
+    <string name="restore_place_home">en la pantalla de inicio</string>
+    <string name="restore_place_grid">en la cuadrícula</string>
+    <string name="restore_place_widget">widget</string>
+    <string name="restore_place_category">en %1$s</string>
+    <string name="widget_not_placed">widget sin colocar — toque para colocarlo</string>
 </resources>

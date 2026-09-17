@@ -209,6 +209,15 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOp
     var index by remember(tile.id, picked?.id, picked?.begin) { mutableIntStateOf(pickedIndex) }
     LaunchedEffect(events.size) { if (index >= events.size) index = maxOf(0, events.size - 1) }
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    // restored from a backup: the calendars were saved by name, matched here once they can be read
+    LaunchedEffect(permitted, tile.calendarKeys) {
+        if (permitted && tile.calendarKeys.isNotEmpty()) {
+            val fixed = withContext(Dispatchers.IO) {
+                com.freedomfighter.readerslauncher.backup.BackupIo.resolveCalendars(context, com.freedomfighter.readerslauncher.data.HomeState(tiles = listOf(tile))).tiles.first()
+            }
+            app.store.replaceTile(fixed)
+        }
+    }
 
     val e = events.getOrNull(index)
     Row(

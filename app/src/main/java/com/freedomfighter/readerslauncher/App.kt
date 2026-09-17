@@ -13,6 +13,8 @@ class App : Application() {
     var pageCells: Int = 0
     /** Bumped after a task is added from the home prompt, so the tasks tile reloads. */
     val tasksChanged = kotlinx.coroutines.flow.MutableStateFlow(0)
+    /** A backup read from a file, waiting on the restore page. */
+    var pendingRestore: com.freedomfighter.readerslauncher.backup.LauncherBackup.Backup? = null
     lateinit var prefs: Prefs
     lateinit var store: HomeStore
     lateinit var apps: AppRepository
@@ -28,6 +30,7 @@ class App : Application() {
         books = BookStore(this)
         widgetManager = AppWidgetManager.getInstance(this)
         widgetHost = AppWidgetHost(this, WIDGET_HOST_ID)
+        com.freedomfighter.readerslauncher.backup.BackupIo.cleanUp(this)
     }
 
     companion object {

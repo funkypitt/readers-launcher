@@ -188,4 +188,24 @@
     <string name="widget_listen">Aufnahmen</string>
     <string name="widget_listen_desc">Aufnahmen von Reader\'s Recorder anhören, von der neuesten zu den älteren wischen</string>
     <string name="listen_none">noch nichts aufgenommen</string>
+    <string name="backup_home">Startbildschirm sichern</string>
+    <string name="backup_home_desc">eine Datei für ein anderes Telefon: Seiten, Kacheln, Apps, Aussehen — kein Passwort</string>
+    <string name="restore_backup">Sicherung wiederherstellen</string>
+    <string name="restore_foreign">keine Sicherung von Reader\'s Launcher</string>
+    <string name="restore_too_new">diese Sicherung stammt von einem neueren Reader\'s Launcher (Format %1$d): bitte zuerst aktualisieren</string>
+    <string name="restore_summary">erstellt am %1$s · %2$d Seiten · %3$d Kacheln</string>
+    <string name="restore_replaces">sie ersetzt Startbildschirm und Aussehen dieses Telefons</string>
+    <string name="restore_missing">nicht auf diesem Telefon — antippen für die Store-Seite</string>
+    <string name="restore_widgets_gone">nicht mehr angebotene Widgets</string>
+    <string name="restore_all_there">alle Apps dieses Startbildschirms sind auf diesem Telefon</string>
+    <string name="restore_explain">Fehlende Apps werden ausgelassen: ihre Kachel entfällt und die Spalte rückt zusammen, eine Kategorie behält ihre anderen Apps, ein Rasterfeld bleibt leer. Ein fehlendes Widget bleibt als Zeile, die man entfernen kann. Ausgeblendete Apps und neue Namen bleiben für später erhalten. Widgets werden einzeln neu platziert; Android fragt eventuell jedes Mal nach.</string>
+    <string name="restore_anyway">trotzdem wiederherstellen</string>
+    <string name="restore_do">wiederherstellen</string>
+    <string name="restore_cancel">abbrechen</string>
+    <string name="restore_done">Startbildschirm wiederhergestellt</string>
+    <string name="restore_place_home">auf dem Startbildschirm</string>
+    <string name="restore_place_grid">im Raster</string>
+    <string name="restore_place_widget">Widget</string>
+    <string name="restore_place_category">in %1$s</string>
+    <string name="widget_not_placed">Widget nicht platziert — antippen zum Platzieren</string>
 </resources>

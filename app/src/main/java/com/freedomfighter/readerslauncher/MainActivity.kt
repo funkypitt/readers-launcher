@@ -109,6 +109,60 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // ---- widgets of a restored backup: ids belong to one phone, so each is bound again ----------
+
+    private val widgetQueue = ArrayDeque<com.freedomfighter.readerslauncher.data.AppWidgetTile>()
+    private var pendingBind: Triple<com.freedomfighter.readerslauncher.data.AppWidgetTile, Int, android.appwidget.AppWidgetProviderInfo>? = null
+
+    /** Places every widget tile left without an id (a restore), one after the other. */
+    fun bindRestoredWidgets(only: com.freedomfighter.readerslauncher.data.AppWidgetTile? = null) {
+        val tiles = only?.let { listOf(it) } ?: app.store.state.value.allTiles
+            .filterIsInstance<com.freedomfighter.readerslauncher.data.AppWidgetTile>().filter { it.appWidgetId < 0 && it.provider.isNotBlank() }
+        widgetQueue.addAll(tiles)
+        if (pendingBind == null && widgetConfigCallback == null) nextWidget()
+    }
+
+    private fun nextWidget() {
+        val tile = widgetQueue.removeFirstOrNull() ?: return
+        val component = android.content.ComponentName.unflattenFromString(tile.provider)
+        val info = app.widgetManager.installedProviders.firstOrNull { it.provider == component }
+        if (info == null) { nextWidget(); return }   // not offered here: the tile stays a line to remove
+        val id = app.widgetHost.allocateAppWidgetId()
+        val bound = runCatching { app.widgetManager.bindAppWidgetIdIfAllowed(id, info.profile, info.provider, null) }.getOrDefault(false)
+        if (bound) { configureRestored(tile, id, info); return }
+        pendingBind = Triple(tile, id, info)
+        val intent = Intent(android.appwidget.AppWidgetManager.ACTION_APPWIDGET_BIND)
+            .putExtra(android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+            .putExtra(android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
+            .putExtra(android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, info.profile)
+        try {
+            @Suppress("DEPRECATION")
+            startActivityForResult(intent, REQ_WIDGET_BIND)
+        } catch (e: Exception) {
+            pendingBind = null
+            app.widgetHost.deleteAppWidgetId(id)
+            nextWidget()
+        }
+    }
+
+    private fun configureRestored(tile: com.freedomfighter.readerslauncher.data.AppWidgetTile, id: Int, info: android.appwidget.AppWidgetProviderInfo) {
+        if (info.configure != null) {
+            configureWidget(id) { ok ->
+                if (ok) placeRestored(tile, id) else app.widgetHost.deleteAppWidgetId(id)
+                nextWidget()
+            }
+        } else {
+            placeRestored(tile, id)
+            nextWidget()
+        }
+    }
+
+    private fun placeRestored(tile: com.freedomfighter.readerslauncher.data.AppWidgetTile, id: Int) {
+        val current = app.store.state.value.allTiles.firstOrNull { it.id == tile.id } as? com.freedomfighter.readerslauncher.data.AppWidgetTile
+        if (current == null || current.appWidgetId >= 0) { app.widgetHost.deleteAppWidgetId(id); return }
+        app.store.replaceTile(current.copy(appWidgetId = id))
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         @Suppress("DEPRECATION")
@@ -117,10 +171,17 @@ class MainActivity : ComponentActivity() {
             widgetConfigCallback?.invoke(resultCode == RESULT_OK)
             widgetConfigCallback = null
         }
+        if (requestCode == REQ_WIDGET_BIND) {
+            val p = pendingBind ?: return
+            pendingBind = null
+            if (resultCode == RESULT_OK) configureRestored(p.first, p.second, p.third)
+            else { app.widgetHost.deleteAppWidgetId(p.second); nextWidget() }
+        }
     }
 
     companion object {
         private const val REQ_WIDGET_CONFIG = 7001
+        private const val REQ_WIDGET_BIND = 7002
     }
 }
 
@@ -187,5 +248,6 @@ private fun Root(nav: Nav, app: App) {
         is Screen.BookChapters -> BookChaptersScreen(nav, app, screen.slot)
         Screen.Word -> com.freedomfighter.readerslauncher.widgets.WordScreen(nav, app)
         is Screen.Agenda -> com.freedomfighter.readerslauncher.widgets.AgendaScreen(nav, app, screen.tileId)
+        Screen.Restore -> com.freedomfighter.readerslauncher.backup.RestoreScreen(nav, app)
     }
 }

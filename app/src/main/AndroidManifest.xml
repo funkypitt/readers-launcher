@@ -60,6 +60,10 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
             <data android:scheme="content" android:host="com.android.calendar" android:pathPrefix="/time" />
         </intent>
     </queries>
@@ -123,5 +127,13 @@
             </intent-filter>
         </service>
 
+            <!-- The home-screen backup handed to the share menu (Telegram, kDrive, Drive…). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.backup"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/backup_paths" />
+        </provider>
     </application>
 </manifest>

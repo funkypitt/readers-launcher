@@ -188,4 +188,24 @@
     <string name="widget_listen">gravações</string>
     <string name="widget_listen_desc">ouvir as gravações do Reader\'s Recorder, deslizar da mais recente para as anteriores</string>
     <string name="listen_none">nada gravado ainda</string>
+    <string name="backup_home">fazer cópia do ecrã inicial</string>
+    <string name="backup_home_desc">um ficheiro para outro telefone: páginas, blocos, apps, aspeto — sem palavras-passe</string>
+    <string name="restore_backup">restaurar uma cópia</string>
+    <string name="restore_foreign">não é uma cópia do Reader\'s Launcher</string>
+    <string name="restore_too_new">esta cópia vem de um Reader\'s Launcher mais recente (formato %1$d): atualize primeiro o launcher</string>
+    <string name="restore_summary">feita a %1$s · %2$d páginas · %3$d blocos</string>
+    <string name="restore_replaces">substitui o ecrã inicial e o aspeto deste telefone</string>
+    <string name="restore_missing">não estão neste telefone — toque para a página na loja</string>
+    <string name="restore_widgets_gone">widgets que já não são oferecidos</string>
+    <string name="restore_all_there">todas as apps deste ecrã estão neste telefone</string>
+    <string name="restore_explain">As apps em falta são deixadas de fora: o bloco desaparece e a coluna fecha, uma categoria mantém as outras apps, uma casa da grelha fica vazia. Um widget em falta fica como uma linha que pode remover. As apps ocultas e os novos nomes ficam guardados para mais tarde. Os widgets são colocados de novo um a um; o Android pode pedir autorização para cada um.</string>
+    <string name="restore_anyway">restaurar mesmo assim</string>
+    <string name="restore_do">restaurar</string>
+    <string name="restore_cancel">cancelar</string>
+    <string name="restore_done">ecrã inicial restaurado</string>
+    <string name="restore_place_home">no ecrã inicial</string>
+    <string name="restore_place_grid">na grelha</string>
+    <string name="restore_place_widget">widget</string>
+    <string name="restore_place_category">em %1$s</string>
+    <string name="widget_not_placed">widget por colocar — toque para o colocar</string>
 </resources>

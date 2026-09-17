@@ -188,4 +188,24 @@
     <string name="widget_listen">записи</string>
     <string name="widget_listen_desc">слушать записи Reader\'s Recorder, листать от последней к более ранним</string>
     <string name="listen_none">пока ничего не записано</string>
+    <string name="backup_home">резервная копия главного экрана</string>
+    <string name="backup_home_desc">файл для другого телефона: страницы, плитки, приложения, вид — без паролей</string>
+    <string name="restore_backup">восстановить из копии</string>
+    <string name="restore_foreign">это не резервная копия Reader\'s Launcher</string>
+    <string name="restore_too_new">эта копия из более новой версии Reader\'s Launcher (формат %1$d): сначала обновите лаунчер</string>
+    <string name="restore_summary">создана %1$s · страниц: %2$d · плиток: %3$d</string>
+    <string name="restore_replaces">она заменит главный экран и внешний вид этого телефона</string>
+    <string name="restore_missing">нет на этом телефоне — нажмите, чтобы открыть магазин</string>
+    <string name="restore_widgets_gone">виджеты, которых больше нет</string>
+    <string name="restore_all_there">все приложения этого экрана есть на телефоне</string>
+    <string name="restore_explain">Отсутствующие приложения пропускаются: их плитка исчезает и столбец смыкается, категория сохраняет остальные приложения, клетка сетки остаётся пустой. Отсутствующий виджет остаётся строкой, которую можно удалить. Скрытые приложения и новые имена сохраняются на будущее. Виджеты размещаются заново по одному; Android может спросить разрешение для каждого.</string>
+    <string name="restore_anyway">всё равно восстановить</string>
+    <string name="restore_do">восстановить</string>
+    <string name="restore_cancel">отмена</string>
+    <string name="restore_done">главный экран восстановлен</string>
+    <string name="restore_place_home">на главном экране</string>
+    <string name="restore_place_grid">в сетке</string>
+    <string name="restore_place_widget">виджет</string>
+    <string name="restore_place_category">в «%1$s»</string>
+    <string name="widget_not_placed">виджет не размещён — нажмите, чтобы разместить</string>
 </resources>

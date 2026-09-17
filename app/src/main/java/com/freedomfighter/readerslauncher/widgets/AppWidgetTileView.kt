@@ -75,7 +75,14 @@ fun AppWidgetTileView(tile: AppWidgetTile, app: App, onLongPress: () -> Unit) {
     val context = LocalContext.current
     val info = remember(tile.appWidgetId) { app.widgetManager.getAppWidgetInfo(tile.appWidgetId) }
     if (info == null) {
-        TextTile(stringResource(R.string.widget_not_installed) + " · " + tile.label, onClick = {}, onLongPress = onLongPress)
+        if (tile.appWidgetId < 0) {
+            // restored from a backup and not placed yet (bind refused or cancelled): a tap tries again
+            TextTile(stringResource(R.string.widget_not_placed) + " · " + tile.label, onClick = {
+                (context.findActivity() as? MainActivity)?.bindRestoredWidgets(tile)
+            }, onLongPress = onLongPress)
+        } else {
+            TextTile(stringResource(R.string.widget_not_installed) + " · " + tile.label, onClick = {}, onLongPress = onLongPress)
+        }
         return
     }
     val heightDp = com.freedomfighter.readerslauncher.ui.cellHeight() * tile.cellCount()

@@ -71,7 +71,7 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
             Toast.makeText(context, R.string.hint_full, Toast.LENGTH_SHORT).show()
             nav.pop(); return
         }
-        app.store.addTile(AppWidgetTile(appWidgetId = id, label = label, cells = cells))
+        app.store.addTile(AppWidgetTile(appWidgetId = id, label = label, cells = cells, provider = info.provider.flattenToString()))
         nav.pop()
     }
 

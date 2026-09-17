@@ -38,22 +38,19 @@ fun SettingsScreen(nav: Nav, app: App) {
     BackHandler { nav.pop() }
     var about by remember { mutableStateOf(false) }
 
-    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+    val restoreLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            runCatching {
-                context.contentResolver.openOutputStream(uri)?.use { it.write(app.store.exportJson().toByteArray()) }
-                Toast.makeText(context, R.string.export_done, Toast.LENGTH_SHORT).show()
+            val text = runCatching { com.freedomfighter.readerslauncher.backup.BackupIo.readText(context, uri) }.getOrDefault("")
+            when (val r = com.freedomfighter.readerslauncher.backup.LauncherBackup.decode(text)) {
+                is com.freedomfighter.readerslauncher.backup.LauncherBackup.Read.Ok -> { app.pendingRestore = r.backup; nav.push(Screen.Restore) }
+                is com.freedomfighter.readerslauncher.backup.LauncherBackup.Read.TooNew ->
+                    Toast.makeText(context, context.getString(R.string.restore_too_new, r.version), Toast.LENGTH_LONG).show()
+                com.freedomfighter.readerslauncher.backup.LauncherBackup.Read.Foreign ->
+                    Toast.makeText(context, R.string.restore_foreign, Toast.LENGTH_LONG).show()
             }
         }
     }
-    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            val ok = runCatching {
-                context.contentResolver.openInputStream(uri)?.use { it.readBytes().toString(Charsets.UTF_8) }
-            }.getOrNull()?.let { app.store.importJson(it) } ?: false
-            Toast.makeText(context, if (ok) R.string.import_done else R.string.import_failed, Toast.LENGTH_SHORT).show()
-        }
-    }
+    val backupTitle = stringResource(R.string.backup_home)
 
     val on = stringResource(R.string.on)
     val off = stringResource(R.string.off)
@@ -101,8 +98,13 @@ fun SettingsScreen(nav: Nav, app: App) {
                     runCatching { context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
                 }
                 Rule(Modifier.padding(vertical = 8.dp))
-                TextRow(stringResource(R.string.settings_export), size = typo.title) { exportLauncher.launch("readers-launcher.json") }
-                TextRow(stringResource(R.string.settings_import), size = typo.title) { importLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) }
+                TextRow(backupTitle, secondary = stringResource(R.string.backup_home_desc), size = typo.title) {
+                    val b = com.freedomfighter.readerslauncher.backup.BackupIo.build(context, app)
+                    com.freedomfighter.readerslauncher.backup.BackupIo.share(context, com.freedomfighter.readerslauncher.backup.LauncherBackup.encode(b), backupTitle)
+                }
+                TextRow(stringResource(R.string.restore_backup), size = typo.title) {
+                    restoreLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream", "*/*"))
+                }
                 Rule(Modifier.padding(vertical = 8.dp))
                 TextRow(
                     stringResource(R.string.settings_about, BuildConfig.VERSION_NAME),

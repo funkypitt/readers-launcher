@@ -188,4 +188,24 @@
     <string name="widget_listen">enregistrements</string>
     <string name="widget_listen_desc">écouter les enregistrements de Reader\'s Recorder, balayer du plus récent aux plus anciens</string>
     <string name="listen_none">rien d\'enregistré pour l\'instant</string>
+    <string name="backup_home">sauvegarder l\'écran d\'accueil</string>
+    <string name="backup_home_desc">un fichier pour un autre téléphone : pages, tuiles, apps, apparence — aucun mot de passe</string>
+    <string name="restore_backup">restaurer une sauvegarde</string>
+    <string name="restore_foreign">ce n\'est pas une sauvegarde de Reader\'s Launcher</string>
+    <string name="restore_too_new">cette sauvegarde vient d\'un Reader\'s Launcher plus récent (format %1$d) : mettez d\'abord le launcher à jour</string>
+    <string name="restore_summary">faite le %1$s · %2$d pages · %3$d tuiles</string>
+    <string name="restore_replaces">elle remplace l\'écran d\'accueil et l\'apparence de ce téléphone</string>
+    <string name="restore_missing">absentes de ce téléphone — toucher pour la page du magasin</string>
+    <string name="restore_widgets_gone">widgets qui ne sont plus proposés</string>
+    <string name="restore_all_there">toutes les apps de cet écran d\'accueil sont sur ce téléphone</string>
+    <string name="restore_explain">Les apps absentes sont laissées de côté : leur tuile disparaît et la colonne se resserre, une catégorie garde ses autres apps, une case de la grille reste vide. Un widget absent reste comme une ligne à supprimer. Les apps masquées et les nouveaux noms sont gardés pour plus tard. Les widgets sont replacés un à un ; Android peut demander l\'autorisation pour chacun.</string>
+    <string name="restore_anyway">restaurer quand même</string>
+    <string name="restore_do">restaurer</string>
+    <string name="restore_cancel">annuler</string>
+    <string name="restore_done">écran d\'accueil restauré</string>
+    <string name="restore_place_home">sur l\'écran d\'accueil</string>
+    <string name="restore_place_grid">dans la grille</string>
+    <string name="restore_place_widget">widget</string>
+    <string name="restore_place_category">dans %1$s</string>
+    <string name="widget_not_placed">widget non placé — toucher pour le placer</string>
 </resources>

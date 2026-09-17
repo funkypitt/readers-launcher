@@ -210,4 +210,24 @@
     <string name="widget_listen">recordings</string>
     <string name="widget_listen_desc">listen to Reader\'s Recorder\'s recordings, swipe from the latest to the older ones</string>
     <string name="listen_none">nothing recorded yet</string>
+    <string name="backup_home">back up the home screen</string>
+    <string name="backup_home_desc">a file for another phone: pages, tiles, apps, look — no password</string>
+    <string name="restore_backup">restore a backup</string>
+    <string name="restore_foreign">not a Reader\'s Launcher backup</string>
+    <string name="restore_too_new">this backup comes from a newer Reader\'s Launcher (format %1$d): update the launcher first</string>
+    <string name="restore_summary">made %1$s · %2$d pages · %3$d tiles</string>
+    <string name="restore_replaces">it replaces the home screen and the look of this phone</string>
+    <string name="restore_missing">not on this phone — tap for its store page</string>
+    <string name="restore_widgets_gone">widgets no longer offered</string>
+    <string name="restore_all_there">every app of this home screen is on this phone</string>
+    <string name="restore_explain">Missing apps are left out: their tile goes and the column closes up, a category keeps its other apps, a square of the grid stays empty. A missing widget stays as a line you can remove. Hidden apps and new names are kept for later. Widgets are placed again one by one; Android may ask to allow each.</string>
+    <string name="restore_anyway">restore anyway</string>
+    <string name="restore_do">restore</string>
+    <string name="restore_cancel">cancel</string>
+    <string name="restore_done">home screen restored</string>
+    <string name="restore_place_home">on the home screen</string>
+    <string name="restore_place_grid">in the grid</string>
+    <string name="restore_place_widget">widget</string>
+    <string name="restore_place_category">in %1$s</string>
+    <string name="widget_not_placed">widget not placed — tap to place it</string>
 </resources>

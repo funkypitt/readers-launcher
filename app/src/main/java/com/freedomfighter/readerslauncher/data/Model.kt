@@ -92,7 +92,9 @@ data class CalendarTile(
     override val id: String = newId(),
     val calendarIds: List<Long>,
     /** Package of the calendar app the tile opens; "" = whatever the system picks. */
-    val app: String = ""
+    val app: String = "",
+    /** From a restored backup: the calendars as "account\u0000name", matched to this phone's ids once calendar access is granted. */
+    val calendarKeys: List<String> = emptyList()
 ) : Tile()
 
 @Serializable
@@ -114,7 +116,9 @@ data class AppWidgetTile(
     val height: Int = 2,
     val label: String = "",
     /** Height in page cells (half text rows); 0 = derive from the legacy [height]. */
-    val cells: Int = 0
+    val cells: Int = 0,
+    /** The provider as a flattened ComponentName ("package/class"): what a backup needs, since ids stay on the phone. */
+    val provider: String = ""
 ) : Tile() {
     fun cellCount(): Int = if (cells > 0) cells else (height * 2).coerceIn(2, 12)
 }
