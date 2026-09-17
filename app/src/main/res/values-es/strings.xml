@@ -207,5 +207,5 @@
     <string name="restore_place_grid">en la cuadrícula</string>
     <string name="restore_place_widget">widget</string>
     <string name="restore_place_category">en %1$s</string>
-    <string name="widget_not_placed">widget sin colocar — toque para colocarlo</string>
+    <string name="widget_not_placed">colocar el widget</string>
 </resources>

@@ -75,7 +75,9 @@ fun AppWidgetTileView(tile: AppWidgetTile, app: App, onLongPress: () -> Unit) {
     val context = LocalContext.current
     val info = remember(tile.appWidgetId) { app.widgetManager.getAppWidgetInfo(tile.appWidgetId) }
     if (info == null) {
-        if (tile.appWidgetId < 0) {
+        val offered = tile.appWidgetId < 0 && tile.provider.isNotBlank() &&
+            app.widgetManager.installedProviders.any { it.provider.flattenToString() == tile.provider }
+        if (offered) {
             // restored from a backup and not placed yet (bind refused or cancelled): a tap tries again
             TextTile(stringResource(R.string.widget_not_placed) + " · " + tile.label, onClick = {
                 (context.findActivity() as? MainActivity)?.bindRestoredWidgets(tile)

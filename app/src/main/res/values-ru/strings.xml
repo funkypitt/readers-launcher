@@ -207,5 +207,5 @@
     <string name="restore_place_grid">в сетке</string>
     <string name="restore_place_widget">виджет</string>
     <string name="restore_place_category">в «%1$s»</string>
-    <string name="widget_not_placed">виджет не размещён — нажмите, чтобы разместить</string>
+    <string name="widget_not_placed">разместить виджет</string>
 </resources>
