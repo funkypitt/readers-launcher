@@ -208,4 +208,7 @@
     <string name="restore_place_widget">widget</string>
     <string name="restore_place_category">en %1$s</string>
     <string name="widget_not_placed">colocar el widget</string>
+    <string name="widget_food">diario de comidas</string>
+    <string name="widget_food_desc">las fotos de sus comidas de hoy (Reader\'s Food Log); ✎ actividad, ⚖ peso, ◉ cámara</string>
+    <string name="food_nothing">nada todavía hoy</string>
 </resources>

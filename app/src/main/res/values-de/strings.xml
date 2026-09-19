@@ -208,4 +208,7 @@
     <string name="restore_place_widget">Widget</string>
     <string name="restore_place_category">in %1$s</string>
     <string name="widget_not_placed">Widget platzieren</string>
+    <string name="widget_food">esstagebuch</string>
+    <string name="widget_food_desc">die heutigen fotos ihrer mahlzeiten (Reader\'s Food Log); ✎ aktivität, ⚖ gewicht, ◉ kamera</string>
+    <string name="food_nothing">heute noch nichts</string>
 </resources>

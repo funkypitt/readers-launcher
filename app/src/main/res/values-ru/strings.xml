@@ -208,4 +208,7 @@
     <string name="restore_place_widget">виджет</string>
     <string name="restore_place_category">в «%1$s»</string>
     <string name="widget_not_placed">разместить виджет</string>
+    <string name="widget_food">дневник питания</string>
+    <string name="widget_food_desc">сегодняшние фото еды (Reader\'s Food Log); ✎ активность, ⚖ вес, ◉ камера</string>
+    <string name="food_nothing">сегодня пока ничего</string>
 </resources>

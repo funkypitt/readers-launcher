@@ -25,6 +25,7 @@ import com.freedomfighter.readerslauncher.data.BookTile
 import com.freedomfighter.readerslauncher.data.NotesTile
 import com.freedomfighter.readerslauncher.data.MindfulTile
 import com.freedomfighter.readerslauncher.data.RecorderTile
+import com.freedomfighter.readerslauncher.data.FoodTile
 import com.freedomfighter.readerslauncher.data.ListenTile
 
 /** Drag tiles to reorder the home column. Widgets are shown by name here. */
@@ -42,6 +43,7 @@ fun ArrangeScreen(nav: Nav, app: App) {
         "notes" to stringResource(R.string.widget_notes),
         "mindful" to stringResource(R.string.widget_mindful),
         "recorder" to stringResource(R.string.widget_recorder),
+        "food" to stringResource(R.string.widget_food),
         "listen" to stringResource(R.string.widget_listen)
     )
     fun label(t: Tile): String = when (t) {
@@ -53,6 +55,7 @@ fun ArrangeScreen(nav: Nav, app: App) {
         is NotesTile -> "— " + names["notes"]
         is MindfulTile -> "— " + names["mindful"]
         is RecorderTile -> "— " + names["recorder"]
+        is FoodTile -> "— " + names["food"]
         is ListenTile -> "— " + names["listen"]
         is WeatherTile -> "— " + names["weather"]
         is CalendarTile -> "— " + names["calendar"]

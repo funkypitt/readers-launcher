@@ -57,6 +57,11 @@ data class NotesTile(override val id: String = newId()) : Tile()
 @SerialName("listen")
 data class ListenTile(override val id: String = newId()) : Tile()
 
+/** Reader's Food Log: today's counts, and the camera, the activity and the weight one tap away. */
+@Serializable
+@SerialName("food")
+data class FoodTile(override val id: String = newId()) : Tile()
+
 /** Reader's Recorder: record with one tap, the latest recording under it. */
 @Serializable
 @SerialName("recorder")
