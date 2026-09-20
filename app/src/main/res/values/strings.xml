@@ -231,6 +231,6 @@
     <string name="restore_place_category">in %1$s</string>
     <string name="widget_not_placed">place the widget</string>
     <string name="widget_food">food log</string>
-    <string name="widget_food_desc">today\'s photos of your meals (Reader\'s Food Log); ✎ activity, ⚖ weight, ◉ camera</string>
-    <string name="food_nothing">nothing yet today</string>
+    <string name="widget_food_desc">one touch opens Reader\'s Food Log\'s viewfinder for a new photo</string>
+    <string name="food_photograph">photograph</string>
 </resources>

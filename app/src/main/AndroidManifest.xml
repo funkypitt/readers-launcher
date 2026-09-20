@@ -33,7 +33,6 @@
     <uses-permission android:name="com.freedomfighter.readersnotes.permission.ACCESS" />
     <uses-permission android:name="com.freedomfighter.readersmindful.permission.ACCESS" />
     <uses-permission android:name="com.freedomfighter.readersrecorder.permission.ACCESS" />
-    <uses-permission android:name="com.freedomfighter.readersfoodlog.permission.ACCESS" />
 
     <queries>
         <package android:name="org.tasks" />
@@ -49,7 +48,6 @@
         <provider android:authorities="com.freedomfighter.readersnotes" />
         <provider android:authorities="com.freedomfighter.readersmindful" />
         <provider android:authorities="com.freedomfighter.readersrecorder" />
-        <provider android:authorities="com.freedomfighter.readersfoodlog" />
         <provider android:authorities="ch.littre.littre_app.wotd" />
         <provider android:authorities="com.freedomfighter.readerstasks" />
         <provider android:authorities="org.tasks.api" />

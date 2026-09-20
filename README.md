@@ -22,8 +22,8 @@ No icons, no colours, no wallpaper: a single column of words.
   **agenda** (next event, swipe for the following ones), **tasks** (a Tasks.org list:
   first task, swipe for the following ones, ☐ to complete, + to add), **mindful** (Reader's
   Mindful Tool: a bowl every X minutes, a timed meditation), **recorder** (Reader's Recorder:
-  record with one tap), **recordings** (listen, swipe through them), **food log** (Reader's Food
-  Log: today's photos, ✎ activity, ⚖ weight, ◉ camera). Any standard app widget can be
+  record with one tap), **recordings** (listen, swipe through them), **food log** (a shortcut
+  to Reader's Food Log's viewfinder). Any standard app widget can be
   added too; its height is set in cells from its menu.
 * **More home pages** if you want them: "add a home page" in the long-press menu, or "or a
   second home page" on the empty right-hand book slot. Swipe sideways between pages (dim
@@ -54,7 +54,7 @@ No icons, no colours, no wallpaper: a single column of words.
 | swipe right / left | the book on that side (long press in the reader for its menu) |
 | the book tile | the book you were reading in [Reader's Books](https://github.com/funkypitt/readers-books), a dim "book" under it; swipe sideways for the books opened before it (most recent first); tap carries on at the current page |
 | the recordings tile | listen to [Reader's Recorder](https://github.com/funkypitt/readers-recorder)'s recordings: the latest one, swipe left for the older ones; ▶ plays through the app's player (❚❚ pauses, position / length shown), the text opens the recording |
-| the food log tile | [Reader's Food Log](https://github.com/funkypitt/readers-foodlog) 1.2.0+: today's photos on the first line, activities and weight under it; ✎ notes a physical activity, ⚖ asks for the day's weight (and shows the curve), ◉ opens the viewfinder; the text opens the journal |
+| the food log tile | a shortcut to [Reader's Food Log](https://github.com/funkypitt/readers-foodlog)'s viewfinder: one touch for a new photo, nothing else |
 | the recorder tile | [Reader's Recorder](https://github.com/funkypitt/readers-recorder): ● records with one tap, ■ stops; the latest recording under it, and the text opens it (transcript one tap away) |
 | the mindful tile | [Reader's Mindful Tool](https://github.com/funkypitt/readers-mindful): "a bowl every X min" and "meditate X min" on one tile (swipe between them) or just one, chosen when the tile is placed; tap the words to change the minutes, ▶ starts, ■ stops; a running meditation shows its countdown and a thin progress rule |
 | the notes tile | the latest note from [Reader's Notes](https://github.com/funkypitt/readers-notes); swipe sideways for the others, tap opens it, + writes a new one |
