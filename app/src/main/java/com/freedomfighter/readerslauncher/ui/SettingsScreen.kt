@@ -1,5 +1,6 @@
 package com.freedomfighter.readerslauncher.ui
 
+import com.freedomfighter.readerslauncher.books.SlotApp
 import android.content.Intent
 import android.provider.Settings
 import android.widget.Toast
@@ -56,6 +57,8 @@ fun SettingsScreen(nav: Nav, app: App) {
     val off = stringResource(R.string.off)
     fun onOff(b: Boolean) = if (b) on else off
 
+    var sideMenu by remember { mutableStateOf<Int?>(null) }
+    var asinFor by remember { mutableStateOf<Int?>(null) }
     Page {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(stringResource(R.string.settings_title), onBack = { nav.pop() })
@@ -92,6 +95,16 @@ fun SettingsScreen(nav: Nav, app: App) {
                 TextRow(stringResource(R.string.settings_arrange), size = typo.title) { nav.push(Screen.Arrange) }
                 TextRow(stringResource(R.string.settings_hidden), size = typo.title) { nav.push(Screen.Hidden) }
                 TextRow(stringResource(R.string.settings_tasks), size = typo.title) { nav.push(Screen.TasksSetup(null)) }
+                // Each side of the home screen: a book kept in the launcher, or a reading app opened by the swipe.
+                val books by app.books.state.collectAsState()
+                listOf(0 to R.string.side_left, 1 to R.string.side_right).forEach { (side, name) ->
+                    val chosen = books.apps.getOrNull(side)
+                    val what = when {
+                        chosen != null -> app.store.state.value.labelFor(app, chosen.app) + (if (chosen.asin.isNotBlank()) " · " + chosen.asin else "")
+                        else -> books.slots.getOrNull(side)?.title ?: stringResource(R.string.side_book)
+                    }
+                    TextRow(stringResource(name), secondary = what, size = typo.title) { sideMenu = side }
+                }
                 Rule(Modifier.padding(vertical = 8.dp))
                 TextRow(stringResource(R.string.settings_default_launcher), size = typo.title) { openHomeSettings(context) }
                 TextRow(stringResource(R.string.settings_usage_access), size = typo.title) {
@@ -113,6 +126,29 @@ fun SettingsScreen(nav: Nav, app: App) {
                 ) { about = !about }
                 TextRow(stringResource(R.string.credits), size = typo.title) { }
             }
+        }
+        sideMenu?.let { side ->
+            val chosen = app.books.slotApp(side)
+            TextMenu(title = stringResource(if (side == 0) R.string.side_left else R.string.side_right), items = buildList {
+                add(MenuItem(stringResource(R.string.side_book)) { app.books.setSlotApp(side, null); nav.push(Screen.Book(side)) })
+                add(MenuItem(stringResource(R.string.side_app)) {
+                    nav.push(Screen.Apps(PickMode.Single { ref -> nav.pop(); app.books.setSlotApp(side, SlotApp(ref)) }))
+                })
+                if (chosen?.app?.packageName == KINDLE) {
+                    add(MenuItem(stringResource(R.string.side_kindle_book), secondary = chosen.asin.ifBlank { null }) { asinFor = side })
+                    if (chosen.asin.isNotBlank()) add(MenuItem(stringResource(R.string.side_kindle_app_only)) { app.books.setSlotApp(side, chosen.copy(asin = "")) })
+                }
+            }, onDismiss = { sideMenu = null })
+        }
+        asinFor?.let { side ->
+            val chosen = app.books.slotApp(side)
+            // the link Kindle or Amazon gives for the book ("share"), or its ten-character ASIN
+            TextPrompt(title = stringResource(R.string.side_kindle_prompt), initial = chosen?.asin.orEmpty(), onDone = { typed ->
+                val asin = asinIn(typed)
+                if (asin != null && chosen != null) app.books.setSlotApp(side, chosen.copy(asin = asin))
+                else android.widget.Toast.makeText(context, R.string.side_kindle_not_found, android.widget.Toast.LENGTH_LONG).show()
+                asinFor = null
+            }, onCancel = { asinFor = null })
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.freedomfighter.readerslauncher.books
 
+import com.freedomfighter.readerslauncher.data.AppRef
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -20,8 +21,15 @@ data class BookSlot(
     val charOffset: Int = 0
 )
 
+/**
+ * A reading app in place of a book on one side of the home screen: the swipe opens it. For
+ * Kindle, [asin] names the book to open — Kindle then shows it at the page it was left on.
+ */
 @Serializable
-data class BooksState(val slots: List<BookSlot?> = listOf(null, null))
+data class SlotApp(val app: AppRef, val asin: String = "")
+
+@Serializable
+data class BooksState(val slots: List<BookSlot?> = listOf(null, null), val apps: List<SlotApp?> = listOf(null, null))
 
 /**
  * Books are copied into app storage when opened (no lingering document permissions), and
@@ -54,6 +62,10 @@ class BookStore(private val context: Context) {
     }
 
     fun slot(i: Int): BookSlot? = _state.value.slots.getOrNull(i)
+
+    /** The app that side opens instead of a book, if one was chosen. The book, if any, stays where it is. */
+    fun slotApp(i: Int): SlotApp? = _state.value.apps.getOrNull(i)
+    fun setSlotApp(i: Int, app: SlotApp?) = update { s -> s.copy(apps = (s.apps + listOf(null, null)).take(2).toMutableList().also { it[i] = app }) }
 
     fun savePosition(i: Int, chapter: Int, charOffset: Int) = update { s ->
         val slots = s.slots.toMutableList()

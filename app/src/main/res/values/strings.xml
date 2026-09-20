@@ -233,4 +233,14 @@
     <string name="widget_food">food log</string>
     <string name="widget_food_desc">one touch opens Reader\'s Food Log\'s viewfinder for a new photo</string>
     <string name="food_photograph">photograph</string>
+    <string name="reader_or_app">or a reading app</string>
+    <string name="reader_or_app_hint">Kindle, Kobo… opened by the swipe instead of a book kept here</string>
+    <string name="side_left">left of the home screen</string>
+    <string name="side_right">right of the home screen</string>
+    <string name="side_book">a book kept in the launcher</string>
+    <string name="side_app">a reading app…</string>
+    <string name="side_kindle_book">the Kindle book to open…</string>
+    <string name="side_kindle_app_only">open Kindle only</string>
+    <string name="side_kindle_prompt">the book\'s link (share, in Kindle or Amazon) or its ASIN</string>
+    <string name="side_kindle_not_found">no ASIN found in that</string>
 </resources>

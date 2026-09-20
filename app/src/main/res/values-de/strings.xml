@@ -211,4 +211,14 @@
     <string name="widget_food">esstagebuch</string>
     <string name="widget_food_desc">ein tippen öffnet den sucher von Reader\'s Food Log für ein neues foto</string>
     <string name="food_photograph">fotografieren</string>
+    <string name="reader_or_app">oder eine Lese-App</string>
+    <string name="reader_or_app_hint">Kindle, Kobo… per Wischen geöffnet, statt eines hier abgelegten Buchs</string>
+    <string name="side_left">links vom Startbildschirm</string>
+    <string name="side_right">rechts vom Startbildschirm</string>
+    <string name="side_book">ein im Launcher abgelegtes Buch</string>
+    <string name="side_app">eine Lese-App…</string>
+    <string name="side_kindle_book">das Kindle-Buch, das geöffnet wird…</string>
+    <string name="side_kindle_app_only">nur Kindle öffnen</string>
+    <string name="side_kindle_prompt">Link des Buchs (Teilen, in Kindle oder Amazon) oder seine ASIN</string>
+    <string name="side_kindle_not_found">darin keine ASIN gefunden</string>
 </resources>

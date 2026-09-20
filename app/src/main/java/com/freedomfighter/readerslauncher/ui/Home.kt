@@ -262,8 +262,8 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                                     // Another page in that direction comes first; past the last one lies the book.
                                     val current = app.store.currentPage.value
                                     val count = app.store.state.value.pageCount
-                                    if (dx > 0) { if (current > 0) app.store.setPage(current - 1) else nav.push(Screen.Book(0)) }
-                                    else { if (current < count - 1) app.store.setPage(current + 1) else nav.push(Screen.Book(1)) }
+                                    if (dx > 0) { if (current > 0) app.store.setPage(current - 1) else openSide(context, app, nav, 0) }
+                                    else { if (current < count - 1) app.store.setPage(current + 1) else openSide(context, app, nav, 1) }
                                 }
                                 break
                             }

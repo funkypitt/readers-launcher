@@ -211,4 +211,14 @@
     <string name="widget_food">дневник питания</string>
     <string name="widget_food_desc">одно касание открывает видоискатель Reader\'s Food Log для нового снимка</string>
     <string name="food_photograph">снять</string>
+    <string name="reader_or_app">или приложение для чтения</string>
+    <string name="reader_or_app_hint">Kindle, Kobo… открывается свайпом вместо книги, хранящейся здесь</string>
+    <string name="side_left">слева от главного экрана</string>
+    <string name="side_right">справа от главного экрана</string>
+    <string name="side_book">книга, хранящаяся в лаунчере</string>
+    <string name="side_app">приложение для чтения…</string>
+    <string name="side_kindle_book">какую книгу Kindle открывать…</string>
+    <string name="side_kindle_app_only">открывать только Kindle</string>
+    <string name="side_kindle_prompt">ссылка на книгу (поделиться, в Kindle или Amazon) или её ASIN</string>
+    <string name="side_kindle_not_found">ASIN там не найден</string>
 </resources>

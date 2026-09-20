@@ -211,4 +211,14 @@
     <string name="widget_food">journal alimentaire</string>
     <string name="widget_food_desc">un toucher ouvre le viseur de Reader\'s Food Log pour une nouvelle photo</string>
     <string name="food_photograph">photographier</string>
+    <string name="reader_or_app">ou une app de lecture</string>
+    <string name="reader_or_app_hint">Kindle, Kobo… ouverte par le glissement, à la place d\'un livre gardé ici</string>
+    <string name="side_left">à gauche de l\'accueil</string>
+    <string name="side_right">à droite de l\'accueil</string>
+    <string name="side_book">un livre gardé dans le lanceur</string>
+    <string name="side_app">une app de lecture…</string>
+    <string name="side_kindle_book">le livre Kindle à ouvrir…</string>
+    <string name="side_kindle_app_only">ouvrir Kindle seulement</string>
+    <string name="side_kindle_prompt">le lien du livre (partager, dans Kindle ou Amazon) ou son ASIN</string>
+    <string name="side_kindle_not_found">aucun ASIN trouvé là-dedans</string>
 </resources>

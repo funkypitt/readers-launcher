@@ -17,6 +17,9 @@ swipe away. No ads, no tracking. Six languages.
   More home pages can be added; a grid of 3 to 5 squares at the bottom holds the key apps.
 * Swipe right or left past the pages for the two books: tap the right half to go forward, the
   left half to go back, long press for chapters and text size. EPUB, MOBI (PalmDoc), FB2, text.
+* Either side can open a reading app instead (Kindle, Kobo…): settings → left / right of the home
+  screen. For Kindle, paste the book's link or ASIN and the swipe opens that book where it was left
+  (Kindle's own `kindle://` link, not a documented one; the app alone is opened if it stops working).
 * Tiles for the sibling apps: tasks ([Reader's Tasks](https://github.com/funkypitt/readers-tasks-android)
   or Tasks.org), agenda, notes, book, recorder, recordings, mindful, food log, and the Littré
   word of the day. Swipe a tile for the next item; + adds one. Any standard app widget fits too.

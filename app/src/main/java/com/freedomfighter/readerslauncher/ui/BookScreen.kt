@@ -53,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.freedomfighter.readerslauncher.App
+import com.freedomfighter.readerslauncher.books.SlotApp
 import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.books.Book
 import com.freedomfighter.readerslauncher.books.BookSlot
@@ -65,6 +66,27 @@ private val BOOK_MIME = arrayOf(
     "application/epub+zip", "application/x-mobipocket-ebook", "application/vnd.amazon.ebook",
     "application/x-fictionbook+xml", "text/plain", "application/octet-stream", "*/*"
 )
+
+const val KINDLE = "com.amazon.kindle"
+
+/** Past the last page on that side: the book kept there, or the reading app chosen in its place. */
+fun openSide(context: android.content.Context, app: App, nav: Nav, side: Int) {
+    val chosen = app.books.slotApp(side)
+    if (chosen == null) { nav.push(Screen.Book(side)); return }
+    if (chosen.asin.isNotBlank()) {
+        // Kindle's own link to one book: it opens it where it was left. Not a documented
+        // address — if Kindle stops answering it, the app is opened as any other would be.
+        val link = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("kindle://book/?action=open&asin=${chosen.asin}"))
+            .setPackage(chosen.app.packageName).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (runCatching { context.startActivity(link) }.isSuccess) return
+    }
+    app.apps.launch(chosen.app)
+}
+
+/** The ASIN in what was pasted: the ten characters themselves, or an Amazon or Kindle link that carries them. */
+fun asinIn(text: String): String? =
+    Regex("(?:asin=|/dp/|/product/|/gp/aw/d/)([A-Z0-9]{10})", RegexOption.IGNORE_CASE).find(text)?.groupValues?.get(1)?.uppercase()
+        ?: Regex("^[A-Z0-9]{10}$", RegexOption.IGNORE_CASE).find(text.trim())?.value?.uppercase()
 
 /** Default reading size follows the screen: about one twentieth of its width, clamped. */
 @Composable
@@ -128,6 +150,12 @@ fun BookScreen(nav: Nav, app: App, slotIndex: Int) {
                         if (importError) stringResource(R.string.reader_unsupported) else stringResource(R.string.reader_hint_formats),
                         align = TextAlign.Center, maxLines = 3
                     )
+                    // A reading app (Kindle, Kobo…) instead of a book kept here: the swipe then opens it.
+                    VSpace(40.dp)
+                    T(stringResource(R.string.reader_or_app), Modifier.noRippleClickable {
+                        nav.push(Screen.Apps(PickMode.Single { ref -> nav.pop(); app.books.setSlotApp(slotIndex, SlotApp(ref)); nav.pop() }))
+                    }, size = typo.title, align = TextAlign.Center)
+                    Small(stringResource(R.string.reader_or_app_hint), align = TextAlign.Center, maxLines = 3)
                     if (slotIndex == 1) {
                         // The right-hand side can be another home page instead of a book; the book slot then moves after it.
                         VSpace(40.dp)
