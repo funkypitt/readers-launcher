@@ -94,6 +94,13 @@ fun <T> ReorderableList(
                         val list = working.toMutableList()
                         val moved = list.removeAt(dragIndex)
                         list.add(target.index, moved)
+                        // A lazy list holds on to its first visible row by KEY: swap that row and
+                        // the list scrolls to follow it, carrying the dragged row off the top —
+                        // which is why nothing could be dropped in first place. Pinning the
+                        // position by index before the swap keeps the list where it is.
+                        val first = listState.firstVisibleItemIndex
+                        if (target.index == first || dragIndex == first)
+                            listState.requestScrollToItem(first, listState.firstVisibleItemScrollOffset)
                         working = list
                         dragOffset += (current.offset - target.offset)
                         dragIndex = target.index
