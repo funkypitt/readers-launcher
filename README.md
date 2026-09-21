@@ -33,8 +33,14 @@ More detail: [docs/NOTES.md](docs/NOTES.md).
 
 ## Install
 
-From the [F-Droid repo](https://funkypitt.github.io/fdroid-repo/) or the APK attached to a
-release.
+
+[<img src="docs/badge_obtainium.png" alt="Get it on Obtainium" height="48">](https://gallaz.ch/eink/#readers-launcher)
+
+- **F-Droid** (recommended, updates arrive by themselves): add the repository from [gallaz.ch/eink](https://gallaz.ch/eink/#fdroid), or the address `https://funkypitt.github.io/fdroid-repo/repo` in F-Droid.
+- **Obtainium**: tap the badge on the phone, or add `https://github.com/funkypitt/readers-launcher` in Obtainium.
+- **APK**: attached to the [latest release](../../releases/latest). No automatic updates.
+
+All three deliver the same file, with the same signature.
 
 ## Build
 
