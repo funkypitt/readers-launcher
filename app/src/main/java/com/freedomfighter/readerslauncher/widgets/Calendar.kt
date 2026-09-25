@@ -186,7 +186,7 @@ fun whenString(e: EventInfo, now: Long): String {
 
 /**
  * Agenda tile: shows one upcoming event; swipe left for the next, right for the previous
- * (never earlier than now); tap opens the event in the calendar app.
+ * (never earlier than now); tap opens the event shown in the calendar app.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -241,8 +241,14 @@ fun CalendarTileView(tile: CalendarTile, app: App, onLongPress: () -> Unit, onOp
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {
-                    // A tap shows today's and tomorrow's events in the launcher's own style.
-                    if (!permitted) permLauncher.launch(Manifest.permission.READ_CALENDAR) else onOpen()
+                    // A tap opens the event shown in the calendar app; with nothing to show, today's
+                    // and tomorrow's (empty) list in the launcher's own style.
+                    val shown = events.getOrNull(index)
+                    when {
+                        !permitted -> permLauncher.launch(Manifest.permission.READ_CALENDAR)
+                        shown != null -> CalendarSource.open(context, shown, tile.app)
+                        else -> onOpen()
+                    }
                 },
                 onLongClick = onLongPress
             )
