@@ -62,7 +62,7 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
 
     val cellDp = cellHeight().value
     fun finishAdd(id: Int, info: AppWidgetProviderInfo) {
-        val label = runCatching { info.loadLabel(context.packageManager) }.getOrDefault("widget")
+        val label = runCatching { info.loadLabel(context.packageManager) }.getOrDefault(context.getString(R.string.restore_place_widget))
         val minDp = info.minHeight / context.resources.displayMetrics.density
         val cells = kotlin.math.ceil(minDp / cellDp).toInt().coerceIn(2, 12)
         val used = app.store.state.value.page(app.store.currentPage.value).sumOf { tileCells(it) }

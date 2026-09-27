@@ -4,7 +4,7 @@
     <string name="hint_empty">lange drücken, um zu beginnen</string>
     <string name="hint_set_default">als Standard-Launcher festlegen</string>
     <string name="menu_add_app">App / Kategorie hinzufügen</string>
-    <string name="menu_add_grid">Raster hinzufügen</string>
+    <string name="menu_add_grid">App-Raster hinzufügen</string>
     <string name="menu_add_widget">Widget hinzufügen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_open">öffnen</string>
@@ -58,7 +58,7 @@
     <string name="widget_tasks">Aufgaben</string>
     <string name="widget_calendar_desc">nächster Termin, wischen für die folgenden</string>
     <string name="widget_weather_desc">Uhrzeit und Wetter heute, antippen für fünf Tage</string>
-    <string name="widget_tasks_desc">erste Aufgabe einer Tasks.org-Liste, wischen für die folgenden</string>
+    <string name="widget_tasks_desc">erste Aufgabe einer Liste, wischen für die folgenden</string>
     <string name="widget_clock_desc">Uhrzeit und Datum</string>
     <string name="widget_bind_failed">dieses Widget konnte nicht hinzugefügt werden</string>
     <string name="widget_not_installed">die App des Widgets wurde entfernt</string>
@@ -77,12 +77,12 @@
     <string name="tasks_offline">Aufgaben nicht verfügbar</string>
     <string name="tasks_setup_needed">Aufgaben einrichten</string>
     <string name="tasks_setup_title">Aufgaben einrichten</string>
-    <string name="tasks_setup_help">Die Aufgaben-Kachel liest eine Liste aus Tasks.org, der quelloffenen Aufgaben-App (F-Droid). Tasks.org hält die Liste auf dem Gerät oder synchronisiert sie mit CalDAV, Google Tasks, Microsoft To Do oder EteSync. Hier ist nichts einzurichten, außer den Zugriff zu erlauben.</string>
+    <string name="tasks_setup_help">Die Aufgaben-Kachel liest eine Liste aus Reader\'s Tasks (CalDAV: Infomaniak, Nextcloud, Tasks.org Cloud…) oder aus Tasks.org. App wählen, bei Nachfrage Zugriff erlauben, Liste auswählen.</string>
     <string name="tasks_install">Tasks.org installieren</string>
     <string name="tasks_grant">Zugriff auf Aufgaben erlauben</string>
     <string name="tasks_choose_list">Liste wählen</string>
-    <string name="tasks_choose_list_legacy">Liste wählen. Diese Tasks.org-Version ist von außen nur lesbar: das Kästchen öffnet die Aufgabe und + den Editor. Ab Tasks.org 15.11 wird direkt abgehakt und hinzugefügt.</string>
-    <string name="tasks_no_lists">keine Liste gefunden — zuerst in Tasks.org eine anlegen</string>
+    <string name="tasks_choose_list_legacy">Liste wählen. Mit dieser Tasks.org-Version öffnet das Kästchen die Aufgabe und + öffnet Tasks.org. Ab Version 15.11 lässt sich hier direkt abhaken und hinzufügen.</string>
+    <string name="tasks_no_lists">keine Liste gefunden — zuerst in der Aufgaben-App eine anlegen</string>
     <string name="settings_title">Einstellungen</string>
     <string name="settings_theme">Thema: %1$s</string>
     <string name="theme_dark">weiß auf schwarz</string>
@@ -154,8 +154,8 @@
     <string name="notes_untitled">ohne Titel</string>
     <string name="arrange_fill">%1$d von %2$d Zellen belegt</string>
     <string name="agenda_new_event">+ neuer Termin</string>
-    <string name="widget_mindful">achtsam</string>
-    <string name="widget_mindful_desc">eine Klangschale alle X Minuten, eine Meditation mit Zeit — Start und Stopp (Reader\'s Mindful Tool)</string>
+    <string name="widget_mindful">Achtsamkeit</string>
+    <string name="widget_mindful_desc">eine Klangschale alle X Minuten und eine Meditation mit fester Dauer, hier starten und stoppen (braucht Reader\'s Mindful Tool)</string>
     <string name="mindful_interval_title">eine Klangschale alle %1$d Min</string>
     <string name="mindful_period_title">%1$d Min meditieren</string>
     <string name="mindful_next">nächste um %1$s · in %2$s</string>
@@ -196,9 +196,9 @@
     <string name="restore_summary">erstellt am %1$s · %2$d Seiten · %3$d Kacheln</string>
     <string name="restore_replaces">sie ersetzt Startbildschirm und Aussehen dieses Telefons</string>
     <string name="restore_missing">nicht auf diesem Telefon — antippen für die Store-Seite</string>
-    <string name="restore_widgets_gone">nicht mehr angebotene Widgets</string>
+    <string name="restore_widgets_gone">auf diesem Telefon nicht verfügbare Widgets</string>
     <string name="restore_all_there">alle Apps dieses Startbildschirms sind auf diesem Telefon</string>
-    <string name="restore_explain">Fehlende Apps werden ausgelassen: ihre Kachel entfällt und die Spalte rückt zusammen, eine Kategorie behält ihre anderen Apps, ein Rasterfeld bleibt leer. Ein fehlendes Widget bleibt als Zeile, die man entfernen kann. Ausgeblendete Apps und neue Namen bleiben für später erhalten. Widgets werden einzeln neu platziert; Android fragt eventuell jedes Mal nach.</string>
+    <string name="restore_explain">Fehlende Apps werden ausgelassen: ihre Kachel entfällt und die Spalte rückt zusammen, eine Kategorie behält ihre anderen Apps, ein Rasterfeld bleibt leer. Ein fehlendes Widget bleibt als Zeile, die man entfernen kann. Ausgeblendete Apps und eigene Namen bleiben für später erhalten. Widgets werden einzeln neu platziert; Android fragt eventuell jedes Mal nach.</string>
     <string name="restore_anyway">trotzdem wiederherstellen</string>
     <string name="restore_do">wiederherstellen</string>
     <string name="restore_cancel">abbrechen</string>
@@ -208,8 +208,8 @@
     <string name="restore_place_widget">Widget</string>
     <string name="restore_place_category">in %1$s</string>
     <string name="widget_not_placed">Widget platzieren</string>
-    <string name="widget_food">esstagebuch</string>
-    <string name="widget_food_desc">ein tippen öffnet den sucher von Reader\'s Food Log für ein neues foto</string>
+    <string name="widget_food">Esstagebuch</string>
+    <string name="widget_food_desc">ein Tippen öffnet den Sucher von Reader\'s Food Log für ein neues Foto</string>
     <string name="food_photograph">fotografieren</string>
     <string name="reader_or_app">oder eine Lese-App</string>
     <string name="reader_or_app_hint">Kindle, Kobo… per Wischen geöffnet, statt eines hier abgelegten Buchs</string>
@@ -219,6 +219,11 @@
     <string name="side_app">eine Lese-App…</string>
     <string name="side_kindle_book">das Kindle-Buch, das geöffnet wird…</string>
     <string name="side_kindle_app_only">nur Kindle öffnen</string>
-    <string name="side_kindle_prompt">Link des Buchs (Teilen, in Kindle oder Amazon) oder seine ASIN</string>
+    <string name="side_kindle_prompt">Link des Buchs einfügen („Teilen“ in Kindle oder Amazon) oder seine ASIN</string>
     <string name="side_kindle_not_found">darin keine ASIN gefunden</string>
+    <string name="app_not_found">App nicht gefunden</string>
+    <string name="cannot_open_app">%1$s lässt sich nicht öffnen</string>
+    <string name="cannot_open_shortcut">die Verknüpfung lässt sich nicht öffnen</string>
+    <string name="work_profile">Arbeit</string>
+    <string name="calendar_untitled">(ohne Titel)</string>
 </resources>

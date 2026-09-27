@@ -14,6 +14,7 @@ import android.os.UserHandle
 import android.os.UserManager
 import android.util.Log
 import android.widget.Toast
+import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.data.AppRef
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -118,14 +119,14 @@ class AppRepository(private val context: Context) {
     fun launch(ref: AppRef, sourceBounds: Rect? = null) {
         val info = activityInfo(ref)
         if (info == null) {
-            Toast.makeText(context, "app not found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.app_not_found), Toast.LENGTH_SHORT).show()
             return
         }
         try {
             launcherApps.startMainActivity(info.componentName, info.user, sourceBounds, null)
         } catch (e: Exception) {
             Log.w(TAG, "launch failed for $ref", e)
-            Toast.makeText(context, "cannot open ${info.label}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.cannot_open_app, info.label), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -172,7 +173,7 @@ class AppRepository(private val context: Context) {
             launcherApps.startShortcut(info, null, null)
         } catch (e: Exception) {
             Log.w(TAG, "shortcut failed", e)
-            Toast.makeText(context, "cannot open shortcut", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.cannot_open_shortcut), Toast.LENGTH_SHORT).show()
         }
     }
 

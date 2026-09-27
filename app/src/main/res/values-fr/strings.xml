@@ -4,7 +4,7 @@
     <string name="hint_empty">appui long pour commencer</string>
     <string name="hint_set_default">définir comme launcher par défaut</string>
     <string name="menu_add_app">ajouter app / catégorie</string>
-    <string name="menu_add_grid">ajouter la grille</string>
+    <string name="menu_add_grid">ajouter une grille d\'apps</string>
     <string name="menu_add_widget">ajouter un widget</string>
     <string name="menu_settings">réglages</string>
     <string name="menu_open">ouvrir</string>
@@ -58,7 +58,7 @@
     <string name="widget_tasks">tâches</string>
     <string name="widget_calendar_desc">prochain événement, glisser pour les suivants</string>
     <string name="widget_weather_desc">heure et météo du jour, toucher pour cinq jours</string>
-    <string name="widget_tasks_desc">première tâche d\'une liste Tasks.org, glisser pour les suivantes</string>
+    <string name="widget_tasks_desc">première tâche d\'une liste, glisser pour les suivantes</string>
     <string name="widget_clock_desc">heure et date</string>
     <string name="widget_bind_failed">impossible d\'ajouter ce widget</string>
     <string name="widget_not_installed">l\'app du widget a été supprimée</string>
@@ -81,8 +81,8 @@
     <string name="tasks_install">installer Tasks.org</string>
     <string name="tasks_grant">autoriser l\'accès aux tâches</string>
     <string name="tasks_choose_list">choisir une liste</string>
-    <string name="tasks_choose_list_legacy">choisir une liste. Cette version de Tasks.org est en lecture seule depuis l\'extérieur : la case ouvre la tâche et + ouvre l\'éditeur. Tasks.org 15.11 ou plus récent coche et ajoute directement.</string>
-    <string name="tasks_no_lists">aucune liste — créez-en une d\'abord dans Tasks.org</string>
+    <string name="tasks_choose_list_legacy">choisir une liste. Avec cette version de Tasks.org, la case ouvre la tâche et + ouvre Tasks.org. Dès la version 15.11, on coche et on ajoute directement ici.</string>
+    <string name="tasks_no_lists">aucune liste — créez-en une d\'abord dans l\'app de tâches</string>
     <string name="settings_title">réglages</string>
     <string name="settings_theme">thème : %1$s</string>
     <string name="theme_dark">blanc sur noir</string>
@@ -149,13 +149,13 @@
     <string name="widget_book_desc">le livre en cours, toucher pour reprendre</string>
     <string name="book_none">ouvrir un livre</string>
     <string name="widget_notes">notes</string>
-    <string name="widget_notes_desc">la dernière note, balayer pour les autres, + en écrit une</string>
+    <string name="widget_notes_desc">la dernière note, glisser pour les autres, + en écrit une</string>
     <string name="notes_none">aucune note</string>
     <string name="notes_untitled">sans titre</string>
     <string name="arrange_fill">%1$d cellules sur %2$d occupées</string>
     <string name="agenda_new_event">+ nouvel événement</string>
     <string name="widget_mindful">pleine conscience</string>
-    <string name="widget_mindful_desc">un bol toutes les X minutes, une méditation chronométrée — play et stop (Reader\'s Mindful Tool)</string>
+    <string name="widget_mindful_desc">un bol toutes les X minutes et une méditation chronométrée, à lancer et arrêter ici (nécessite Reader\'s Mindful Tool)</string>
     <string name="mindful_interval_title">un bol toutes les %1$d min</string>
     <string name="mindful_period_title">méditer %1$d min</string>
     <string name="mindful_next">prochain à %1$s · dans %2$s</string>
@@ -186,7 +186,7 @@
     <string name="recorder_paused">en pause</string>
     <string name="recorder_tap_stop">toucher ■ pour arrêter</string>
     <string name="widget_listen">enregistrements</string>
-    <string name="widget_listen_desc">écouter les enregistrements de Reader\'s Recorder, balayer du plus récent aux plus anciens</string>
+    <string name="widget_listen_desc">écouter les enregistrements de Reader\'s Recorder, glisser du plus récent aux plus anciens</string>
     <string name="listen_none">rien d\'enregistré pour l\'instant</string>
     <string name="backup_home">sauvegarder l\'écran d\'accueil</string>
     <string name="backup_home_desc">un fichier pour un autre téléphone : pages, tuiles, apps, apparence — aucun mot de passe</string>
@@ -196,9 +196,9 @@
     <string name="restore_summary">faite le %1$s · %2$d pages · %3$d tuiles</string>
     <string name="restore_replaces">elle remplace l\'écran d\'accueil et l\'apparence de ce téléphone</string>
     <string name="restore_missing">absentes de ce téléphone — toucher pour la page du magasin</string>
-    <string name="restore_widgets_gone">widgets qui ne sont plus proposés</string>
+    <string name="restore_widgets_gone">widgets indisponibles sur ce téléphone</string>
     <string name="restore_all_there">toutes les apps de cet écran d\'accueil sont sur ce téléphone</string>
-    <string name="restore_explain">Les apps absentes sont laissées de côté : leur tuile disparaît et la colonne se resserre, une catégorie garde ses autres apps, une case de la grille reste vide. Un widget absent reste comme une ligne à supprimer. Les apps masquées et les nouveaux noms sont gardés pour plus tard. Les widgets sont replacés un à un ; Android peut demander l\'autorisation pour chacun.</string>
+    <string name="restore_explain">Les apps absentes sont laissées de côté : leur tuile disparaît et la colonne se resserre, une catégorie garde ses autres apps, une case de la grille reste vide. Un widget absent reste comme une ligne à supprimer. Les apps masquées et les noms personnalisés sont gardés pour plus tard. Les widgets sont replacés un à un ; Android peut demander l\'autorisation pour chacun.</string>
     <string name="restore_anyway">restaurer quand même</string>
     <string name="restore_do">restaurer</string>
     <string name="restore_cancel">annuler</string>
@@ -215,10 +215,15 @@
     <string name="reader_or_app_hint">Kindle, Kobo… ouverte par le glissement, à la place d\'un livre gardé ici</string>
     <string name="side_left">à gauche de l\'accueil</string>
     <string name="side_right">à droite de l\'accueil</string>
-    <string name="side_book">un livre gardé dans le lanceur</string>
+    <string name="side_book">un livre gardé dans le launcher</string>
     <string name="side_app">une app de lecture…</string>
     <string name="side_kindle_book">le livre Kindle à ouvrir…</string>
     <string name="side_kindle_app_only">ouvrir Kindle seulement</string>
-    <string name="side_kindle_prompt">le lien du livre (partager, dans Kindle ou Amazon) ou son ASIN</string>
+    <string name="side_kindle_prompt">coller le lien du livre (« partager » dans Kindle ou Amazon) ou son ASIN</string>
     <string name="side_kindle_not_found">aucun ASIN trouvé là-dedans</string>
+    <string name="app_not_found">app introuvable</string>
+    <string name="cannot_open_app">impossible d\'ouvrir %1$s</string>
+    <string name="cannot_open_shortcut">impossible d\'ouvrir le raccourci</string>
+    <string name="work_profile">travail</string>
+    <string name="calendar_untitled">(sans titre)</string>
 </resources>

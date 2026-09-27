@@ -4,7 +4,7 @@
     <string name="hint_empty">toque longo para começar</string>
     <string name="hint_set_default">definir como launcher padrão</string>
     <string name="menu_add_app">adicionar app / categoria</string>
-    <string name="menu_add_grid">adicionar a grelha</string>
+    <string name="menu_add_grid">adicionar uma grelha de apps</string>
     <string name="menu_add_widget">adicionar um widget</string>
     <string name="menu_settings">definições</string>
     <string name="menu_open">abrir</string>
@@ -58,7 +58,7 @@
     <string name="widget_tasks">tarefas</string>
     <string name="widget_calendar_desc">próximo evento, deslize para os seguintes</string>
     <string name="widget_weather_desc">hora e tempo de hoje, toque para cinco dias</string>
-    <string name="widget_tasks_desc">primeira tarefa de uma lista do Tasks.org, deslize para as seguintes</string>
+    <string name="widget_tasks_desc">primeira tarefa de uma lista, deslize para as seguintes</string>
     <string name="widget_clock_desc">hora e data</string>
     <string name="widget_bind_failed">não foi possível adicionar este widget</string>
     <string name="widget_not_installed">a app do widget foi removida</string>
@@ -77,12 +77,12 @@
     <string name="tasks_offline">tarefas indisponíveis</string>
     <string name="tasks_setup_needed">configurar as tarefas</string>
     <string name="tasks_setup_title">configuração das tarefas</string>
-    <string name="tasks_setup_help">O bloco de tarefas lê uma lista do Tasks.org, a app de tarefas de código aberto (F-Droid). O Tasks.org guarda a lista no telefone ou sincroniza-a com CalDAV, Google Tasks, Microsoft To Do ou EteSync. Nada a configurar aqui, além de permitir o acesso.</string>
+    <string name="tasks_setup_help">O bloco de tarefas lê uma lista do Reader\'s Tasks (CalDAV: Infomaniak, Nextcloud, Tasks.org Cloud…) ou do Tasks.org. Escolha a app, permita o acesso se for pedido e escolha uma lista.</string>
     <string name="tasks_install">instalar o Tasks.org</string>
     <string name="tasks_grant">permitir o acesso às tarefas</string>
     <string name="tasks_choose_list">escolha uma lista</string>
-    <string name="tasks_choose_list_legacy">escolha uma lista. Esta versão do Tasks.org é só de leitura a partir de fora: a caixa abre a tarefa e + abre o editor. O Tasks.org 15.11 ou posterior conclui e adiciona diretamente.</string>
-    <string name="tasks_no_lists">nenhuma lista — crie uma primeiro no Tasks.org</string>
+    <string name="tasks_choose_list_legacy">escolha uma lista. Com esta versão do Tasks.org, a caixa abre a tarefa e + abre o Tasks.org. A partir da versão 15.11, pode concluir e adicionar tarefas aqui mesmo.</string>
+    <string name="tasks_no_lists">nenhuma lista — crie uma primeiro na app de tarefas</string>
     <string name="settings_title">definições</string>
     <string name="settings_theme">tema: %1$s</string>
     <string name="theme_dark">branco sobre preto</string>
@@ -155,7 +155,7 @@
     <string name="arrange_fill">%1$d de %2$d células ocupadas</string>
     <string name="agenda_new_event">+ novo evento</string>
     <string name="widget_mindful">atenção plena</string>
-    <string name="widget_mindful_desc">uma taça a cada X minutos, uma meditação cronometrada — play e stop (Reader\'s Mindful Tool)</string>
+    <string name="widget_mindful_desc">uma taça a cada X minutos e uma meditação cronometrada, iniciadas e paradas aqui (requer Reader\'s Mindful Tool)</string>
     <string name="mindful_interval_title">uma taça a cada %1$d min</string>
     <string name="mindful_period_title">meditar %1$d min</string>
     <string name="mindful_next">próxima às %1$s · em %2$s</string>
@@ -196,9 +196,9 @@
     <string name="restore_summary">feita a %1$s · %2$d páginas · %3$d blocos</string>
     <string name="restore_replaces">substitui o ecrã inicial e o aspeto deste telefone</string>
     <string name="restore_missing">não estão neste telefone — toque para a página na loja</string>
-    <string name="restore_widgets_gone">widgets que já não são oferecidos</string>
+    <string name="restore_widgets_gone">widgets indisponíveis neste telefone</string>
     <string name="restore_all_there">todas as apps deste ecrã estão neste telefone</string>
-    <string name="restore_explain">As apps em falta são deixadas de fora: o bloco desaparece e a coluna fecha, uma categoria mantém as outras apps, uma casa da grelha fica vazia. Um widget em falta fica como uma linha que pode remover. As apps ocultas e os novos nomes ficam guardados para mais tarde. Os widgets são colocados de novo um a um; o Android pode pedir autorização para cada um.</string>
+    <string name="restore_explain">As apps em falta são deixadas de fora: o bloco desaparece e a coluna fecha, uma categoria mantém as outras apps, uma casa da grelha fica vazia. Um widget em falta fica como uma linha que pode remover. As apps ocultas e os nomes personalizados ficam guardados para mais tarde. Os widgets são colocados de novo um a um; o Android pode pedir autorização para cada um.</string>
     <string name="restore_anyway">restaurar mesmo assim</string>
     <string name="restore_do">restaurar</string>
     <string name="restore_cancel">cancelar</string>
@@ -219,6 +219,11 @@
     <string name="side_app">uma app de leitura…</string>
     <string name="side_kindle_book">o livro Kindle a abrir…</string>
     <string name="side_kindle_app_only">abrir só o Kindle</string>
-    <string name="side_kindle_prompt">a ligação do livro (partilhar, no Kindle ou na Amazon) ou o seu ASIN</string>
+    <string name="side_kindle_prompt">cole a ligação do livro («partilhar» no Kindle ou na Amazon) ou o seu ASIN</string>
     <string name="side_kindle_not_found">nenhum ASIN encontrado aí</string>
+    <string name="app_not_found">app não encontrada</string>
+    <string name="cannot_open_app">não é possível abrir %1$s</string>
+    <string name="cannot_open_shortcut">não é possível abrir o atalho</string>
+    <string name="work_profile">trabalho</string>
+    <string name="calendar_untitled">(sem título)</string>
 </resources>

@@ -112,7 +112,7 @@ object CalendarSource {
                     begin -= off; end -= off
                 }
                 if (end < now) continue
-                out += EventInfo(c.getLong(0), c.getString(1)?.ifBlank { null } ?: "(untitled)", begin, end, allDay, c.getString(5))
+                out += EventInfo(c.getLong(0), c.getString(1)?.ifBlank { null } ?: context.getString(R.string.calendar_untitled), begin, end, allDay, c.getString(5))
             }
         }
         return out

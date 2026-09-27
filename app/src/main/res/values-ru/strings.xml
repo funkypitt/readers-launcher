@@ -4,7 +4,7 @@
     <string name="hint_empty">удерживайте, чтобы начать</string>
     <string name="hint_set_default">сделать лаунчером по умолчанию</string>
     <string name="menu_add_app">добавить приложение / категорию</string>
-    <string name="menu_add_grid">добавить сетку</string>
+    <string name="menu_add_grid">добавить сетку приложений</string>
     <string name="menu_add_widget">добавить виджет</string>
     <string name="menu_settings">настройки</string>
     <string name="menu_open">открыть</string>
@@ -58,7 +58,7 @@
     <string name="widget_tasks">задачи</string>
     <string name="widget_calendar_desc">ближайшее событие, проведите для следующих</string>
     <string name="widget_weather_desc">время и погода на сегодня, нажмите для пяти дней</string>
-    <string name="widget_tasks_desc">первая задача из списка Tasks.org, проведите для следующих</string>
+    <string name="widget_tasks_desc">первая задача из списка, проведите для следующих</string>
     <string name="widget_clock_desc">время и дата</string>
     <string name="widget_bind_failed">не удалось добавить этот виджет</string>
     <string name="widget_not_installed">приложение виджета удалено</string>
@@ -77,12 +77,12 @@
     <string name="tasks_offline">задачи недоступны</string>
     <string name="tasks_setup_needed">настроить задачи</string>
     <string name="tasks_setup_title">настройка задач</string>
-    <string name="tasks_setup_help">Плитка задач читает список из Tasks.org — открытого приложения для задач (F-Droid). Tasks.org хранит список на телефоне или синхронизирует его с CalDAV, Google Tasks, Microsoft To Do или EteSync. Здесь ничего настраивать не нужно, только разрешить доступ.</string>
+    <string name="tasks_setup_help">Плитка задач читает список из Reader\'s Tasks (CalDAV: Infomaniak, Nextcloud, Tasks.org Cloud…) или из Tasks.org. Выберите приложение, разрешите доступ, если спросят, и выберите список.</string>
     <string name="tasks_install">установить Tasks.org</string>
     <string name="tasks_grant">разрешить доступ к задачам</string>
     <string name="tasks_choose_list">выберите список</string>
-    <string name="tasks_choose_list_legacy">выберите список. Эта версия Tasks.org доступна извне только для чтения: квадрат открывает задачу, а + открывает редактор. Tasks.org 15.11 и новее отмечает и добавляет напрямую.</string>
-    <string name="tasks_no_lists">списков нет — сначала создайте список в Tasks.org</string>
+    <string name="tasks_choose_list_legacy">выберите список. В этой версии Tasks.org квадрат открывает задачу, а + открывает Tasks.org. С версии 15.11 задачи можно отмечать и добавлять прямо здесь.</string>
+    <string name="tasks_no_lists">списков нет — сначала создайте список в приложении задач</string>
     <string name="settings_title">настройки</string>
     <string name="settings_theme">тема: %1$s</string>
     <string name="theme_dark">белое на чёрном</string>
@@ -155,7 +155,7 @@
     <string name="arrange_fill">занято ячеек: %1$d из %2$d</string>
     <string name="agenda_new_event">+ новое событие</string>
     <string name="widget_mindful">осознанность</string>
-    <string name="widget_mindful_desc">чаша каждые X минут, медитация по таймеру — старт и стоп (Reader\'s Mindful Tool)</string>
+    <string name="widget_mindful_desc">чаша каждые X минут и медитация по таймеру, запуск и остановка здесь (нужно приложение Reader\'s Mindful Tool)</string>
     <string name="mindful_interval_title">чаша каждые %1$d мин</string>
     <string name="mindful_period_title">медитировать %1$d мин</string>
     <string name="mindful_next">следующий в %1$s · через %2$s</string>
@@ -196,9 +196,9 @@
     <string name="restore_summary">создана %1$s · страниц: %2$d · плиток: %3$d</string>
     <string name="restore_replaces">она заменит главный экран и внешний вид этого телефона</string>
     <string name="restore_missing">нет на этом телефоне — нажмите, чтобы открыть магазин</string>
-    <string name="restore_widgets_gone">виджеты, которых больше нет</string>
+    <string name="restore_widgets_gone">виджеты, недоступные на этом телефоне</string>
     <string name="restore_all_there">все приложения этого экрана есть на телефоне</string>
-    <string name="restore_explain">Отсутствующие приложения пропускаются: их плитка исчезает и столбец смыкается, категория сохраняет остальные приложения, клетка сетки остаётся пустой. Отсутствующий виджет остаётся строкой, которую можно удалить. Скрытые приложения и новые имена сохраняются на будущее. Виджеты размещаются заново по одному; Android может спросить разрешение для каждого.</string>
+    <string name="restore_explain">Отсутствующие приложения пропускаются: их плитка исчезает и столбец смыкается, категория сохраняет остальные приложения, клетка сетки остаётся пустой. Отсутствующий виджет остаётся строкой, которую можно удалить. Скрытые приложения и заданные вами названия сохраняются на будущее. Виджеты размещаются заново по одному; Android может спросить разрешение для каждого.</string>
     <string name="restore_anyway">всё равно восстановить</string>
     <string name="restore_do">восстановить</string>
     <string name="restore_cancel">отмена</string>
@@ -219,6 +219,11 @@
     <string name="side_app">приложение для чтения…</string>
     <string name="side_kindle_book">какую книгу Kindle открывать…</string>
     <string name="side_kindle_app_only">открывать только Kindle</string>
-    <string name="side_kindle_prompt">ссылка на книгу (поделиться, в Kindle или Amazon) или её ASIN</string>
+    <string name="side_kindle_prompt">вставьте ссылку на книгу («Поделиться» в Kindle или Amazon) или её ASIN</string>
     <string name="side_kindle_not_found">ASIN там не найден</string>
+    <string name="app_not_found">приложение не найдено</string>
+    <string name="cannot_open_app">не удаётся открыть %1$s</string>
+    <string name="cannot_open_shortcut">не удаётся открыть ярлык</string>
+    <string name="work_profile">рабочий</string>
+    <string name="calendar_untitled">(без названия)</string>
 </resources>
