@@ -211,6 +211,11 @@
     <string name="widget_food">дневник питания</string>
     <string name="widget_food_desc">одно касание открывает видоискатель Reader\'s Food Log для нового снимка</string>
     <string name="food_photograph">снять</string>
+    <string name="widget_night">ночной фильтр</string>
+    <string name="widget_night_desc">серый, тёплый и приглушённый экран: Reader\'s Night Filter включить и выключить</string>
+    <string name="night_on">фильтр включён</string>
+    <string name="night_off">фильтр выключен</string>
+    <string name="night_setup">остался один шаг в приложении</string>
     <string name="reader_or_app">или приложение для чтения</string>
     <string name="reader_or_app_hint">Kindle, Kobo… открывается свайпом вместо книги, хранящейся здесь</string>
     <string name="side_left">слева от главного экрана</string>

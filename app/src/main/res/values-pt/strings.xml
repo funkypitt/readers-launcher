@@ -211,6 +211,11 @@
     <string name="widget_food">diário alimentar</string>
     <string name="widget_food_desc">um toque abre o visor do Reader\'s Food Log para uma nova foto</string>
     <string name="food_photograph">fotografar</string>
+    <string name="widget_night">filtro noturno</string>
+    <string name="widget_night_desc">o ecrã cinzento, quente e escuro: Reader\'s Night Filter ativo ou não</string>
+    <string name="night_on">filtro ativo</string>
+    <string name="night_off">filtro inativo</string>
+    <string name="night_setup">falta um passo na aplicação</string>
     <string name="reader_or_app">ou uma app de leitura</string>
     <string name="reader_or_app_hint">Kindle, Kobo… aberta pelo deslizar, em vez de um livro guardado aqui</string>
     <string name="side_left">à esquerda do ecrã inicial</string>

@@ -211,6 +211,11 @@
     <string name="widget_food">Esstagebuch</string>
     <string name="widget_food_desc">ein Tippen öffnet den Sucher von Reader\'s Food Log für ein neues Foto</string>
     <string name="food_photograph">fotografieren</string>
+    <string name="widget_night">Nachtfilter</string>
+    <string name="widget_night_desc">der Bildschirm grau, warm und dunkel: Reader\'s Night Filter an und aus</string>
+    <string name="night_on">Filter an</string>
+    <string name="night_off">Filter aus</string>
+    <string name="night_setup">noch ein Schritt in der App</string>
     <string name="reader_or_app">oder eine Lese-App</string>
     <string name="reader_or_app_hint">Kindle, Kobo… per Wischen geöffnet, statt eines hier abgelegten Buchs</string>
     <string name="side_left">links vom Startbildschirm</string>

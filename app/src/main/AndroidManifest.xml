@@ -44,10 +44,12 @@
         <package android:name="com.freedomfighter.readersmindful" />
         <package android:name="com.freedomfighter.readersrecorder" />
         <package android:name="com.freedomfighter.readersfoodlog" />
+        <package android:name="com.freedomfighter.readersnight" />
         <provider android:authorities="com.freedomfighter.readersbooks" />
         <provider android:authorities="com.freedomfighter.readersnotes" />
         <provider android:authorities="com.freedomfighter.readersmindful" />
         <provider android:authorities="com.freedomfighter.readersrecorder" />
+        <provider android:authorities="com.freedomfighter.readersnight" />
         <provider android:authorities="ch.littre.littre_app.wotd" />
         <provider android:authorities="com.freedomfighter.readerstasks" />
         <provider android:authorities="org.tasks.api" />

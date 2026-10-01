@@ -62,6 +62,11 @@ data class ListenTile(override val id: String = newId()) : Tile()
 @SerialName("food")
 data class FoodTile(override val id: String = newId()) : Tile()
 
+/** Reader's Night Filter: its state and its switch. */
+@Serializable
+@SerialName("night")
+data class NightTile(override val id: String = newId()) : Tile()
+
 /** Reader's Recorder: record with one tap, the latest recording under it. */
 @Serializable
 @SerialName("recorder")

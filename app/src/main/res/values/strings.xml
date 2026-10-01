@@ -233,6 +233,11 @@
     <string name="widget_food">food log</string>
     <string name="widget_food_desc">one touch opens Reader\'s Food Log\'s viewfinder for a new photo</string>
     <string name="food_photograph">photograph</string>
+    <string name="widget_night">night filter</string>
+    <string name="widget_night_desc">the screen gray, warm and dim: Reader\'s Night Filter on and off</string>
+    <string name="night_on">filter on</string>
+    <string name="night_off">filter off</string>
+    <string name="night_setup">one step left in the app</string>
     <string name="reader_or_app">or a reading app</string>
     <string name="reader_or_app_hint">Kindle, Kobo… opened by the swipe instead of a book kept here</string>
     <string name="side_left">left of the home screen</string>
