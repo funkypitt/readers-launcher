@@ -89,6 +89,8 @@
     <string name="theme_light">чёрное на белом</string>
     <string name="theme_system">как в системе</string>
     <string name="settings_font">шрифт: %1$s</string>
+    <string name="book_text">текст книг</string>
+    <string name="settings_book_text">текст книг: %1$s</string>
     <string name="font_serif">с засечками</string>
     <string name="font_sans">без засечек</string>
     <string name="font_mono">моноширинный</string>

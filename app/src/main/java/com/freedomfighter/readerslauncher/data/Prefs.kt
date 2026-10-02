@@ -23,7 +23,9 @@ data class Settings(
     /** Double tap on an app tile or grid square lists its shortcuts (costs ~300 ms on a single tap). */
     val doubleTapShortcuts: Boolean = true,
     /** Reader text size in sp; 0 = automatic from screen size. */
-    val readerSp: Int = 0
+    val readerSp: Int = 0,
+    /** Book text in the serif reading face (Literata) instead of the sans-serif one. */
+    val bookSerif: Boolean = false
 )
 
 /**
@@ -56,7 +58,9 @@ class Prefs(context: Context) {
         haptics = sp.getBoolean(K_HAPTICS, true),
         autoRotate = sp.getBoolean(K_ROTATE, false),
         doubleTapShortcuts = sp.getBoolean(K_DT_SHORTCUTS, true),
-        readerSp = sp.getInt(K_READER_SP, 0)
+        readerSp = sp.getInt(K_READER_SP, 0),
+        // Never chosen: a serif launcher font used to give serif pages, and still does.
+        bookSerif = if (sp.contains(K_BOOK_SERIF)) sp.getBoolean(K_BOOK_SERIF, false) else sp.getString(K_FONT, null) == FontChoice.SERIF.name
     )
 
     private inline fun <reified E : Enum<E>> enumOr(name: String?, default: E): E =
@@ -73,6 +77,7 @@ class Prefs(context: Context) {
     fun setAutoRotate(v: Boolean) = sp.edit().putBoolean(K_ROTATE, v).apply()
     fun setDoubleTapShortcuts(v: Boolean) = sp.edit().putBoolean(K_DT_SHORTCUTS, v).apply()
     fun setReaderSp(v: Int) = sp.edit().putInt(K_READER_SP, v).apply()
+    fun setBookSerif(v: Boolean) = sp.edit().putBoolean(K_BOOK_SERIF, v).apply()
 
     /** Flip between the two monochrome palettes (SYSTEM resolves to whatever is showing now). */
     fun toggleTheme(systemIsDark: Boolean) {
@@ -101,5 +106,6 @@ class Prefs(context: Context) {
         private const val K_ROTATE = "auto_rotate"
         private const val K_DT_SHORTCUTS = "double_tap_shortcuts"
         private const val K_READER_SP = "reader_sp"
+        private const val K_BOOK_SERIF = "book_serif"
     }
 }

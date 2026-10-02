@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Literata 3.103 (SIL Open Font License 1.1, docs/Literata-OFL.txt), cut from the variable
+     font at optical size 12: regular and bold, the only two styles the reader draws. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font android:fontStyle="normal" android:fontWeight="400" android:font="@font/literata_regular" />
+    <font android:fontStyle="normal" android:fontWeight="700" android:font="@font/literata_bold" />
+</font-family>

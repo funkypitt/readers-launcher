@@ -89,6 +89,8 @@
     <string name="theme_light">negro sobre blanco</string>
     <string name="theme_system">seguir el sistema</string>
     <string name="settings_font">fuente: %1$s</string>
+    <string name="book_text">texto de los libros</string>
+    <string name="settings_book_text">texto de los libros: %1$s</string>
     <string name="font_serif">serif</string>
     <string name="font_sans">sans</string>
     <string name="font_mono">mono</string>

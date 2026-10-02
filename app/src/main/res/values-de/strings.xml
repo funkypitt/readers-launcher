@@ -89,6 +89,8 @@
     <string name="theme_light">schwarz auf weiß</string>
     <string name="theme_system">dem System folgen</string>
     <string name="settings_font">Schrift: %1$s</string>
+    <string name="book_text">Buchtext</string>
+    <string name="settings_book_text">Buchtext: %1$s</string>
     <string name="font_serif">Serif</string>
     <string name="font_sans">Sans</string>
     <string name="font_mono">Mono</string>

@@ -108,6 +108,8 @@
     <string name="theme_light">black on white</string>
     <string name="theme_system">follow system</string>
     <string name="settings_font">font: %1$s</string>
+    <string name="book_text">book text</string>
+    <string name="settings_book_text">book text: %1$s</string>
     <string name="font_serif">serif</string>
     <string name="font_sans">sans</string>
     <string name="font_mono">mono</string>

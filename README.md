@@ -16,7 +16,8 @@ swipe away. No ads, no tracking. Six languages.
 * The page never scrolls: it is a fixed grid of cells, and adding is refused once it is full.
   More home pages can be added; a grid of 3 to 5 squares at the bottom holds the key apps.
 * Swipe right or left past the pages for the two books: tap the right half to go forward, the
-  left half to go back, long press for chapters and text size. EPUB, MOBI (PalmDoc), FB2, text.
+  left half to go back, long press for chapters, text size and the book text in sans-serif or
+  serif (Literata). EPUB, MOBI (PalmDoc), FB2, text.
 * Either side can open a reading app instead (Kindle, Kobo…): settings → left / right of the home
   screen. For Kindle, paste the book's link or ASIN and the swipe opens that book where it was left
   (Kindle's own `kindle://` link, not a documented one; the app alone is opened if it stops working).

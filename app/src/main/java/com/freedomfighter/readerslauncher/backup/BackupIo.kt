@@ -48,7 +48,8 @@ object BackupIo {
             settings = LauncherBackup.Settings(
                 theme = s.theme.name, font = s.font.name, textSize = s.textSize.name, align = s.align.name,
                 doubleTapTheme = s.doubleTapTheme, swipeDownNotifications = s.swipeDownNotifications, showStatusBar = s.showStatusBar,
-                haptics = s.haptics, autoRotate = s.autoRotate, doubleTapShortcuts = s.doubleTapShortcuts, readerSp = s.readerSp
+                haptics = s.haptics, autoRotate = s.autoRotate, doubleTapShortcuts = s.doubleTapShortcuts, readerSp = s.readerSp,
+                bookSerif = s.bookSerif
             ),
             home = home,
             apps = pkgs.distinct().mapNotNull { p -> labels[p]?.let { p to it } }.toMap(),
@@ -118,6 +119,7 @@ object BackupIo {
         runCatching { p.setAlign(enumValueOf(s.align)) }
         p.setDoubleTapTheme(s.doubleTapTheme); p.setSwipeDownNotifications(s.swipeDownNotifications); p.setShowStatusBar(s.showStatusBar)
         p.setHaptics(s.haptics); p.setAutoRotate(s.autoRotate); p.setDoubleTapShortcuts(s.doubleTapShortcuts); p.setReaderSp(s.readerSp)
+        s.bookSerif?.let { p.setBookSerif(it) }
     }
 
     /** Agenda tiles restored by calendar name: matched now if calendar access is granted, else by the tile later. */

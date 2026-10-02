@@ -177,6 +177,7 @@ fun BookScreen(nav: Nav, app: App, slotIndex: Int) {
                     add(MenuItem(stringResource(R.string.reader_menu_chapters)) { nav.push(Screen.BookChapters(slotIndex)) })
                     add(MenuItem(stringResource(R.string.reader_menu_larger), "$current → ${(current + 2).coerceAtMost(40)}") { app.prefs.setReaderSp((current + 2).coerceAtMost(40)) })
                     add(MenuItem(stringResource(R.string.reader_menu_smaller), "$current → ${(current - 2).coerceAtLeast(12)}") { app.prefs.setReaderSp((current - 2).coerceAtLeast(12)) })
+                    add(MenuItem(stringResource(R.string.book_text), stringResource(if (settings.bookSerif) R.string.font_serif else R.string.font_sans) + " → " + stringResource(if (settings.bookSerif) R.string.font_sans else R.string.font_serif)) { app.prefs.setBookSerif(!settings.bookSerif) })
                     add(MenuItem(stringResource(R.string.reader_menu_open)) { pick() })
                     add(MenuItem(stringResource(R.string.reader_menu_remove)) { app.books.clear(slotIndex) })
                 },
@@ -206,6 +207,15 @@ private class ChapterLayout(val layout: StaticLayout, val pageStarts: List<Int>,
         for (i in pageStarts.indices) if (pageStartChar(i) <= charOffset) p = i else break
         return p
     }
+}
+
+/**
+ * Lines sit 1.7 em apart whatever the face: 1.45 times the line of the system fonts, less for
+ * a face that is drawn with tall line boxes of its own (Literata).
+ */
+private fun lineSpacing(paint: TextPaint): Float {
+    val natural = paint.fontMetrics.let { it.descent - it.ascent } / paint.textSize
+    return if (natural > 1.3f) 1.7f / natural else 1.45f
 }
 
 private fun buildLayout(text: CharSequence, paint: TextPaint, widthPx: Int, spacingMul: Float): StaticLayout =
@@ -293,21 +303,22 @@ private fun Reader(app: App, slotIndex: Int, slot: BookSlot, swipeBack: Modifier
         var canvasHeight by remember { mutableStateOf(0) }
         val pageHeightPx = if (canvasHeight > 0) canvasHeight.toFloat() else estimatedHeightPx
         val fgArgb = colors.fg.toArgb()
-        val paint = remember(readerSp, typo.family, typo.weight, fgArgb, density) {
+        val fontContext = LocalContext.current
+        val paint = remember(readerSp, settings.bookSerif, typo.family, fgArgb, density) {
             TextPaint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply {
                 color = fgArgb
                 textSize = with(density) { readerSp.sp.toPx() }
-                typeface = when (typo.family) {
-                    FontFamily.Serif -> Typeface.SERIF
-                    FontFamily.Monospace -> Typeface.MONOSPACE
-                    else -> if (typo.weight == FontWeight.Light) Typeface.create("sans-serif-light", Typeface.NORMAL) else Typeface.SANS_SERIF
+                typeface = when {
+                    settings.bookSerif -> fontContext.resources.getFont(R.font.literata)
+                    typo.family == FontFamily.Monospace -> Typeface.MONOSPACE
+                    else -> Typeface.create("sans-serif-light", Typeface.NORMAL)
                 }
             }
         }
         val ch = b.chapters[chapter]
         val text = remember(ch) { chapterText(ch) }
         val layout = remember(text, widthPx, paint, pageHeightPx) {
-            paginate(buildLayout(text, paint, widthPx, 1.45f), pageHeightPx.toInt())
+            paginate(buildLayout(text, paint, widthPx, lineSpacing(paint)), pageHeightPx.toInt())
         }
         // Resolve the wanted character into a page whenever the layout (size, width) changes.
         LaunchedEffect(layout) { page = layout.pageFor(wantedChar).coerceIn(0, layout.pageCount - 1) }

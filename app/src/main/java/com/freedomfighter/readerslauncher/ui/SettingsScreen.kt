@@ -77,6 +77,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                     FontChoice.MONO -> stringResource(R.string.font_mono)
                 }
                 TextRow(stringResource(R.string.settings_font, fontName), size = typo.title) { app.prefs.setFont(next(s.font)) }
+                TextRow(stringResource(R.string.settings_book_text, stringResource(if (s.bookSerif) R.string.font_serif else R.string.font_sans)), size = typo.title) { app.prefs.setBookSerif(!s.bookSerif) }
                 val sizeName = when (s.textSize) {
                     TextSize.SMALL -> stringResource(R.string.size_small)
                     TextSize.MEDIUM -> stringResource(R.string.size_medium)
@@ -125,6 +126,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                     secondary = if (about) stringResource(R.string.settings_about_line) else null
                 ) { about = !about }
                 TextRow(stringResource(R.string.credits), size = typo.title) { }
+                TextRow("Literata", size = typo.title, secondary = "The Literata Project Authors · SIL Open Font License 1.1") { }
             }
         }
         sideMenu?.let { side ->
