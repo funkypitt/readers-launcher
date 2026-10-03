@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -88,8 +89,17 @@ fun <T> ReorderableList(
                     dragOffset += delta
                     val info = listState.layoutInfo.visibleItemsInfo
                     val current = info.firstOrNull { it.index == dragIndex } ?: continue
+                    // The list has not been laid out again since the last swap: its rows are
+                    // not where these numbers say.
+                    if (current.key != key(working[dragIndex])) continue
                     val centerY = current.offset + current.size / 2f + dragOffset
-                    val target = info.firstOrNull { it.index != dragIndex && centerY >= it.offset && centerY < it.offset + it.size }
+                    // Rows of unequal height: the dragged row changes places once its middle
+                    // passes the MIDDLE of a neighbour. Entering the neighbour is not enough —
+                    // past a taller row the middle would still be inside it after the swap, and
+                    // the two would change places for ever.
+                    fun middle(i: LazyListItemInfo) = i.offset + i.size / 2f
+                    val target = info.firstOrNull { it.index < dragIndex && centerY < middle(it) }
+                        ?: info.lastOrNull { it.index > dragIndex && it.index < working.size && centerY > middle(it) }
                     if (target != null) {
                         val list = working.toMutableList()
                         val moved = list.removeAt(dragIndex)
@@ -99,10 +109,13 @@ fun <T> ReorderableList(
                         // which is why nothing could be dropped in first place. Pinning the
                         // position by index before the swap keeps the list where it is.
                         val first = listState.firstVisibleItemIndex
-                        if (target.index == first || dragIndex == first)
+                        if (first in minOf(target.index, dragIndex)..maxOf(target.index, dragIndex))
                             listState.requestScrollToItem(first, listState.firstVisibleItemScrollOffset)
                         working = list
-                        dragOffset += (current.offset - target.offset)
+                        // Keep the row under the finger: going up it lands where the target
+                        // started, going down where the target ended.
+                        dragOffset += if (target.index < dragIndex) current.offset - target.offset
+                            else current.offset + current.size - (target.offset + target.size)
                         dragIndex = target.index
                     }
                     val viewportStart = listState.layoutInfo.viewportStartOffset

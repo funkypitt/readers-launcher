@@ -13,8 +13,8 @@ android {
         applicationId = "com.freedomfighter.readerslauncher"
         minSdk = 26
         targetSdk = 34
-        versionCode = 38
-        versionName = "1.20.0"
+        versionCode = 39
+        versionName = "1.20.1"
     }
 
     buildTypes {
