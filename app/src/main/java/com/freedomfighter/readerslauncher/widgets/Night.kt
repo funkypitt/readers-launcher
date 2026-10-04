@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -47,21 +48,35 @@ object ReadersNight {
     const val PACKAGE = "com.freedomfighter.readersnight"
     val URI: Uri = Uri.parse("content://$PACKAGE/state")
 
-    /** [allowed] is false until the app has received its permission from a computer. */
-    data class State(val on: Boolean, val allowed: Boolean)
+    /**
+     * [allowed] is false until the app has received its permission from a computer. [dim] is
+     * the dimming (0 = off, then 30, 60, 90); [canDim] is false when the phone has no dimming
+     * or the app is a version that cannot change it from here.
+     */
+    data class State(val on: Boolean, val allowed: Boolean, val dim: Int = 0, val canDim: Boolean = false)
 
     fun isInstalled(context: Context) = runCatching { context.packageManager.getPackageInfo(PACKAGE, 0) }.isSuccess
 
     fun state(context: Context): State? = runCatching {
         context.contentResolver.query(URI, null, null, null, null)?.use { c ->
             if (!c.moveToFirst()) null
-            else State(c.getInt(c.getColumnIndexOrThrow("on")) == 1, c.getInt(c.getColumnIndexOrThrow("allowed")) == 1)
+            else {
+                val canDim = c.getColumnIndex("can_dim")
+                State(
+                    c.getInt(c.getColumnIndexOrThrow("on")) == 1, c.getInt(c.getColumnIndexOrThrow("allowed")) == 1,
+                    c.getInt(c.getColumnIndexOrThrow("dim")), canDim >= 0 && c.getInt(canDim) == 1
+                )
+            }
         }
     }.getOrNull()
 
     /** False when the app could not switch: it is opened instead, where the missing step is explained. */
     fun toggle(context: Context): Boolean =
         runCatching { context.contentResolver.call(URI, "toggle", null, null)?.getBoolean("done") == true }.getOrDefault(false)
+
+    /** The dimming moved one step (off, light, medium, strong). False when the app could not. */
+    fun cycleDim(context: Context): Boolean =
+        runCatching { context.contentResolver.call(URI, "dim", null, null)?.getBoolean("done") == true }.getOrDefault(false)
 
     /** The app; the project page when it is not installed. */
     fun open(context: Context) {
@@ -71,7 +86,10 @@ object ReadersNight {
     }
 }
 
-/** The night filter tile: the state in words, the switch on the right; the words open the app. */
+/**
+ * The night filter tile: the state in words, then the dimming, which a tap moves one step,
+ * then the switch; the words open the app.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NightTileView(onLongPress: () -> Unit) {
@@ -104,6 +122,32 @@ fun NightTileView(onLongPress: () -> Unit) {
                 maxLines = 1, color = if (installed) colors.fg else colors.dim
             )
             Small(stringResource(if (st?.allowed == false) R.string.night_setup else R.string.widget_night), maxLines = 1)
+        }
+        if (installed && st?.canDim == true) {
+            val dim = st?.dim ?: 0
+            Column(
+                Modifier.padding(start = 16.dp).border(1.dp, colors.fg)
+                    .noRippleClickable {
+                        tick()
+                        scope.launch {
+                            val done = withContext(Dispatchers.IO) { ReadersNight.cycleDim(context) }
+                            if (done) poll++ else ReadersNight.open(context)
+                        }
+                    }
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Small(stringResource(R.string.night_dim), maxLines = 1, align = TextAlign.Center)
+                Small(
+                    stringResource(when {
+                        dim <= 0 -> R.string.night_dim_off
+                        dim <= 30 -> R.string.night_dim_light
+                        dim <= 60 -> R.string.night_dim_medium
+                        else -> R.string.night_dim_strong
+                    }),
+                    color = colors.fg, maxLines = 1, align = TextAlign.Center
+                )
+            }
         }
         if (installed) {
             Box(

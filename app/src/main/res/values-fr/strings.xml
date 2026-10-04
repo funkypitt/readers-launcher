@@ -218,6 +218,11 @@
     <string name="night_on">filtre actif</string>
     <string name="night_off">filtre inactif</string>
     <string name="night_setup">encore une étape dans l’application</string>
+    <string name="night_dim">assombrissement</string>
+    <string name="night_dim_off">inactif</string>
+    <string name="night_dim_light">léger</string>
+    <string name="night_dim_medium">moyen</string>
+    <string name="night_dim_strong">fort</string>
     <string name="reader_or_app">ou une app de lecture</string>
     <string name="reader_or_app_hint">Kindle, Kobo… ouverte par le glissement, à la place d\'un livre gardé ici</string>
     <string name="side_left">à gauche de l\'accueil</string>

@@ -240,6 +240,11 @@
     <string name="night_on">filter on</string>
     <string name="night_off">filter off</string>
     <string name="night_setup">one step left in the app</string>
+    <string name="night_dim">dimming</string>
+    <string name="night_dim_off">off</string>
+    <string name="night_dim_light">light</string>
+    <string name="night_dim_medium">medium</string>
+    <string name="night_dim_strong">strong</string>
     <string name="reader_or_app">or a reading app</string>
     <string name="reader_or_app_hint">Kindle, Kobo… opened by the swipe instead of a book kept here</string>
     <string name="side_left">left of the home screen</string>
