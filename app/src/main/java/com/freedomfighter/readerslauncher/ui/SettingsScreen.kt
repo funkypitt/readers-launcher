@@ -52,6 +52,14 @@ fun SettingsScreen(nav: Nav, app: App) {
         }
     }
     val backupTitle = stringResource(R.string.backup_home)
+    // the backup: saved where the person chooses, then offered to the share menu
+    var saved by remember { mutableStateOf(false) }
+    val saveLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val b = com.freedomfighter.readerslauncher.backup.BackupIo.build(context, app)
+        saved = com.freedomfighter.readerslauncher.backup.BackupIo.save(context, uri, com.freedomfighter.readerslauncher.backup.LauncherBackup.encode(b))
+        if (!saved) Toast.makeText(context, R.string.backup_failed, Toast.LENGTH_LONG).show()
+    }
 
     val on = stringResource(R.string.on)
     val off = stringResource(R.string.off)
@@ -113,8 +121,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                 }
                 Rule(Modifier.padding(vertical = 8.dp))
                 TextRow(backupTitle, secondary = stringResource(R.string.backup_home_desc), size = typo.title) {
-                    val b = com.freedomfighter.readerslauncher.backup.BackupIo.build(context, app)
-                    com.freedomfighter.readerslauncher.backup.BackupIo.share(context, com.freedomfighter.readerslauncher.backup.LauncherBackup.encode(b), backupTitle)
+                    runCatching { saveLauncher.launch(com.freedomfighter.readerslauncher.backup.LauncherBackup.FILE_NAME) }
                 }
                 TextRow(stringResource(R.string.restore_backup), size = typo.title) {
                     restoreLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream", "*/*"))
@@ -141,6 +148,12 @@ fun SettingsScreen(nav: Nav, app: App) {
                     if (chosen.asin.isNotBlank()) add(MenuItem(stringResource(R.string.side_kindle_app_only)) { app.books.setSlotApp(side, chosen.copy(asin = "")) })
                 }
             }, onDismiss = { sideMenu = null })
+        }
+        if (saved) {
+            val shareTitle = stringResource(R.string.share_export)
+            TextMenu(stringResource(R.string.export_saved, com.freedomfighter.readerslauncher.backup.LauncherBackup.FILE_NAME), listOf(MenuItem(shareTitle) {
+                com.freedomfighter.readerslauncher.backup.BackupIo.share(context, shareTitle)
+            }), onDismiss = { saved = false })
         }
         asinFor?.let { side ->
             val chosen = app.books.slotApp(side)

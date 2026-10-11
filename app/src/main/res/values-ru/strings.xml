@@ -192,6 +192,9 @@
     <string name="listen_none">пока ничего не записано</string>
     <string name="backup_home">резервная копия главного экрана</string>
     <string name="backup_home_desc">файл для другого телефона: страницы, плитки, приложения, вид — без паролей</string>
+    <string name="export_saved">сохранено как %1$s</string>
+    <string name="share_export">поделиться этим файлом…</string>
+    <string name="backup_failed">не удалось записать копию</string>
     <string name="restore_backup">восстановить из копии</string>
     <string name="restore_foreign">это не резервная копия Reader\'s Launcher</string>
     <string name="restore_too_new">эта копия из более новой версии Reader\'s Launcher (формат %1$d): сначала обновите лаунчер</string>

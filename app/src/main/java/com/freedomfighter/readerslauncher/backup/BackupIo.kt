@@ -65,10 +65,25 @@ object BackupIo {
         return h.copy(tiles = h.tiles.map(::fill), morePages = h.morePages.map { p -> p.copy(tiles = p.tiles.map(::fill)) })
     }
 
-    fun share(context: Context, json: String, chooserTitle: String) {
+    /**
+     * Writes the backup to the document the person chose and keeps a copy for the share menu
+     * offered right after. False when the document could not be written.
+     */
+    fun save(context: Context, uri: Uri, json: String): Boolean {
         cleanUp(context)
-        val file = File(dir(context).apply { mkdirs() }, LauncherBackup.FILE_NAME)
-        file.writeText(json)
+        val written = runCatching {
+            // "wt", not the default: written over a longer file, plain "w" leaves the end of the
+            // old one after the new — a file no other program can read.
+            context.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(json.toByteArray(Charsets.UTF_8)) }
+        }.isSuccess
+        if (written) File(dir(context).apply { mkdirs() }, LauncherBackup.FILE_NAME).writeText(json)
+        return written
+    }
+
+    /** Hands the copy of the backup just saved to the share menu (Telegram, a drive, an e-mail…). */
+    fun share(context: Context, chooserTitle: String) {
+        val file = File(dir(context), LauncherBackup.FILE_NAME)
+        if (!file.exists()) return
         val uri = FileProvider.getUriForFile(context, context.packageName + ".backup", file)
         val send = Intent(Intent.ACTION_SEND)
             .setType("application/json")
@@ -76,7 +91,7 @@ object BackupIo {
             .putExtra(Intent.EXTRA_SUBJECT, LauncherBackup.FILE_NAME)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         send.clipData = ClipData.newRawUri(LauncherBackup.FILE_NAME, uri)
-        context.startActivity(Intent.createChooser(send, chooserTitle).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        runCatching { context.startActivity(Intent.createChooser(send, chooserTitle).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
     }
 
     fun readText(context: Context, uri: Uri): String =

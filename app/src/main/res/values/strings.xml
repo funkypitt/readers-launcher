@@ -214,6 +214,9 @@
     <string name="listen_none">nothing recorded yet</string>
     <string name="backup_home">back up the home screen</string>
     <string name="backup_home_desc">a file for another phone: pages, tiles, apps, look — no password</string>
+    <string name="export_saved">saved as %1$s</string>
+    <string name="share_export">share this file…</string>
+    <string name="backup_failed">the backup could not be written</string>
     <string name="restore_backup">restore a backup</string>
     <string name="restore_foreign">not a Reader\'s Launcher backup</string>
     <string name="restore_too_new">this backup comes from a newer Reader\'s Launcher (format %1$d): update the launcher first</string>

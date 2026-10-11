@@ -192,6 +192,9 @@
     <string name="listen_none">noch nichts aufgenommen</string>
     <string name="backup_home">Startbildschirm sichern</string>
     <string name="backup_home_desc">eine Datei für ein anderes Telefon: Seiten, Kacheln, Apps, Aussehen — kein Passwort</string>
+    <string name="export_saved">gespeichert als %1$s</string>
+    <string name="share_export">diese Datei teilen…</string>
+    <string name="backup_failed">die Sicherung konnte nicht geschrieben werden</string>
     <string name="restore_backup">Sicherung wiederherstellen</string>
     <string name="restore_foreign">keine Sicherung von Reader\'s Launcher</string>
     <string name="restore_too_new">diese Sicherung stammt von einem neueren Reader\'s Launcher (Format %1$d): bitte zuerst aktualisieren</string>

@@ -192,6 +192,9 @@
     <string name="listen_none">rien d\'enregistré pour l\'instant</string>
     <string name="backup_home">sauvegarder l\'écran d\'accueil</string>
     <string name="backup_home_desc">un fichier pour un autre téléphone : pages, tuiles, apps, apparence — aucun mot de passe</string>
+    <string name="export_saved">enregistré sous %1$s</string>
+    <string name="share_export">partager ce fichier…</string>
+    <string name="backup_failed">la sauvegarde n\'a pas pu être écrite</string>
     <string name="restore_backup">restaurer une sauvegarde</string>
     <string name="restore_foreign">ce n\'est pas une sauvegarde de Reader\'s Launcher</string>
     <string name="restore_too_new">cette sauvegarde vient d\'un Reader\'s Launcher plus récent (format %1$d) : mettez d\'abord le launcher à jour</string>

@@ -53,6 +53,10 @@ class LauncherBackupTest {
         calendars = mapOf("agenda" to listOf(LauncherBackup.CalendarName("me@x.ch", "Personal"), LauncherBackup.CalendarName("local", "Work")))
     )
 
+    @Test fun fileNameCarriesTheAppName() {
+        assertEquals("readers-launcher-home.json", LauncherBackup.FILE_NAME)
+    }
+
     @Test fun roundTrip() {
         val text = LauncherBackup.encode(backup)
         assertTrue(text.contains("\"format\": \"readers-launcher-backup\""))

@@ -192,6 +192,9 @@
     <string name="listen_none">nada grabado todavía</string>
     <string name="backup_home">hacer copia de la pantalla de inicio</string>
     <string name="backup_home_desc">un archivo para otro teléfono: páginas, mosaicos, apps, aspecto — sin contraseñas</string>
+    <string name="export_saved">guardado como %1$s</string>
+    <string name="share_export">compartir este archivo…</string>
+    <string name="backup_failed">no se pudo escribir la copia</string>
     <string name="restore_backup">restaurar una copia</string>
     <string name="restore_foreign">no es una copia de Reader\'s Launcher</string>
     <string name="restore_too_new">esta copia viene de un Reader\'s Launcher más reciente (formato %1$d): actualiza primero el launcher</string>
