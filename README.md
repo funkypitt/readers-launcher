@@ -25,7 +25,9 @@ swipe away. No ads, no tracking. Six languages.
   or Tasks.org), agenda, notes, book, recorder, recordings, mindful, food log, night filter, and the Littré
   word of the day. Swipe a tile for the next item; + adds one. Any standard app widget fits too.
 * Network is used for the weather only (MeteoSwiss in Switzerland, Open-Meteo elsewhere, no
-  key). The launcher never talks to a task or calendar server itself.
+  key). In Switzerland the weather tile has a third view, the day's chart: the temperature
+  curve and the rain bars, hour by hour, as in the MeteoSwiss app. The launcher never talks
+  to a task or calendar server itself.
 * The whole configuration exports and imports as one JSON file, from the settings.
 * Android does not let a launcher replace the system's recents view; the "open apps" text list
   is the closest thing available.

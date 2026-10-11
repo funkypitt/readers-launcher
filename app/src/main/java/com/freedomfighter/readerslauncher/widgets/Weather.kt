@@ -32,6 +32,13 @@ import kotlin.coroutines.resume
 @Serializable
 data class DayForecast(val date: String, val code: Int, val min: Double, val max: Double)
 
+/**
+ * Hourly series for the chart view, as MeteoSwiss gives them with the forecast: one value per
+ * hour from [start] (a local midnight, epoch ms), temperature in °C and precipitation in mm/h.
+ */
+@Serializable
+data class Hourly(val start: Long, val temperature: List<Double>, val precipitation: List<Double>)
+
 @Serializable
 data class Forecast(
     val placeName: String,
@@ -42,7 +49,9 @@ data class Forecast(
     val days: List<DayForecast>,
     val fetchedAt: Long,
     /** "open-meteo" or "meteosuisse". */
-    val source: String = "open-meteo"
+    val source: String = "open-meteo",
+    /** MeteoSwiss only: the hourly curves the third view of the tile draws. */
+    val hourly: Hourly? = null
 )
 
 sealed class WeatherState {
@@ -166,7 +175,8 @@ class WeatherRepo private constructor(private val context: Context) {
 
     @Serializable private data class MsCurrent(val icon: Int = 0, val temperature: Double = 0.0)
     @Serializable private data class MsDay(val dayDate: String, val iconDay: Int = 0, val temperatureMax: Double = 0.0, val temperatureMin: Double = 0.0)
-    @Serializable private data class MsResponse(val currentWeather: MsCurrent? = null, val forecast: List<MsDay> = emptyList())
+    @Serializable private data class MsGraph(val start: Long = 0, val temperatureMean1h: List<Double?> = emptyList(), val precipitation1h: List<Double?> = emptyList())
+    @Serializable private data class MsResponse(val currentWeather: MsCurrent? = null, val forecast: List<MsDay> = emptyList(), val graph: MsGraph? = null)
     @Serializable private data class GaAttributes(val plz: Int? = null, val langtext: String? = null)
     @Serializable private data class GaResult(val attributes: GaAttributes = GaAttributes())
     @Serializable private data class GaResponse(val results: List<GaResult> = emptyList())
@@ -189,11 +199,23 @@ class WeatherRepo private constructor(private val context: Context) {
             val current = r.currentWeather ?: return null
             if (r.forecast.isEmpty()) return null
             val days = r.forecast.take(5).map { DayForecast(it.dayDate, swissToWmo(it.iconDay), it.temperatureMin, it.temperatureMax) }
-            Forecast(name.ifBlank { hit.langtext ?: "" }, lat, lon, current.temperature, swissToWmo(current.icon), days, System.currentTimeMillis(), "meteosuisse")
+            // The same JSON carries the hourly curves (144 h of temperature, 126 h of precipitation
+            // from today's midnight): kept with the forecast, so the chart costs no second request.
+            val hourly = r.graph?.takeIf { it.start > 0 && it.temperatureMean1h.size >= 2 }?.let { g ->
+                Hourly(g.start, fillGaps(g.temperatureMean1h), g.precipitation1h.map { it ?: 0.0 })
+            }
+            Forecast(name.ifBlank { hit.langtext ?: "" }, lat, lon, current.temperature, swissToWmo(current.icon), days, System.currentTimeMillis(), "meteosuisse", hourly)
         } catch (e: Exception) {
             Log.w(TAG, "MeteoSwiss unavailable, falling back to Open-Meteo", e)
             null
         }
+    }
+
+    /** A missing hour takes the last known value (the first known one before that), so the curve has no hole. */
+    private fun fillGaps(values: List<Double?>): List<Double> {
+        val first = values.firstOrNull { it != null } ?: 0.0
+        var last = first
+        return values.map { v -> (v ?: last).also { last = it } }
     }
 
     /**

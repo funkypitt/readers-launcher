@@ -57,7 +57,7 @@
     <string name="widget_calendar">agenda</string>
     <string name="widget_tasks">tarefas</string>
     <string name="widget_calendar_desc">próximo evento, deslize para os seguintes</string>
-    <string name="widget_weather_desc">hora e tempo de hoje, toque para cinco dias</string>
+    <string name="widget_weather_desc">hora e tempo de hoje; toque para cinco dias, depois a curva do dia na Suíça</string>
     <string name="widget_tasks_desc">primeira tarefa de uma lista, deslize para as seguintes</string>
     <string name="widget_clock_desc">hora e data</string>
     <string name="widget_bind_failed">não foi possível adicionar este widget</string>

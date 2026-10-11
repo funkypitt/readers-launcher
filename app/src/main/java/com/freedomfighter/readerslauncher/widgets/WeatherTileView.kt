@@ -1,6 +1,7 @@
 package com.freedomfighter.readerslauncher.widgets
 
 import android.content.Context
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -21,12 +22,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import java.time.ZoneId
 import com.freedomfighter.readerslauncher.App
 import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.data.WeatherTile
@@ -84,8 +95,15 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {
-                    when (state) {
-                        is WeatherState.Ready -> app.store.replaceTile(tile.copy(fiveDays = !tile.fiveDays))
+                    when (val s = state) {
+                        // Today → five days → the day's chart (when MeteoSwiss gives one) → today.
+                        is WeatherState.Ready -> app.store.replaceTile(
+                            when {
+                                tile.fiveDays -> tile.copy(fiveDays = false, chart = chartDay(s.forecast, now) != null)
+                                tile.chart && chartDay(s.forecast, now) != null -> tile.copy(chart = false)
+                                else -> tile.copy(fiveDays = true, chart = false)
+                            }
+                        )
                         WeatherState.NoLocation -> if (repo.hasLocationPermission()) onNeedCity(tile) else repo.requestLocationPermission(context.findActivityCompat())
                         else -> repo.refresh(tile.place, force = true)
                     }
@@ -114,7 +132,13 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
             is WeatherState.Ready -> {
                 val f = s.forecast
                 val placeLabel = f.placeName.ifBlank { stringResource(R.string.weather_here) }
-                if (!tile.fiveDays) {
+                val chartDay = if (tile.chart && !tile.fiveDays) remember(f, now / 60_000) { chartDay(f, now) } else null
+                if (chartDay != null) {
+                    // The day's chart: place and day on one line, then MeteoSwiss's graph in two colours.
+                    val dayFmt = remember { SimpleDateFormat("EEEE d MMMM", Locale.getDefault()) }
+                    Small("${placeLabel.lowercase()} · ${dayFmt.format(java.util.Date(now)).lowercase()}", maxLines = 1, align = TextAlign.Start, color = colors.fg)
+                    DayChart(chartDay, tile.fahrenheit, Modifier.fillMaxWidth().weight(1f).padding(top = 4.dp))
+                } else if (!tile.fiveDays) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             T(timeString(now), size = typo.big, lineHeightMul = 1.05f, align = TextAlign.Start)
@@ -150,6 +174,54 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
 }
 
 private fun Context.findActivityCompat(): android.app.Activity? = findActivity()
+
+/** Today's hours of a MeteoSwiss forecast, in Swiss time (the place is Swiss); null elsewhere or when the data has run out. */
+private fun chartDay(f: Forecast, now: Long): WeatherChart.Day? =
+    f.hourly?.let { WeatherChart.today(it, now, ZoneId.of("Europe/Zurich")) }
+
+/**
+ * The chart itself: a thick line for the temperature, solid bars for the rain, a vertical mark at
+ * the present hour, figures in the tile's text. Two colours and no transparency, for e-ink.
+ */
+@Composable
+private fun DayChart(day: WeatherChart.Day, fahrenheit: Boolean, modifier: Modifier) {
+    val colors = LocalColors.current
+    val typo = LocalTypo.current
+    val measurer = rememberTextMeasurer()
+    val labelStyle = TextStyle(color = colors.fg, fontFamily = typo.family, fontWeight = typo.weight, fontSize = typo.tile * 0.5f)
+    Canvas(modifier) {
+        val labelH = measurer.measure("0°", labelStyle).size.height.toFloat()
+        val gap = 2.dp.toPx()
+        val l = WeatherChart.layout(day, size.width, size.height, labelH, gap, fahrenheit) { measurer.measure(it, labelStyle).size.width.toFloat() }
+        val stroke = 2.5.dp.toPx()
+        // Bars first, the line over them with a halo in the background colour so it stays readable where they meet.
+        l.bars.forEach { b -> drawRect(colors.fg, Offset(b.left, b.top), Size(b.right - b.left, b.bottom - b.top)) }
+        drawLine(colors.fg, Offset(l.plotLeft, l.baselineY), Offset(l.plotRight, l.baselineY), strokeWidth = 1.dp.toPx())
+        l.ticks.forEach { x -> drawLine(colors.fg, Offset(x, l.baselineY), Offset(x, l.baselineY + gap * 1.5f), strokeWidth = 1.dp.toPx()) }
+        if (l.line.size >= 2) {
+            val path = Path().apply {
+                moveTo(l.line[0].x, l.line[0].y)
+                l.line.drop(1).forEach { lineTo(it.x, it.y) }
+            }
+            drawPath(path, colors.bg, style = Stroke(stroke * 2.2f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawPath(path, colors.fg, style = Stroke(stroke, cap = StrokeCap.Round, join = StrokeJoin.Round))
+        }
+        if (l.nowX != null && l.nowY != null) {
+            drawLine(colors.fg, Offset(l.nowX, l.plotTop), Offset(l.nowX, l.baselineY), strokeWidth = 1.dp.toPx())
+            drawCircle(colors.bg, stroke * 1.8f, Offset(l.nowX, l.nowY))
+            drawCircle(colors.fg, stroke * 1.2f, Offset(l.nowX, l.nowY))
+        }
+        l.labels.forEach { lb ->
+            val m = measurer.measure(lb.text, labelStyle)
+            val x = when (lb.anchor) {
+                WeatherChart.Anchor.START -> lb.x
+                WeatherChart.Anchor.CENTER -> lb.x - m.size.width / 2f
+                WeatherChart.Anchor.END -> lb.x - m.size.width
+            }
+            drawText(m, topLeft = Offset(x, lb.y))
+        }
+    }
+}
 
 @Composable
 fun weatherMenuItems(tile: WeatherTile, app: App, context: Context, onChooseCity: () -> Unit): List<MenuItem> = buildList {

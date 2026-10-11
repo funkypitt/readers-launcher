@@ -93,7 +93,9 @@ data class WeatherTile(
     /** null = automatic location. */
     val place: Place? = null,
     val fahrenheit: Boolean = false,
-    val fiveDays: Boolean = false
+    val fiveDays: Boolean = false,
+    /** The third view, the day's chart (MeteoSwiss places only); tap cycles today → five days → chart. */
+    val chart: Boolean = false
 ) : Tile()
 
 @Serializable

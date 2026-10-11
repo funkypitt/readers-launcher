@@ -68,7 +68,7 @@
     <string name="widget_calendar">agenda</string>
     <string name="widget_tasks">tasks</string>
     <string name="widget_calendar_desc">next event, swipe for the following ones</string>
-    <string name="widget_weather_desc">time and today\'s weather, tap for five days</string>
+    <string name="widget_weather_desc">time and today\'s weather; tap for five days, then the day\'s curve in Switzerland</string>
     <string name="widget_clock_desc">time and date</string>
     <string name="widget_bind_failed">could not add this widget</string>
     <string name="widget_not_installed">widget app was removed</string>
