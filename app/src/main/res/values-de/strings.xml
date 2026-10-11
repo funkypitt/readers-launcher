@@ -218,6 +218,9 @@
     <string name="food_photograph">fotografieren</string>
     <string name="widget_night">Nachtfilter</string>
     <string name="widget_night_desc">der Bildschirm grau, warm und dunkel: Reader\'s Night Filter an und aus</string>
+    <string name="widget_attention">Aufmerksamkeit</string>
+    <string name="widget_attention_desc">die Reflex-Öffnungen und -Zeit des Tages, die Zeit der Werkzeuge (braucht Reader\'s Attention)</string>
+    <string name="attention_setup">der Nutzungszugriff wird in der App gegeben</string>
     <string name="night_on">Filter an</string>
     <string name="night_off">Filter aus</string>
     <string name="night_setup">noch ein Schritt in der App</string>

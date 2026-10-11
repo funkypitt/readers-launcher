@@ -164,6 +164,11 @@ fun WidgetPickerScreen(nav: Nav, app: App) {
                     }
                 }
                 item {
+                    TextRow(stringResource(R.string.widget_attention), secondary = stringResource(R.string.widget_attention_desc)) {
+                        app.store.addTile(com.freedomfighter.readerslauncher.data.AttentionTile()); nav.pop()
+                    }
+                }
+                item {
                     TextRow(stringResource(R.string.widget_mindful), secondary = stringResource(R.string.widget_mindful_desc)) {
                         nav.replace(Screen.MindfulSetup(null))
                     }

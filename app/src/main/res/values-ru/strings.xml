@@ -218,6 +218,9 @@
     <string name="food_photograph">снять</string>
     <string name="widget_night">ночной фильтр</string>
     <string name="widget_night_desc">серый, тёплый и приглушённый экран: Reader\'s Night Filter включить и выключить</string>
+    <string name="widget_attention">внимание</string>
+    <string name="widget_attention_desc">рефлекторные открытия и время за день, время инструментов (нужен Reader\'s Attention)</string>
+    <string name="attention_setup">доступ к данным об использовании даётся в приложении</string>
     <string name="night_on">фильтр включён</string>
     <string name="night_off">фильтр выключен</string>
     <string name="night_setup">остался один шаг в приложении</string>

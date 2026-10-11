@@ -218,6 +218,9 @@
     <string name="food_photograph">fotografar</string>
     <string name="widget_night">filtro noturno</string>
     <string name="widget_night_desc">o ecrã cinzento, quente e escuro: Reader\'s Night Filter ativo ou não</string>
+    <string name="widget_attention">atenção</string>
+    <string name="widget_attention_desc">as aberturas e o tempo reflexo do dia, o tempo das ferramentas (precisa de Reader\'s Attention)</string>
+    <string name="attention_setup">o acesso à utilização dá-se na app</string>
     <string name="night_on">filtro ativo</string>
     <string name="night_off">filtro inativo</string>
     <string name="night_setup">falta um passo na aplicação</string>

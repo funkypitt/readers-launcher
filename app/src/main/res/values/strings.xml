@@ -240,6 +240,9 @@
     <string name="food_photograph">photograph</string>
     <string name="widget_night">night filter</string>
     <string name="widget_night_desc">the screen gray, warm and dim: Reader\'s Night Filter on and off</string>
+    <string name="widget_attention">attention</string>
+    <string name="widget_attention_desc">today’s reflex openings and time, the tools’ time (needs Reader\'s Attention)</string>
+    <string name="attention_setup">usage access to give in the app</string>
     <string name="night_on">filter on</string>
     <string name="night_off">filter off</string>
     <string name="night_setup">one step left in the app</string>

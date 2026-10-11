@@ -67,6 +67,11 @@ data class FoodTile(override val id: String = newId()) : Tile()
 @SerialName("night")
 data class NightTile(override val id: String = newId()) : Tile()
 
+/** Reader's Attention: today's reflex openings and time, the tools' time. */
+@Serializable
+@SerialName("attention")
+data class AttentionTile(override val id: String = newId()) : Tile()
+
 /** Reader's Recorder: record with one tap, the latest recording under it. */
 @Serializable
 @SerialName("recorder")

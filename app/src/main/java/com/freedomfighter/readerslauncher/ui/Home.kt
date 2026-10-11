@@ -68,6 +68,8 @@ import com.freedomfighter.readerslauncher.data.RecorderTile
 import com.freedomfighter.readerslauncher.data.FoodTile
 import com.freedomfighter.readerslauncher.data.NightTile
 import com.freedomfighter.readerslauncher.widgets.NightTileView
+import com.freedomfighter.readerslauncher.data.AttentionTile
+import com.freedomfighter.readerslauncher.widgets.AttentionTileView
 import com.freedomfighter.readerslauncher.widgets.FoodLogTileView
 import com.freedomfighter.readerslauncher.widgets.RecorderTileView
 import com.freedomfighter.readerslauncher.data.ListenTile
@@ -478,6 +480,7 @@ private fun tileTitle(tile: Tile, state: HomeState, app: App): String? = when (t
     is RecorderTile -> stringResource(R.string.widget_recorder)
     is FoodTile -> stringResource(R.string.widget_food)
     is NightTile -> stringResource(R.string.widget_night)
+    is AttentionTile -> stringResource(R.string.widget_attention)
     is ListenTile -> stringResource(R.string.widget_listen)
     is WeatherTile -> stringResource(R.string.widget_weather)
     is CalendarTile -> stringResource(R.string.widget_calendar)
@@ -535,6 +538,7 @@ private fun tileMenuItems(
         is RecorderTile -> moveItems + remove
         is FoodTile -> moveItems + remove
         is NightTile -> moveItems + remove
+        is AttentionTile -> moveItems + remove
         is ListenTile -> moveItems + remove
         is MindfulTile -> buildList {
             add(MenuItem(stringResource(R.string.menu_configure)) { nav.push(Screen.MindfulSetup(tile.id)) })
@@ -593,6 +597,7 @@ private fun TileView(
         is RecorderTile -> RecorderTileView(onLongPress)
         is FoodTile -> FoodLogTileView(onLongPress)
         is NightTile -> NightTileView(onLongPress)
+        is AttentionTile -> AttentionTileView(onLongPress)
         is ListenTile -> ListenTileView(onLongPress)
         is MindfulTile -> MindfulTileView(tile, app, onLongPress, onMinutes = { onMindfulMinutes(tile, it) })
         is WeatherTile -> WeatherTileView(tile, app, onLongPress, onNeedCity)
