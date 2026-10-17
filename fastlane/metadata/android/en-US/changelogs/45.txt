@@ -1,0 +1,1 @@
+Weather tile: when the forecast could not be refreshed for two hours or more, the tile says how old it is.

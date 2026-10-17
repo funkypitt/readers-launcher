@@ -76,6 +76,8 @@
     <string name="weather_loading">…</string>
     <string name="weather_no_location">no location — hold to choose a city</string>
     <string name="weather_offline">weather unavailable</string>
+    <string name="weather_age_hours">updated %1$d h ago</string>
+    <string name="weather_age_days">updated %1$d days ago</string>
     <string name="weather_here">here</string>
     <string name="weather_min_max">%1$s / %2$s</string>
     <string name="weather_city_prompt">city name</string>

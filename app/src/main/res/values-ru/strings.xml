@@ -64,6 +64,8 @@
     <string name="widget_not_installed">приложение виджета удалено</string>
     <string name="weather_no_location">нет места — удерживайте, чтобы выбрать город</string>
     <string name="weather_offline">погода недоступна</string>
+    <string name="weather_age_hours">обновлено %1$d ч назад</string>
+    <string name="weather_age_days">обновлено %1$d дн. назад</string>
     <string name="weather_here">здесь</string>
     <string name="weather_city_prompt">название города</string>
     <string name="calendar_none">предстоящих событий нет</string>

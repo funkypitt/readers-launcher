@@ -148,16 +148,19 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
                 val f = s.forecast
                 val placeLabel = f.placeName.ifBlank { stringResource(R.string.weather_here) }
                 val chartDay = if (tile.chart && !tile.fiveDays) remember(f, now / 60_000) { chartDay(f, now) } else null
+                val age = ageLabel(f, now)
                 if (chartDay != null) {
                     // The day's chart: place and day on one line, then MeteoSwiss's graph in two colours.
                     val dayFmt = remember { SimpleDateFormat("EEEE d MMMM", Locale.getDefault()) }
-                    Small("${placeLabel.lowercase()} · ${dayFmt.format(java.util.Date(now)).lowercase()}", maxLines = 1, align = TextAlign.Start, color = colors.fg)
+                    // An old forecast says its age in place of the date (the chart is always today's): both overflow the line.
+                    val header = "${placeLabel.lowercase()} · ${age ?: dayFmt.format(java.util.Date(now)).lowercase()}"
+                    Small(header, maxLines = 1, align = TextAlign.Start, color = colors.fg)
                     DayChart(chartDay, tile.fahrenheit, Modifier.fillMaxWidth().weight(1f).padding(top = 4.dp))
                 } else if (!tile.fiveDays) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             T(timeString(now), size = typo.big, lineHeightMul = 1.05f, align = TextAlign.Start)
-                            Small(placeLabel.lowercase(), maxLines = 1, align = TextAlign.Start)
+                            Small(placeLabel.lowercase() + (age?.let { " · $it" } ?: ""), maxLines = 1, align = TextAlign.Start)
                         }
                         WxIcon(f.currentCode, 44.dp)
                         Spacer(Modifier.width(14.dp))
@@ -182,9 +185,24 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
                             }
                         }
                     }
+                    if (age != null) Small(age, Modifier.fillMaxWidth().padding(top = 2.dp), align = TextAlign.Center, maxLines = 1)
                 }
             }
         }
+    }
+}
+
+/**
+ * "updated 3 h ago" once the forecast is two hours old (refreshes failed: no network, phone
+ * asleep), so an old forecast never passes for today's; null while it is fresh.
+ */
+@Composable
+private fun ageLabel(f: Forecast, now: Long): String? {
+    val hours = ((now - f.fetchedAt) / 3_600_000L).toInt()
+    return when {
+        hours < 2 -> null
+        hours < 48 -> stringResource(R.string.weather_age_hours, hours)
+        else -> stringResource(R.string.weather_age_days, hours / 24)
     }
 }
 

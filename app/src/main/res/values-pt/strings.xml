@@ -64,6 +64,8 @@
     <string name="widget_not_installed">a app do widget foi removida</string>
     <string name="weather_no_location">sem local — toque longo para escolher uma cidade</string>
     <string name="weather_offline">tempo indisponível</string>
+    <string name="weather_age_hours">atualizado há %1$d h</string>
+    <string name="weather_age_days">atualizado há %1$d dias</string>
     <string name="weather_here">aqui</string>
     <string name="weather_city_prompt">nome da cidade</string>
     <string name="calendar_none">nenhum evento próximo</string>
