@@ -15,11 +15,11 @@ class WeatherChartTest {
     private val midnight = day.atStartOfDay(zone).toInstant().toEpochMilli()
     private fun at(h: Int, m: Int = 0, d: LocalDate = day) = d.atTime(LocalTime.of(h, m)).atZone(zone).toInstant().toEpochMilli()
 
-    /** Six days of hours as MeteoSwiss sends them: 144 temperatures, 126 precipitations from midnight. */
+    /** Six days of hours, once merged by [WeatherChart.hourlyPrecipitation]: 144 temperatures, 140 precipitations from midnight (the series may end earlier). */
     private val hourly = Hourly(
         start = midnight,
         temperature = List(144) { i -> 10.0 + (i % 24) / 2.0 },
-        precipitation = List(126) { i -> if (i == 15) 1.2 else if (i == 16) 0.4 else 0.0 }
+        precipitation = List(140) { i -> if (i == 15) 1.2 else if (i == 16) 0.4 else 0.0 }
     )
 
     private fun measure(s: String) = s.length * 8f
@@ -46,7 +46,7 @@ class WeatherChartTest {
     @Test fun lastDayOfTheSeriesIsShorterButShown() {
         val d = WeatherChart.today(hourly, at(9, d = day.plusDays(5)), zone)!!
         assertEquals(24, d.temperature.size)
-        assertEquals(6, d.precipitation.size)
+        assertEquals(20, d.precipitation.size)
     }
 
     @Test fun scaleHoldsTheHeaviestHour() {
@@ -146,4 +146,21 @@ class WeatherChartTest {
         val l = layout(WeatherChart.today(hourly, at(6, 30), zone)!!)
         assertEquals((l.line[6].y + l.line[7].y) / 2, l.nowY!!, 0.001f)
     }
+
+    /** As the JSON comes: ten-minute steps from midnight (160), hourly from startLowResolution, 26 h later (118). */
+    @Test fun precipitationTakesTenMinutesFirstThenTheHourlySeriesWhereItStarts() {
+        val tenMin = List(160) { i -> if (i in 90..95) 0.2 else 0.0 }      // 15–16 h today: 1.2 mm
+        val oneHour = List(118) { i -> if (i == 0) 1.0 else 0.0 }          // 02–03 h tomorrow: 1.0 mm
+        val p = WeatherChart.hourlyPrecipitation(midnight, tenMin, midnight + 26 * 3_600_000L, oneHour)
+        assertEquals(144, p.size)
+        assertEquals(1.2, p[15], 1e-9)
+        assertEquals(0.0, p[0], 0.0)
+        assertEquals(1.0, p[26], 0.0)
+        val today = WeatherChart.today(Hourly(midnight, List(144) { 10.0 }, p), at(12), zone)!!
+        assertEquals(1.2, today.precipitation[15], 1e-9)
+        assertEquals(1.2, today.precipitation.sum(), 1e-9)
+    }
+
+    @Test fun withoutStartLowResolutionTheHourlySeriesIsTakenFromMidnight() =
+        assertEquals(listOf(0.5, 0.0), WeatherChart.hourlyPrecipitation(midnight, emptyList(), 0, listOf(0.5, null)))
 }

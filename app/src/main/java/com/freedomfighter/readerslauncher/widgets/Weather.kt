@@ -175,7 +175,13 @@ class WeatherRepo private constructor(private val context: Context) {
 
     @Serializable private data class MsCurrent(val icon: Int = 0, val temperature: Double = 0.0)
     @Serializable private data class MsDay(val dayDate: String, val iconDay: Int = 0, val temperatureMax: Double = 0.0, val temperatureMin: Double = 0.0)
-    @Serializable private data class MsGraph(val start: Long = 0, val temperatureMean1h: List<Double?> = emptyList(), val precipitation1h: List<Double?> = emptyList())
+    @Serializable private data class MsGraph(
+        val start: Long = 0,
+        val startLowResolution: Long = 0,
+        val temperatureMean1h: List<Double?> = emptyList(),
+        val precipitation10m: List<Double?> = emptyList(),
+        val precipitation1h: List<Double?> = emptyList()
+    )
     @Serializable private data class MsResponse(val currentWeather: MsCurrent? = null, val forecast: List<MsDay> = emptyList(), val graph: MsGraph? = null)
     @Serializable private data class GaAttributes(val plz: Int? = null, val langtext: String? = null)
     @Serializable private data class GaResult(val attributes: GaAttributes = GaAttributes())
@@ -199,10 +205,12 @@ class WeatherRepo private constructor(private val context: Context) {
             val current = r.currentWeather ?: return null
             if (r.forecast.isEmpty()) return null
             val days = r.forecast.take(5).map { DayForecast(it.dayDate, swissToWmo(it.iconDay), it.temperatureMin, it.temperatureMax) }
-            // The same JSON carries the hourly curves (144 h of temperature, 126 h of precipitation
-            // from today's midnight): kept with the forecast, so the chart costs no second request.
+            // The same JSON carries the hourly curves (144 h of temperature from today's midnight;
+            // precipitation in ten-minute steps from midnight, then hourly from startLowResolution,
+            // a day later): kept with the forecast, so the chart costs no second request.
             val hourly = r.graph?.takeIf { it.start > 0 && it.temperatureMean1h.size >= 2 }?.let { g ->
-                Hourly(g.start, fillGaps(g.temperatureMean1h), g.precipitation1h.map { it ?: 0.0 })
+                Hourly(g.start, fillGaps(g.temperatureMean1h),
+                    WeatherChart.hourlyPrecipitation(g.start, g.precipitation10m, g.startLowResolution, g.precipitation1h))
             }
             Forecast(name.ifBlank { hit.langtext ?: "" }, lat, lon, current.temperature, swissToWmo(current.icon), days, System.currentTimeMillis(), "meteosuisse", hourly)
         } catch (e: Exception) {

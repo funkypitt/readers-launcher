@@ -46,6 +46,19 @@ object WeatherChart {
         val precipitationScale: Double
     )
 
+    /**
+     * MeteoSwiss's precipitation as one value per hour from [start]. The first hours only come in
+     * ten-minute steps ([tenMin], from [start]); the hourly series ([oneHour]) begins at [startLow],
+     * about a day later — read from [start], it put tomorrow's rain under today's hours.
+     */
+    fun hourlyPrecipitation(start: Long, tenMin: List<Double?>, startLow: Long, oneHour: List<Double?>): List<Double> {
+        val hourly = oneHour.map { it ?: 0.0 }
+        if (startLow <= start) return hourly
+        val lead = ((startLow - start) / 3_600_000.0).roundToInt()
+        val head = List(lead) { h -> (h * 6 until h * 6 + 6).sumOf { tenMin.getOrNull(it) ?: 0.0 } }
+        return head + hourly
+    }
+
     /** The hourly series cut to the day that is [now] in [zone]; null when the data does not reach it. */
     fun today(hourly: Hourly, now: Long, zone: ZoneId): Day? {
         val dayStart = Instant.ofEpochMilli(now).atZone(zone).toLocalDate().atStartOfDay(zone).toInstant().toEpochMilli()

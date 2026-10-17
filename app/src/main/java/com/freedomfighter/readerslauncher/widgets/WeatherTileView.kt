@@ -16,7 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,6 +35,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -85,7 +91,16 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
     val typo = LocalTypo.current
     val colors = LocalColors.current
 
-    LaunchedEffect(tile.place, now / (30 * 60_000)) { repo.refresh(tile.place) }
+    // Also on the home's ON_RESUME: the half-hour tick alone left a forecast hours old on screen
+    // when the phone had slept or the network was down at that moment.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var resumed by remember { mutableIntStateOf(0) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, e -> if (e == Lifecycle.Event.ON_RESUME) resumed++ }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    LaunchedEffect(tile.place, now / (30 * 60_000), resumed) { repo.refresh(tile.place) }
 
     Column(
         Modifier
@@ -175,9 +190,12 @@ fun WeatherTileView(tile: WeatherTile, app: App, onLongPress: () -> Unit, onNeed
 
 private fun Context.findActivityCompat(): android.app.Activity? = findActivity()
 
-/** Today's hours of a MeteoSwiss forecast, in Swiss time (the place is Swiss); null elsewhere or when the data has run out. */
+/**
+ * Today's hours of a MeteoSwiss forecast, in Swiss time (the place is Swiss); null elsewhere, when
+ * the data has run out, or when it is more than six hours old (an hour-by-hour chart that old misleads).
+ */
 private fun chartDay(f: Forecast, now: Long): WeatherChart.Day? =
-    f.hourly?.let { WeatherChart.today(it, now, ZoneId.of("Europe/Zurich")) }
+    f.hourly?.takeIf { now - f.fetchedAt < 6 * 3_600_000L }?.let { WeatherChart.today(it, now, ZoneId.of("Europe/Zurich")) }
 
 /**
  * The chart itself: a thick line for the temperature, solid bars for the rain, a vertical mark at

@@ -1,0 +1,1 @@
+Weather tile: the day's rain bars show today's MeteoSwiss rain (they showed tomorrow's), and the forecast is refreshed when you come back to the home screen.
