@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roboto Mono 3.000 (Apache License 2.0, docs/Roboto-LICENSE.txt), for the pages in mono. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font android:fontStyle="normal" android:fontWeight="400" android:font="@font/roboto_mono_regular" />
+    <font android:fontStyle="normal" android:fontWeight="700" android:font="@font/roboto_mono_bold" />
+</font-family>

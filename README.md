@@ -18,6 +18,8 @@ swipe away. No ads, no tracking. Six languages.
 * Swipe right or left past the pages for the two books: tap the right half to go forward, the
   left half to go back, long press for chapters, text size and the book text in sans-serif or
   serif (Literata). EPUB, MOBI (PalmDoc), FB2, text.
+* The faces travel with the app: Roboto Light, Literata and Roboto Mono are in the APK, so the
+  text looks the same on every device, whatever font the device has set.
 * Either side can open a reading app instead (Kindle, Kobo…): settings → left / right of the home
   screen. For Kindle, paste the book's link or ASIN and the swipe opens that book where it was left
   (Kindle's own `kindle://` link, not a documented one; the app alone is opened if it stops working).

@@ -6,11 +6,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.data.Align
 import com.freedomfighter.readerslauncher.data.FontChoice
 import com.freedomfighter.readerslauncher.data.Settings
@@ -40,8 +42,18 @@ data class ReaderTypography(
     val textAlign: TextAlign get() = if (alignLeft) TextAlign.Start else TextAlign.Center
 }
 
+/**
+ * The faces travel with the app (res/font), so every device draws the same text whatever font
+ * it has set — a device that replaces its system fonts (Hisense) used to give its own face and
+ * weight to "sans-serif". Roboto Light for sans (the Light Phone look), Literata for serif,
+ * Roboto Mono for mono; bold is only drawn in the pages (headings, leads).
+ */
+val RobotoFamily = FontFamily(Font(R.font.roboto_light, FontWeight.Light), Font(R.font.roboto_bold, FontWeight.Bold))
+val LiterataFamily = FontFamily(Font(R.font.literata_regular, FontWeight.Normal), Font(R.font.literata_bold, FontWeight.Bold))
+val RobotoMonoFamily = FontFamily(Font(R.font.roboto_mono_regular, FontWeight.Normal), Font(R.font.roboto_mono_bold, FontWeight.Bold))
+
 val LocalColors = compositionLocalOf { ReaderColors(Color.Black, Color.White) }
-val LocalTypo = compositionLocalOf { ReaderTypography(FontFamily.SansSerif, FontWeight.Light, 28.sp, true) }
+val LocalTypo = compositionLocalOf { ReaderTypography(RobotoFamily, FontWeight.Light, 28.sp, true) }
 val LocalHaptics = compositionLocalOf { true }
 
 @Composable
@@ -54,11 +66,11 @@ fun ReaderTheme(settings: Settings, content: @Composable () -> Unit) {
     }
     val colors = if (dark) ReaderColors(Color.Black, Color.White) else ReaderColors(Color.White, Color.Black)
     val family = when (settings.font) {
-        FontChoice.SERIF -> FontFamily.Serif
-        FontChoice.SANS -> FontFamily.SansSerif
-        FontChoice.MONO -> FontFamily.Monospace
+        FontChoice.SERIF -> LiterataFamily
+        FontChoice.SANS -> RobotoFamily
+        FontChoice.MONO -> RobotoMonoFamily
     }
-    // Roboto Light for sans (the Light Phone look); serif and mono only ship in regular weight.
+    // Roboto Light for sans (the Light Phone look); Literata and Roboto Mono in regular weight.
     val weight = if (settings.font == FontChoice.SANS) FontWeight.Light else FontWeight.Normal
     val size = when (settings.textSize) {
         TextSize.SMALL -> 24.sp

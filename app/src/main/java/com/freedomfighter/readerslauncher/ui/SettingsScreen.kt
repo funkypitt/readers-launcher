@@ -134,6 +134,7 @@ fun SettingsScreen(nav: Nav, app: App) {
                 ) { about = !about }
                 TextRow(stringResource(R.string.credits), size = typo.title) { }
                 TextRow("Literata", size = typo.title, secondary = "The Literata Project Authors · SIL Open Font License 1.1") { }
+                TextRow("Roboto, Roboto Mono", size = typo.title, secondary = "Christian Robertson, Google · Apache License 2.0") { }
             }
         }
         sideMenu?.let { side ->

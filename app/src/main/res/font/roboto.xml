@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roboto 2.138 (Apache License 2.0, docs/Roboto-LICENSE.txt), for the pages in sans. Light
+     stands as the family's regular, so a page set in it draws its bold spans in Roboto Bold. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font android:fontStyle="normal" android:fontWeight="400" android:font="@font/roboto_light" />
+    <font android:fontStyle="normal" android:fontWeight="700" android:font="@font/roboto_bold" />
+</font-family>

@@ -12,7 +12,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -57,6 +56,7 @@ import com.freedomfighter.readerslauncher.books.SlotApp
 import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.books.Book
 import com.freedomfighter.readerslauncher.books.BookSlot
+import com.freedomfighter.readerslauncher.data.FontChoice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -304,14 +304,16 @@ private fun Reader(app: App, slotIndex: Int, slot: BookSlot, swipeBack: Modifier
         val pageHeightPx = if (canvasHeight > 0) canvasHeight.toFloat() else estimatedHeightPx
         val fgArgb = colors.fg.toArgb()
         val fontContext = LocalContext.current
-        val paint = remember(readerSp, settings.bookSerif, typo.family, fgArgb, density) {
+        val paint = remember(readerSp, settings.bookSerif, settings.font, fgArgb, density) {
             TextPaint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply {
                 color = fgArgb
                 textSize = with(density) { readerSp.sp.toPx() }
+                // Families shipped with the app (res/font), never the device's: each pairs its
+                // regular with a bold, so the bold spans of headings land on a true bold.
                 typeface = when {
                     settings.bookSerif -> fontContext.resources.getFont(R.font.literata)
-                    typo.family == FontFamily.Monospace -> Typeface.MONOSPACE
-                    else -> Typeface.create("sans-serif-light", Typeface.NORMAL)
+                    settings.font == FontChoice.MONO -> fontContext.resources.getFont(R.font.roboto_mono)
+                    else -> fontContext.resources.getFont(R.font.roboto)
                 }
             }
         }
