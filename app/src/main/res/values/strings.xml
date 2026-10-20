@@ -105,10 +105,18 @@
 
     <!-- settings -->
     <string name="settings_title">settings</string>
-    <string name="settings_theme">theme: %1$s</string>
+    <string name="settings_theme">colours: %1$s</string>
     <string name="theme_dark">white on black</string>
     <string name="theme_light">black on white</string>
     <string name="theme_system">follow system</string>
+    <string name="theme_lavande">lavender</string>
+    <string name="theme_sauge">sage</string>
+    <string name="theme_nordique">nordic</string>
+    <string name="theme_terracotta">terracotta</string>
+    <string name="theme_coquette">coquette</string>
+    <string name="theme_militante">activist</string>
+    <string name="theme_torride">sultry</string>
+    <string name="theme_nature">nature</string>
     <string name="settings_font">font: %1$s</string>
     <string name="book_text">book text</string>
     <string name="settings_book_text">book text: %1$s</string>
@@ -122,7 +130,7 @@
     <string name="settings_align">alignment: %1$s</string>
     <string name="align_left">left</string>
     <string name="align_center">center</string>
-    <string name="settings_double_tap">double tap flips theme: %1$s</string>
+    <string name="settings_double_tap">double tap changes the colours: %1$s</string>
     <string name="settings_swipe_down">swipe down opens notifications: %1$s</string>
     <string name="settings_status_bar">status bar: %1$s</string>
     <string name="settings_haptics">haptic feedback: %1$s</string>

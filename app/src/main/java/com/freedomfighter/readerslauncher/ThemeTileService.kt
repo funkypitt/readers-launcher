@@ -3,9 +3,9 @@ package com.freedomfighter.readerslauncher
 import android.content.res.Configuration
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.freedomfighter.readerslauncher.data.ThemeMode
+import com.freedomfighter.readerslauncher.data.Palettes
 
-/** Quick-settings tile: flips the launcher between white-on-black and black-on-white. */
+/** Quick-settings tile: moves the launcher to its next colour theme (the inks, then the palettes). */
 class ThemeTileService : TileService() {
 
     private val prefs get() = (application as App).prefs
@@ -13,11 +13,7 @@ class ThemeTileService : TileService() {
     private fun systemIsDark(): Boolean =
         resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
-    private fun isDark(): Boolean = when (prefs.settings.value.theme) {
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-        ThemeMode.SYSTEM -> systemIsDark()
-    }
+    private fun isDark(): Boolean = Palettes.of(prefs.settings.value.theme, systemIsDark()).isDark
 
     override fun onStartListening() {
         super.onStartListening()
@@ -26,7 +22,7 @@ class ThemeTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        prefs.toggleTheme(systemIsDark())
+        prefs.nextTheme()
         refresh()
     }
 

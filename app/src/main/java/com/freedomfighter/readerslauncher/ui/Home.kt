@@ -11,7 +11,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -57,6 +56,7 @@ import com.freedomfighter.readerslauncher.data.CategoryTile
 import com.freedomfighter.readerslauncher.data.ClockTile
 import com.freedomfighter.readerslauncher.data.Grid
 import com.freedomfighter.readerslauncher.data.HomeState
+import com.freedomfighter.readerslauncher.data.Palettes
 import com.freedomfighter.readerslauncher.data.TasksTile
 import com.freedomfighter.readerslauncher.data.Tile
 import com.freedomfighter.readerslauncher.data.WeatherTile
@@ -136,8 +136,6 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
     val activity = context.findActivity()
     val state by app.store.state.collectAsState()
     val settings by app.prefs.settings.collectAsState()
-    val colors = LocalColors.current
-    val systemDark = isSystemInDarkTheme()
     val tick = rememberTick()
     val scope = rememberCoroutineScope()
 
@@ -277,7 +275,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                 .pointerInput(settings.doubleTapTheme) {
                     detectTapGestures(
                         onLongPress = { tick(); menu = HomeMenu.Empty },
-                        onDoubleTap = { if (settings.doubleTapTheme) { tick(); app.prefs.toggleTheme(systemDark) } }
+                        onDoubleTap = { if (settings.doubleTapTheme) { tick(); app.prefs.nextTheme() } }
                     )
                 }
         ) {
@@ -354,9 +352,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
             add(MenuItem(stringResource(R.string.menu_add_page)) { app.store.setPage(app.store.addPage()) })
             if (page > 0 && pageTiles.isEmpty()) add(MenuItem(stringResource(R.string.menu_remove_page)) { app.store.removePage(page) })
             // Reachable from every tile's menu too, since a full page leaves no empty space to double-tap.
-            add(MenuItem(if (colors.isDark) stringResource(R.string.theme_light) else stringResource(R.string.theme_dark)) {
-                app.prefs.toggleTheme(systemDark)
-            })
+            add(MenuItem(themeName(Palettes.next(settings.theme))) { app.prefs.nextTheme() })
             add(MenuItem(stringResource(R.string.menu_settings)) { nav.push(Screen.Settings) })
         }
         when (val m = menu) {

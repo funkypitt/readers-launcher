@@ -1,0 +1,1 @@
+Colour themes: white on black and black on white as before, then, one tap after another, the palettes of the Plume keyboard: lavender, sage, nordic, terracotta, coquette, activist, sultry, nature. The menu entry, the settings line, the double tap on empty space and the quick-settings tile all move to the next theme.

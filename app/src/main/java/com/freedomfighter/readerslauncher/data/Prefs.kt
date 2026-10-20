@@ -5,7 +5,8 @@ import android.content.SharedPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-enum class ThemeMode { DARK, LIGHT, SYSTEM }
+/** The inks, the phone's choice between them, then the Plume palettes (see [Palettes]). */
+enum class ThemeMode { DARK, LIGHT, SYSTEM, LAVANDE, SAUGE, NORDIQUE, TERRACOTTA, COQUETTE, MILITANTE, TORRIDE, NATURE }
 enum class FontChoice { SERIF, SANS, MONO }
 enum class TextSize { SMALL, MEDIUM, LARGE }
 enum class Align { LEFT, CENTER }
@@ -79,16 +80,8 @@ class Prefs(context: Context) {
     fun setReaderSp(v: Int) = sp.edit().putInt(K_READER_SP, v).apply()
     fun setBookSerif(v: Boolean) = sp.edit().putBoolean(K_BOOK_SERIF, v).apply()
 
-    /** Flip between the two monochrome palettes (SYSTEM resolves to whatever is showing now). */
-    fun toggleTheme(systemIsDark: Boolean) {
-        val current = _settings.value.theme
-        val dark = when (current) {
-            ThemeMode.DARK -> true
-            ThemeMode.LIGHT -> false
-            ThemeMode.SYSTEM -> systemIsDark
-        }
-        setTheme(if (dark) ThemeMode.LIGHT else ThemeMode.DARK)
-    }
+    /** One tap: the next theme, round and round (the inks first, then the Plume palettes). */
+    fun nextTheme() = setTheme(Palettes.next(_settings.value.theme))
 
     // Opaque blobs used by widgets.
     fun getString(key: String): String? = sp.getString(key, null)

@@ -143,11 +143,11 @@ fun <T> ReorderableList(
                     .fillMaxWidth()
                     .zIndex(if (dragging) 1f else 0f)
                     .graphicsLayer { translationY = if (dragging) dragOffset else 0f }
-                    .background(if (dragging) colors.fg else colors.bg)
+                    .background(if (dragging) colors.accent else colors.bg)
                     .then(if (onTap != null) Modifier.noRippleClickable { onTap(item) } else Modifier)
                     .padding(horizontal = rowPadH, vertical = rowPadV)
             ) {
-                T(label(item), Modifier.fillMaxWidth(), color = if (dragging) colors.bg else colors.fg, maxLines = 1)
+                T(label(item), Modifier.fillMaxWidth(), color = if (dragging) colors.onAccent else colors.fg, maxLines = 1)
             }
         }
     }

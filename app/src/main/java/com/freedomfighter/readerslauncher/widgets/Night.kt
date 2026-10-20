@@ -151,7 +151,7 @@ fun NightTileView(onLongPress: () -> Unit) {
         }
         if (installed) {
             Box(
-                Modifier.padding(start = 16.dp).background(if (on) colors.fg else Color.Transparent)
+                Modifier.padding(start = 16.dp).background(if (on) colors.accent else Color.Transparent)
                     .noRippleClickable {
                         tick()
                         scope.launch {
@@ -161,7 +161,7 @@ fun NightTileView(onLongPress: () -> Unit) {
                     }
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
-                T(if (on) "●" else "○", size = typo.title, color = if (on) colors.bg else colors.fg, align = TextAlign.Center)
+                T(if (on) "●" else "○", size = typo.title, color = if (on) colors.onAccent else colors.fg, align = TextAlign.Center)
             }
         }
     }

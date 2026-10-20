@@ -173,11 +173,11 @@ fun RecorderTileView(onLongPress: () -> Unit) {
         }
         if (installed) {
             Box(
-                Modifier.padding(start = 16.dp).background(if (recording) colors.fg else Color.Transparent)
+                Modifier.padding(start = 16.dp).background(if (recording) colors.accent else Color.Transparent)
                     .noRippleClickable { tick(); ReadersRecorder.toggle(context); poll++ }
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
-                T(if (recording) "■" else "●", size = typo.title, color = if (recording) colors.bg else colors.fg, align = TextAlign.Center)
+                T(if (recording) "■" else "●", size = typo.title, color = if (recording) colors.onAccent else colors.fg, align = TextAlign.Center)
             }
         }
     }
@@ -250,11 +250,11 @@ fun ListenTileView(onLongPress: () -> Unit) {
         }
         if (installed && r != null) {
             Box(
-                Modifier.padding(start = 16.dp).background(if (playing) colors.fg else Color.Transparent)
+                Modifier.padding(start = 16.dp).background(if (playing) colors.accent else Color.Transparent)
                     .noRippleClickable { tick(); ReadersRecorder.togglePlay(context, r.id) }
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
-                T(if (playing) "❚❚" else "▶", size = typo.title, color = if (playing) colors.bg else colors.fg, align = TextAlign.Center)
+                T(if (playing) "❚❚" else "▶", size = typo.title, color = if (playing) colors.onAccent else colors.fg, align = TextAlign.Center)
             }
         }
     }

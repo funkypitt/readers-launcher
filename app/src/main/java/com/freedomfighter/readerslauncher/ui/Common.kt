@@ -114,9 +114,9 @@ fun TextRow(
     onClick: (() -> Unit)? = null
 ) {
     val colors = LocalColors.current
-    val bg = if (inverted) colors.fg else Color.Transparent
-    val fg = if (inverted) colors.bg else colors.fg
-    val dim = if (inverted) colors.bg.copy(alpha = 0.6f) else colors.dim
+    val bg = if (inverted) colors.accent else Color.Transparent
+    val fg = if (inverted) colors.onAccent else colors.fg
+    val dim = if (inverted) colors.onAccent.copy(alpha = 0.6f) else colors.dim
     Column(
         modifier
             .fillMaxWidth()

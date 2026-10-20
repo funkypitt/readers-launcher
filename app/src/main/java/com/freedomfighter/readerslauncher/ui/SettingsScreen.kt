@@ -28,7 +28,6 @@ import com.freedomfighter.readerslauncher.R
 import com.freedomfighter.readerslauncher.data.Align
 import com.freedomfighter.readerslauncher.data.FontChoice
 import com.freedomfighter.readerslauncher.data.TextSize
-import com.freedomfighter.readerslauncher.data.ThemeMode
 
 /** Every setting is a line of text; tapping it cycles to the next value. */
 @Composable
@@ -71,14 +70,7 @@ fun SettingsScreen(nav: Nav, app: App) {
         Column(Modifier.fillMaxSize()) {
             ScreenTitle(stringResource(R.string.settings_title), onBack = { nav.pop() })
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(top = 8.dp, bottom = 32.dp)) {
-                val themeName = when (s.theme) {
-                    ThemeMode.DARK -> stringResource(R.string.theme_dark)
-                    ThemeMode.LIGHT -> stringResource(R.string.theme_light)
-                    ThemeMode.SYSTEM -> stringResource(R.string.theme_system)
-                }
-                TextRow(stringResource(R.string.settings_theme, themeName), size = typo.title) {
-                    app.prefs.setTheme(next(s.theme))
-                }
+                TextRow(stringResource(R.string.settings_theme, themeName(s.theme)), size = typo.title) { app.prefs.nextTheme() }
                 val fontName = when (s.font) {
                     FontChoice.SERIF -> stringResource(R.string.font_serif)
                     FontChoice.SANS -> stringResource(R.string.font_sans)

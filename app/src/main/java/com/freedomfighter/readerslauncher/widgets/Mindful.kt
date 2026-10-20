@@ -182,7 +182,7 @@ fun MindfulTileView(tile: MindfulTile, app: App, onLongPress: () -> Unit, onMinu
         }
         if (installed) {
             Box(
-                Modifier.padding(start = 16.dp).background(if (active) colors.fg else Color.Transparent)
+                Modifier.padding(start = 16.dp).background(if (active) colors.accent else Color.Transparent)
                     .noRippleClickable {
                         tick()
                         when {
@@ -195,7 +195,7 @@ fun MindfulTileView(tile: MindfulTile, app: App, onLongPress: () -> Unit, onMinu
                     }
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
-                T(if (active) "■" else "▶", size = typo.title, color = if (active) colors.bg else colors.fg, align = TextAlign.Center)
+                T(if (active) "■" else "▶", size = typo.title, color = if (active) colors.onAccent else colors.fg, align = TextAlign.Center)
             }
         }
     }
