@@ -295,10 +295,18 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                         .clipToBounds()
                         .onSizeChanged { availableHeight = it.height }
                 ) {
+                    val tiles = LocalColors.current.tiles
                     Column(Modifier.fillMaxWidth()) {
                         pageTiles.forEach { tile ->
                             key(tile.id) {
-                                Box(Modifier.fillMaxWidth().tileCard(vertical = 3.dp)) {
+                                // A card takes its 3 dp margins out of the tile's own cells, so a page
+                                // holds the same tiles in colour as in the inks.
+                                Box(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .then(if (tiles) Modifier.height(cellHeight() * tileCells(tile)) else Modifier)
+                                        .tileCard(vertical = 3.dp)
+                                ) {
                                 TileView(
                                     tile = tile,
                                     app = app,

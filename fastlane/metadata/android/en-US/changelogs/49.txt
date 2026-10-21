@@ -1,0 +1,1 @@
+With a colour theme, the home page holds the same tiles as in the inks: a card takes its margins out of its own cells instead of pushing the last tile off the page.
