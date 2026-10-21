@@ -20,6 +20,8 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
@@ -40,9 +42,10 @@ import kotlinx.coroutines.withContext
 @Composable
 fun GridBar(grid: Grid, app: App, onLongPress: (Int) -> Unit, onDoubleTap: ((AppRef) -> Unit)? = null) {
     val colors = LocalColors.current
+    val tiles = colors.tiles
     Column(Modifier.fillMaxWidth()) {
         Rule()
-        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(if (tiles) 8.dp else 0.dp)) {
             for (i in 0 until grid.columns) {
                 val ref = grid.slot(i)
                 val gestures = if (onDoubleTap != null && ref != null) Modifier.pointerInput(ref, i) {
@@ -61,6 +64,7 @@ fun GridBar(grid: Grid, app: App, onLongPress: (Int) -> Unit, onDoubleTap: ((App
                     Modifier
                         .weight(1f)
                         .aspectRatio(1f)
+                        .then(if (tiles) Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(tileCorner)).background(colors.tile) else Modifier)
                         .then(gestures),
                     contentAlignment = Alignment.Center
                 ) {

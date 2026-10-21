@@ -26,7 +26,11 @@ import com.freedomfighter.readerslauncher.data.ThemeMode
  * rows (the text colour itself in the two inks). `dim` is the text at reduced opacity for
  * secondary lines and rules.
  */
-data class ReaderColors(val bg: Color, val fg: Color, val accent: Color = fg, val onAccent: Color = bg) {
+data class ReaderColors(
+    val bg: Color, val fg: Color, val accent: Color = fg, val onAccent: Color = bg,
+    /** The card under a tappable row; the inks have none (`tiles` false: text on the page). */
+    val tile: Color = bg, val tile2: Color = bg, val press: Color = bg, val tiles: Boolean = false
+) {
     val dim: Color get() = fg.copy(alpha = 0.55f)
     val rule: Color get() = fg.copy(alpha = 0.25f)
     val isDark: Boolean get() = bg.luminance() < 0.5f
@@ -66,7 +70,7 @@ val LocalHaptics = compositionLocalOf { true }
 fun ReaderTheme(settings: Settings, content: @Composable () -> Unit) {
     val systemDark = isSystemInDarkTheme()
     val p = Palettes.of(settings.theme, systemDark)
-    val colors = ReaderColors(Color(p.bg), Color(p.fg), Color(p.accent), Color(p.onAccent))
+    val colors = ReaderColors(Color(p.bg), Color(p.fg), Color(p.accent), Color(p.onAccent), Color(p.tile), Color(p.tile2), Color(p.press), p.tiles)
     val family = when (settings.font) {
         FontChoice.SERIF -> LiterataFamily
         FontChoice.SANS -> RobotoFamily

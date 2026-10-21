@@ -5,7 +5,8 @@ package com.freedomfighter.readerslauncher.data
  * then the palettes of the Plume keyboard, in its order. Plain ARGB values so the parts that
  * cannot use Compose (the quick-settings tile) read the same colours.
  */
-data class Palette(val mode: ThemeMode, val bg: Long, val fg: Long, val accent: Long, val onAccent: Long) {
+data class Palette(val mode: ThemeMode, val bg: Long, val fg: Long, val accent: Long, val onAccent: Long,
+                   val tile: Long = bg, val tile2: Long = bg, val press: Long = bg, val tiles: Boolean = false) {
     /** Dark background: the status and navigation bar icons depend on it. */
     val isDark: Boolean get() {
         val r = (bg shr 16 and 0xFF) / 255f; val g = (bg shr 8 and 0xFF) / 255f; val b = (bg and 0xFF) / 255f
@@ -17,14 +18,14 @@ object Palettes {
     val ALL = listOf(
         Palette(ThemeMode.DARK, 0xFF000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF000000),
         Palette(ThemeMode.LIGHT, 0xFFFFFFFF, 0xFF000000, 0xFF000000, 0xFFFFFFFF),
-        Palette(ThemeMode.LAVANDE, 0xFF1F1A2E, 0xFFF4EFFF, 0xFFB8A4FF, 0xFF1F1A2E),
-        Palette(ThemeMode.SAUGE, 0xFFD9E0D4, 0xFF1E2A21, 0xFF4C7A5B, 0xFFFFFFFF),
-        Palette(ThemeMode.NORDIQUE, 0xFF2E3440, 0xFFECEFF4, 0xFF88C0D0, 0xFF2E3440),
-        Palette(ThemeMode.TERRACOTTA, 0xFFE6D9CC, 0xFF2B211B, 0xFFC25E38, 0xFFFFFFFF),
-        Palette(ThemeMode.COQUETTE, 0xFFF3D9DC, 0xFF4A1F2B, 0xFFD2455E, 0xFFFFFFFF),
-        Palette(ThemeMode.MILITANTE, 0xFFF2EEE4, 0xFF121212, 0xFFE8412E, 0xFFFFFFFF),
-        Palette(ThemeMode.TORRIDE, 0xFF1E0D13, 0xFFF8E9E6, 0xFFE02A50, 0xFFFFF4F2),
-        Palette(ThemeMode.NATURE, 0xFF2B2A24, 0xFFF2EFE4, 0xFFD19A4E, 0xFF2B2A24),
+        Palette(ThemeMode.LAVANDE, 0xFF1F1A2E, 0xFFF4EFFF, 0xFFB8A4FF, 0xFF1F1A2E, 0xFF3B3352, 0xFF2B2540, 0xFF5A4F78, true),
+        Palette(ThemeMode.SAUGE, 0xFFD9E0D4, 0xFF1E2A21, 0xFF4C7A5B, 0xFFFFFFFF, 0xFFF7F9F4, 0xFFB5C2B2, 0xFFB5C2B2, true),
+        Palette(ThemeMode.NORDIQUE, 0xFF2E3440, 0xFFECEFF4, 0xFF88C0D0, 0xFF2E3440, 0xFF3B4252, 0xFF353B4A, 0xFF4C566A, true),
+        Palette(ThemeMode.TERRACOTTA, 0xFFE6D9CC, 0xFF2B211B, 0xFFC25E38, 0xFFFFFFFF, 0xFFFCF7F1, 0xFFC8B6A5, 0xFFC8B6A5, true),
+        Palette(ThemeMode.COQUETTE, 0xFFF3D9DC, 0xFF4A1F2B, 0xFFD2455E, 0xFFFFFFFF, 0xFFFFF7F5, 0xFFE7BFC6, 0xFFE7BFC6, true),
+        Palette(ThemeMode.MILITANTE, 0xFFF2EEE4, 0xFF121212, 0xFFE8412E, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFD8D3C6, 0xFFD8D3C6, true),
+        Palette(ThemeMode.TORRIDE, 0xFF1E0D13, 0xFFF8E9E6, 0xFFE02A50, 0xFFFFF4F2, 0xFF561A2C, 0xFF34121D, 0xFF7A2A42, true),
+        Palette(ThemeMode.NATURE, 0xFF2B2A24, 0xFFF2EFE4, 0xFFD19A4E, 0xFF2B2A24, 0xFF3A4733, 0xFF2F3A2B, 0xFF566650, true),
     )
 
     /** The palette of a setting; "system" follows the phone between the two inks. */

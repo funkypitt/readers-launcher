@@ -298,6 +298,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                     Column(Modifier.fillMaxWidth()) {
                         pageTiles.forEach { tile ->
                             key(tile.id) {
+                                Box(Modifier.fillMaxWidth().tileCard(vertical = 3.dp)) {
                                 TileView(
                                     tile = tile,
                                     app = app,
@@ -310,6 +311,7 @@ fun HomeScreen(nav: Nav, app: App, ui: HomeUi) {
                                     doubleTapShortcuts = settings.doubleTapShortcuts,
                                     onShortcuts = { tick(); menu = HomeMenu.Shortcuts(it) }
                                 )
+                                }
                             }
                         }
                     }
@@ -622,7 +624,7 @@ fun TextTile(label: String, onClick: () -> Unit, onLongPress: () -> Unit, onDoub
             .fillMaxWidth()
             .height(cellHeight() * TEXT_ROW_CELLS)
             .then(gestures)
-            .padding(horizontal = rowPadH),
+            .padding(horizontal = if (LocalColors.current.tiles) rowPadH - tileGap else rowPadH),
         contentAlignment = Alignment.CenterStart
     ) {
         T(label, Modifier.fillMaxWidth(), size = LocalTypo.current.nav, maxLines = 1)

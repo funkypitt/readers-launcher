@@ -1,0 +1,1 @@
+With a colour theme, the home tiles, the app squares, the rows, the menus and the prompts become cards; the two inks stay text on the page.
